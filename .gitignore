@@ -1,0 +1,25 @@
+### App ####
+node_modules/
+dist/
+key/
+.env
+output.txt
+
+### CI/CD ###
+.npmrc
+
+### Debugging ###
+*.log
+
+### Jetbrains ###
+.idea/
+
+### Mac ###
+.DS_Store
+
+### Testing ###
+coverage/
+test_coverage/
+
+### VS Code ###
+.vscode/
