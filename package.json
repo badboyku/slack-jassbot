@@ -58,7 +58,8 @@
   },
   "dependencies": {
     "@slack/bolt": "^3.12.1",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "@types/node": "^18.11.7",

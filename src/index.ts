@@ -1,14 +1,19 @@
 import {App, LogLevel} from '@slack/bolt';
-import * as dotenv from 'dotenv';
+import config from './utils/config';
+import logger from './utils/logger';
 // import registerListeners from './listeners';
 
-dotenv.config();
+const {
+  app: { port },
+  slack: { appToken, botToken },
+} = config;
 
 /** Initialization */
 const app = new App({
-  token: process.env.SLACK_BOT_TOKEN,
+  appToken: appToken,
+  token: botToken,
   socketMode: true,
-  appToken: process.env.SLACK_APP_TOKEN,
+  developerMode: true, // TODO: Be sure to remove this!
   logLevel: LogLevel.DEBUG,
 });
 
@@ -18,9 +23,9 @@ const app = new App({
 /** Start Bolt App */
 (async () => {
   try {
-    await app.start(process.env.PORT || 3000);
-    console.log('⚡️ Bolt app is running! ⚡️');
+    await app.start(port);
+    logger.info('⚡️ Bolt app is running! ⚡️');
   } catch (error) {
-    console.error('Unable to start App', error);
+    logger.error('Unable to start App', { error });
   }
 })();
