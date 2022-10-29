@@ -16,9 +16,13 @@ const getSlackLogger = (logLevel: LogLevel) => {
     info: (...msgs: string[]) => logger.info(getLogMsg(msgs)),
     warn: (...msgs: string[]) => logger.warn(getLogMsg(msgs)),
     error: (...msgs: string[]) => logger.error(getLogMsg(msgs)),
-    setLevel: (level: LogLevel) => {},
+    setLevel: (_level: LogLevel) => {
+      // Do nothing.
+    },
     getLevel: () => logLevel,
-    setName: (name: string) => {},
+    setName: (_name: string) => {
+      // Do nothing.
+    },
   };
 };
 
