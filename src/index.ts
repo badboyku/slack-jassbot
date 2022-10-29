@@ -1,24 +1,29 @@
-import {App, LogLevel} from '@slack/bolt';
+/* istanbul ignore file */
+import {App} from '@slack/bolt';
+import registerListeners from './listeners';
 import config from './utils/config';
 import logger from './utils/logger';
-// import registerListeners from './listeners';
+import {getSlackLogger, getSlackLogLevel} from './utils/slackLogger';
 
 const {
   app: { port },
-  slack: { appToken, botToken },
+  slack: { logLevel, appToken, botToken },
 } = config;
+
+const slackLogLevel = getSlackLogLevel(logLevel);
+const slackLogger = getSlackLogger(slackLogLevel);
 
 /** Initialization */
 const app = new App({
-  appToken: appToken,
+  appToken,
   token: botToken,
   socketMode: true,
-  developerMode: true, // TODO: Be sure to remove this!
-  logLevel: LogLevel.DEBUG,
+  logger: slackLogger,
+  logLevel: slackLogLevel,
 });
 
 /** Register Listeners */
-// registerListeners(app);
+registerListeners(app);
 
 /** Start Bolt App */
 (async () => {

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import winston, {format} from 'winston';
 import config from './config';
 
