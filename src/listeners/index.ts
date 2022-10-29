@@ -7,7 +7,7 @@ import options from './options';
 import shortcuts from './shortcuts';
 import steps from './steps';
 import views from './views';
-import type {App} from '@slack/bolt';
+import type { App } from '@slack/bolt';
 
 const registerListeners = (app: App) => {
   actions.register(app);

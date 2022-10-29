@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import {LogLevel} from '@slack/bolt';
+import { LogLevel } from '@slack/bolt';
 import logger from './logger';
 
 const getSlackLogger = (logLevel: LogLevel) => {

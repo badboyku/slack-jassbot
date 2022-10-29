@@ -1,9 +1,9 @@
 /* istanbul ignore file */
-import {App} from '@slack/bolt';
+import { App } from '@slack/bolt';
 import registerListeners from './listeners';
 import config from './utils/config';
 import logger from './utils/logger';
-import {getSlackLogger, getSlackLogLevel} from './utils/slackLogger';
+import { getSlackLogger, getSlackLogLevel } from './utils/slackLogger';
 
 const {
   app: { port },
