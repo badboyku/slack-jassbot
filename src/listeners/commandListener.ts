@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import type {AllMiddlewareArgs, App, SlackCommandMiddlewareArgs} from '@slack/bolt';
+import type { AllMiddlewareArgs, App, SlackCommandMiddlewareArgs } from '@slack/bolt';
 
 const register = (app: App) => {
   app.command(/w*/, async (args: SlackCommandMiddlewareArgs & AllMiddlewareArgs) => {

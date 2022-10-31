@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import type {AllMiddlewareArgs, App, SlackShortcutMiddlewareArgs} from '@slack/bolt';
+import type { AllMiddlewareArgs, App, SlackShortcutMiddlewareArgs } from '@slack/bolt';
 
 const register = (app: App) => {
   app.shortcut(/w*/, async (args: SlackShortcutMiddlewareArgs & AllMiddlewareArgs) => {

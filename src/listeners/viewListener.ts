@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import type {AllMiddlewareArgs, App, SlackViewMiddlewareArgs} from '@slack/bolt';
+import type { AllMiddlewareArgs, App, SlackViewMiddlewareArgs } from '@slack/bolt';
 
 const register = (app: App) => {
   app.view(/w*/, async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs) => {

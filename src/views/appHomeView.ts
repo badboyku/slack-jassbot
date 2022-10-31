@@ -1,5 +1,5 @@
-import type {ViewsPublishArguments} from '@slack/web-api';
-import type {User} from '../@types/global';
+import type { ViewsPublishArguments } from '@slack/web-api';
+import type { User } from '../@types/global';
 
 const appHomeRoot = (user: User): ViewsPublishArguments => {
   const { id: userId, birthday, workAnniversary } = user;

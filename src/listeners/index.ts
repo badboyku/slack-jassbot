@@ -7,7 +7,7 @@ import optionsListener from './optionsListener';
 import shortcutListener from './shortcutListener';
 import stepListener from './stepListener';
 import viewListener from './viewListener';
-import type {App} from '@slack/bolt';
+import type { App } from '@slack/bolt';
 
 const registerListeners = (app: App) => {
   actionListener.register(app);

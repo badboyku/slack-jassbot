@@ -1,7 +1,7 @@
 import appHomeView from '../views/appHomeView';
-import type {Logger} from '@slack/logger';
-import type {WebClient} from '@slack/web-api';
-import type {User} from '../@types/global';
+import type { Logger } from '@slack/logger';
+import type { WebClient } from '@slack/web-api';
+import type { User } from '../@types/global';
 
 const appHomeOpened = async (user: User, client: WebClient, logger: Logger) => {
   logger.debug('appHomeService: appHomeOpened called', { user });

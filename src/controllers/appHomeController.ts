@@ -1,5 +1,5 @@
-import {appHomeService} from '../services';
-import type {AllMiddlewareArgs, SlackActionMiddlewareArgs, SlackEventMiddlewareArgs} from '@slack/bolt';
+import { appHomeService } from '../services';
+import type { AllMiddlewareArgs, SlackActionMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 
 const appHomeOpened = (args: SlackEventMiddlewareArgs<'app_home_opened'> & AllMiddlewareArgs) => {
   const {
