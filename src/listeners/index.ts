@@ -1,23 +1,23 @@
 /* istanbul ignore file */
-import actions from './actions';
-import commands from './commands';
-import events from './events';
-import messages from './messages';
-import options from './options';
-import shortcuts from './shortcuts';
-import steps from './steps';
-import views from './views';
-import type { App } from '@slack/bolt';
+import actionListener from './actionListener';
+import commandListener from './commandListener';
+import eventListener from './eventListener';
+import messageListener from './messageListener';
+import optionsListener from './optionsListener';
+import shortcutListener from './shortcutListener';
+import stepListener from './stepListener';
+import viewListener from './viewListener';
+import type {App} from '@slack/bolt';
 
 const registerListeners = (app: App) => {
-  actions.register(app);
-  commands.register(app);
-  events.register(app);
-  messages.register(app);
-  options.register(app);
-  shortcuts.register(app);
-  steps.register(app);
-  views.register(app);
+  actionListener.register(app);
+  commandListener.register(app);
+  eventListener.register(app);
+  messageListener.register(app);
+  optionsListener.register(app);
+  shortcutListener.register(app);
+  stepListener.register(app);
+  viewListener.register(app);
 };
 
 export default registerListeners;
