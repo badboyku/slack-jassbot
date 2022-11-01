@@ -8,7 +8,7 @@ const appHomeOpened = async (user: User, client: WebClient, logger: Logger) => {
 
   // TODO: get user from storage.
   const userModel = { ...user, birthday: '1/13', workAnniversary: '5/15/2015' };
-  const options = appHomeView.appHomeRoot(userModel)
+  const options = appHomeView.appHomeRoot(userModel);
 
   try {
     await client.views.publish(options);

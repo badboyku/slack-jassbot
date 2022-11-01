@@ -1,5 +1,5 @@
-import type { ViewsPublishArguments } from '@slack/web-api';
-import type { User } from '../@types/global';
+import type {ViewsPublishArguments} from '@slack/web-api';
+import type {User} from '../@types/global';
 
 const appHomeRoot = (user: User): ViewsPublishArguments => {
   const { id: userId, birthday, workAnniversary } = user;
@@ -13,15 +13,57 @@ const appHomeRoot = (user: User): ViewsPublishArguments => {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `Birthday: *${birthday}*`,
+            text: '*Birthday*',
           },
         },
         {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `Work Anniversary: *${workAnniversary}*`,
+            text: `\`${birthday}\``,
           },
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: '\n',
+          },
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: '\n',
+          },
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: '*Work Anniversary*',
+          },
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: `\`${workAnniversary}\``,
+          },
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "\n"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "\n"
+          }
         },
         {
           type: 'actions',
@@ -52,17 +94,24 @@ const manageUserDates = (user: User): ViewsPublishArguments => {
       type: 'home',
       blocks: [
         {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: '*Birthday* _(year is ignored)_',
+          },
+        },
+        {
           type: 'actions',
           elements: [
             {
-              type: 'button',
-              text: {
+              type: 'datepicker',
+              initial_date: '2023-04-28',
+              placeholder: {
                 type: 'plain_text',
-                text: '<- Back',
+                text: 'Select a date',
                 emoji: true,
               },
-              value: 'goBackAppHome',
-              action_id: 'goBackAppHome',
+              action_id: 'setUserBirthday',
             },
           ],
         },
@@ -70,15 +119,37 @@ const manageUserDates = (user: User): ViewsPublishArguments => {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `Birthday: *${birthday}*`,
+            text: '*Work Anniversary*',
           },
         },
         {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: `Work Anniversary: *${workAnniversary}*`,
-          },
+          type: 'actions',
+          elements: [
+            {
+              type: 'datepicker',
+              initial_date: '2023-04-28',
+              placeholder: {
+                type: 'plain_text',
+                text: 'Select a date',
+                emoji: true,
+              },
+              action_id: 'setUserWorkAnniversary',
+            },
+          ],
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "\n"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "\n"
+          }
         },
         {
           type: 'actions',
@@ -87,11 +158,22 @@ const manageUserDates = (user: User): ViewsPublishArguments => {
               type: 'button',
               text: {
                 type: 'plain_text',
+                text: 'Cancel',
+                emoji: true,
+              },
+              value: 'cancelManageUserDates',
+              action_id: 'cancelManageUserDates',
+            },
+            {
+              type: 'button',
+              text: {
+                type: 'plain_text',
                 text: 'Save',
                 emoji: true,
               },
+              style: 'primary',
               value: 'save',
-              action_id: 'saveUserDates',
+              action_id: 'doneManageUserDates',
             },
           ],
         },

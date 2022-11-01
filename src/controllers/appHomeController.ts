@@ -20,21 +20,7 @@ const appHomeOpened = async (args: SlackEventMiddlewareArgs<'app_home_opened'> &
   logger.debug('appHomeController: appHomeOpened completed');
 };
 
-const goBackAppHome = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
-  const {
-    ack,
-    action,
-    body: { user },
-    client,
-    logger,
-  } = args;
-  logger.debug('appHomeController: goBackAppHome called', { action, user });
 
-  await ack();
-  await appHomeService.appHomeOpened(user, client, logger);
-
-  logger.debug('appHomeController: goBackAppHome completed');
-};
 
 const manageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
   const {
@@ -52,4 +38,68 @@ const manageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareAr
   logger.debug('appHomeController: manageUserDates completed');
 };
 
-export default { appHomeOpened, goBackAppHome, manageUserDates };
+const cancelManageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
+  const {
+    ack,
+    action,
+    body: { user },
+    client,
+    logger,
+  } = args;
+  logger.debug('appHomeController: cancelManageUserDates called', { action, user });
+
+  await ack();
+  await appHomeService.appHomeOpened(user, client, logger);
+
+  logger.debug('appHomeController: cancelManageUserDates completed');
+};
+
+const doneManageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
+  const {
+    ack,
+    action,
+    body: { user },
+    client,
+    logger,
+  } = args;
+  logger.debug('appHomeController: doneManageUserDates called', { action, user });
+
+  await ack();
+  await appHomeService.appHomeOpened(user, client, logger);
+
+  logger.debug('appHomeController: doneManageUserDates completed');
+};
+
+const setUserBirthday = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
+  const {
+    ack,
+    action,
+    body: { user },
+    client,
+    logger,
+  } = args;
+  logger.debug('appHomeController: setUserBirthday called', { action, user });
+
+  await ack();
+  await appHomeService.manageUserDates(user, client, logger);
+
+  logger.debug('appHomeController: setUserBirthday completed');
+};
+
+const setUserWorkAnniversary = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
+  const {
+    ack,
+    action,
+    body: { user },
+    client,
+    logger,
+  } = args;
+  logger.debug('appHomeController: setUserWorkAnniversary called', { action, user });
+
+  await ack();
+  await appHomeService.manageUserDates(user, client, logger);
+
+  logger.debug('appHomeController: setUserWorkAnniversary completed');
+};
+
+export default { appHomeOpened, manageUserDates, cancelManageUserDates, doneManageUserDates, setUserBirthday, setUserWorkAnniversary };
