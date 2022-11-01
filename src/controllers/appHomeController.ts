@@ -1,5 +1,5 @@
-import {appHomeService} from '../services';
-import type {AllMiddlewareArgs, SlackActionMiddlewareArgs, SlackEventMiddlewareArgs} from '@slack/bolt';
+import { appHomeService } from '../services';
+import type { AllMiddlewareArgs, SlackActionMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 
 const appHomeOpened = async (args: SlackEventMiddlewareArgs<'app_home_opened'> & AllMiddlewareArgs) => {
   const {
@@ -19,8 +19,6 @@ const appHomeOpened = async (args: SlackEventMiddlewareArgs<'app_home_opened'> &
 
   logger.debug('appHomeController: appHomeOpened completed');
 };
-
-
 
 const manageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
   const {
@@ -102,4 +100,11 @@ const setUserWorkAnniversary = async (args: SlackActionMiddlewareArgs & AllMiddl
   logger.debug('appHomeController: setUserWorkAnniversary completed');
 };
 
-export default { appHomeOpened, manageUserDates, cancelManageUserDates, doneManageUserDates, setUserBirthday, setUserWorkAnniversary };
+export default {
+  appHomeOpened,
+  manageUserDates,
+  cancelManageUserDates,
+  doneManageUserDates,
+  setUserBirthday,
+  setUserWorkAnniversary,
+};

@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import {appHomeController} from '../controllers';
-import type {App} from '@slack/bolt';
+import { appHomeController } from '../controllers';
+import type { App } from '@slack/bolt';
 // import { AllMiddlewareArgs, SlackActionMiddlewareArgs } from '@slack/bolt';
 
 const register = (app: App) => {
