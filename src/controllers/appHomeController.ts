@@ -1,7 +1,7 @@
-import { appHomeService } from '../services';
-import type { AllMiddlewareArgs, SlackActionMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
+import {appHomeService} from '../services';
+import type {AllMiddlewareArgs, SlackActionMiddlewareArgs, SlackEventMiddlewareArgs} from '@slack/bolt';
 
-const appHomeOpened = (args: SlackEventMiddlewareArgs<'app_home_opened'> & AllMiddlewareArgs) => {
+const appHomeOpened = async (args: SlackEventMiddlewareArgs<'app_home_opened'> & AllMiddlewareArgs) => {
   const {
     client,
     event: { channel, tab, type, user: userId },
@@ -12,10 +12,12 @@ const appHomeOpened = (args: SlackEventMiddlewareArgs<'app_home_opened'> & AllMi
   if (tab === 'messages') {
     // TODO: Do something when user opens message tab?
     // await say(`Hello world, and welcome <@${event.user}>!`);
-    return Promise<void>;
+  }
+  if (tab === 'home') {
+    await appHomeService.appHomeOpened({ id: userId }, client, logger);
   }
 
-  return appHomeService.appHomeOpened({ id: userId }, client, logger);
+  logger.debug('appHomeController: appHomeOpened completed');
 };
 
 const goBackAppHome = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
@@ -29,8 +31,9 @@ const goBackAppHome = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs
   logger.debug('appHomeController: goBackAppHome called', { action, user });
 
   await ack();
+  await appHomeService.appHomeOpened(user, client, logger);
 
-  return appHomeService.appHomeOpened(user, client, logger);
+  logger.debug('appHomeController: goBackAppHome completed');
 };
 
 const manageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
@@ -44,8 +47,9 @@ const manageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareAr
   logger.debug('appHomeController: manageUserDates called', { action, user });
 
   await ack();
+  await appHomeService.manageUserDates(user, client, logger);
 
-  return appHomeService.manageUserDates(user, client, logger);
+  logger.debug('appHomeController: manageUserDates completed');
 };
 
 export default { appHomeOpened, goBackAppHome, manageUserDates };
