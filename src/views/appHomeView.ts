@@ -1,5 +1,5 @@
-import type { ViewsPublishArguments } from '@slack/web-api';
 import type { User } from '../@types/global';
+import type { ViewsOpenArguments, ViewsPublishArguments } from '@slack/web-api';
 
 const appHomeRoot = (user: User): ViewsPublishArguments => {
   const { id: userId, birthday, workAnniversary } = user;
@@ -9,74 +9,23 @@ const appHomeRoot = (user: User): ViewsPublishArguments => {
     view: {
       type: 'home',
       blocks: [
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '*Birthday*',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: `\`${birthday}\``,
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '\n',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '\n',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '*Work Anniversary*',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: `\`${workAnniversary}\``,
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '\n',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '\n',
-          },
-        },
+        { type: 'section', text: { type: 'mrkdwn', text: '*Birthday*' } },
+        { type: 'section', text: { type: 'mrkdwn', text: `\`${birthday}\`` } },
+        { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
+        { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
+        { type: 'section', text: { type: 'mrkdwn', text: '*Work Anniversary*' } },
+        { type: 'section', text: { type: 'mrkdwn', text: `\`${workAnniversary}\`` } },
+        { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
+        { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
         {
           type: 'actions',
+          block_id: 'manageUserDates',
           elements: [
             {
               type: 'button',
-              text: {
-                type: 'plain_text',
-                text: 'Manage',
-                emoji: true,
-              },
+              action_id: 'manageUserDatesButton',
+              text: { type: 'plain_text', text: 'Manage', emoji: true },
               value: 'manageUserDates',
-              action_id: 'manageUserDates',
             },
           ],
         },
@@ -85,97 +34,39 @@ const appHomeRoot = (user: User): ViewsPublishArguments => {
   };
 };
 
-const manageUserDates = (user: User): ViewsPublishArguments => {
-  const { id: userId, birthday, workAnniversary } = user;
+const manageUserDates = (triggerId: string, user: User): ViewsOpenArguments => {
+  const { birthday, workAnniversary } = user;
 
   return {
-    user_id: userId,
+    trigger_id: triggerId,
     view: {
-      type: 'home',
+      type: 'modal',
+      callback_id: 'saveUserDates',
+      title: { type: 'plain_text', text: 'Manage Dates' },
+      submit: { type: 'plain_text', text: 'Save' },
       blocks: [
         {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '*Birthday* _(year is ignored)_',
+          type: 'input',
+          block_id: 'birthdayInput',
+          label: { type: 'plain_text', text: 'Birthday', emoji: true },
+          element: {
+            type: 'datepicker',
+            action_id: 'birthdayDatepicker',
+            initial_date: birthday,
+            placeholder: { type: 'plain_text', text: 'Select a date', emoji: true },
           },
+          hint: { type: 'plain_text', text: 'Year is ignored', emoji: true },
         },
         {
-          type: 'actions',
-          elements: [
-            {
-              type: 'datepicker',
-              initial_date: '2023-04-28',
-              placeholder: {
-                type: 'plain_text',
-                text: 'Select a date',
-                emoji: true,
-              },
-              action_id: 'setUserBirthday',
-            },
-          ],
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '*Work Anniversary*',
+          type: 'input',
+          block_id: 'workAnniversaryInput',
+          label: { type: 'plain_text', text: 'Work Anniversary', emoji: true },
+          element: {
+            type: 'datepicker',
+            action_id: 'workAnniversaryDatepicker',
+            initial_date: workAnniversary,
+            placeholder: { type: 'plain_text', text: 'Select a date', emoji: true },
           },
-        },
-        {
-          type: 'actions',
-          elements: [
-            {
-              type: 'datepicker',
-              initial_date: '2023-04-28',
-              placeholder: {
-                type: 'plain_text',
-                text: 'Select a date',
-                emoji: true,
-              },
-              action_id: 'setUserWorkAnniversary',
-            },
-          ],
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '\n',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '\n',
-          },
-        },
-        {
-          type: 'actions',
-          elements: [
-            {
-              type: 'button',
-              text: {
-                type: 'plain_text',
-                text: 'Cancel',
-                emoji: true,
-              },
-              value: 'cancelManageUserDates',
-              action_id: 'cancelManageUserDates',
-            },
-            {
-              type: 'button',
-              text: {
-                type: 'plain_text',
-                text: 'Save',
-                emoji: true,
-              },
-              style: 'primary',
-              value: 'save',
-              action_id: 'doneManageUserDates',
-            },
-          ],
         },
       ],
     },

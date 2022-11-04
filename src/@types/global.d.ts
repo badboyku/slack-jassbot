@@ -1,3 +1,12 @@
+export type SaveUserDatesValues = {
+  birthdayInput: {
+    birthdayDatepicker: { type: 'datepicker'; selected_date: string };
+  };
+  workAnniversaryInput: {
+    workAnniversaryDatepicker: { type: 'datepicker'; selected_date: string };
+  };
+};
+
 export type User = {
   id: string;
   username?: string;
