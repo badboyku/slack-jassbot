@@ -3,8 +3,14 @@ import {getBirthDate} from '../utils/datetime';
 import type {ViewsOpenArguments, ViewsPublishArguments} from '@slack/web-api';
 import type {User, UserDocType} from '../db/models/UserModel';
 
-const appHomeRoot = (userId: string, user: User): ViewsPublishArguments => {
-  const { birthMonth, birthDay, workAnniversaryDate } = user as UserDocType;
+const appHomeRoot = (userId: string, user: User, headerCustom = ''): ViewsPublishArguments => {
+  const { birthMonth, birthDay, workAnniversaryDate } = (user as UserDocType) || {};
+
+  const headerDefault =
+    '*Hi there!* :smiley:\nManage your birthday and work anniversary by clicking the manage button below.';
+  const headerError =
+    "*Oh no!* :scream:\nWe seem to be having issues retrieving your data, but don't worry it should show up eventually.";
+  const header = headerCustom || (user ? headerDefault : headerError);
 
   const birthDate = getBirthDate(birthMonth, birthDay);
   const birthDayStr = birthDate ? `\`${birthDate.toFormat('MMMM d')}\`` : '\n';
@@ -17,12 +23,15 @@ const appHomeRoot = (userId: string, user: User): ViewsPublishArguments => {
     view: {
       type: 'home',
       blocks: [
+        { type: 'section', text: { type: 'mrkdwn', text: header } },
+        { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
+        { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
         { type: 'section', text: { type: 'mrkdwn', text: '*Birthday*' } },
-        { type: 'section', text: { type: 'mrkdwn', text: `${birthDayStr}` } },
+        { type: 'section', text: { type: 'mrkdwn', text: birthDayStr } },
         { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
         { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
         { type: 'section', text: { type: 'mrkdwn', text: '*Work Anniversary*' } },
-        { type: 'section', text: { type: 'mrkdwn', text: `${workAnniversaryStr}` } },
+        { type: 'section', text: { type: 'mrkdwn', text: workAnniversaryStr } },
         { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
         { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
         {
@@ -42,7 +51,7 @@ const appHomeRoot = (userId: string, user: User): ViewsPublishArguments => {
 };
 
 const manageUserDates = (triggerId: string, user: User): ViewsOpenArguments => {
-  const { birthMonth, birthDay, workAnniversaryDate } = user as UserDocType;
+  const { birthMonth, birthDay, workAnniversaryDate } = (user as UserDocType) || {};
 
   const birthDate = getBirthDate(birthMonth, birthDay);
   const birthdayStr = birthDate ? birthDate.toISODate() : undefined;

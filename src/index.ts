@@ -2,25 +2,21 @@
 import {App} from '@slack/bolt';
 import registerListeners from './listeners';
 import config from './utils/config';
-import logger from './utils/logger';
-import {getSlackLogger, getSlackLogLevel} from './utils/slackLogger';
+import logger, {getSlackLogger, getSlackLogLevel} from './utils/logger';
 import db from './db';
 
 const {
   app: { port },
-  slack: { logLevel, appToken, botToken },
+  slack: { appToken, botToken },
 } = config;
-
-const slackLogLevel = getSlackLogLevel(logLevel);
-const slackLogger = getSlackLogger(slackLogLevel);
 
 /** Initialization */
 const app = new App({
   appToken,
   token: botToken,
   socketMode: true,
-  logger: slackLogger,
-  logLevel: slackLogLevel,
+  logger: getSlackLogger(),
+  logLevel: getSlackLogLevel(),
 });
 
 /** Register Listeners */

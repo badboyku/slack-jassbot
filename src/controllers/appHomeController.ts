@@ -7,6 +7,7 @@ import type {
   SlackEventMiddlewareArgs,
   SlackViewMiddlewareArgs,
 } from '@slack/bolt';
+import type {ViewsOpenArguments, ViewsPublishArguments} from '@slack/web-api';
 
 const appHomeOpened = async (args: SlackEventMiddlewareArgs<'app_home_opened'> & AllMiddlewareArgs) => {
   const { client, event } = args;
@@ -36,10 +37,14 @@ const manageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareAr
   logger.debug('appHomeController: manageUserDates called', { action, triggerId, slackUser });
 
   await ack();
-  const options = await appHomeService.manageUserDates(triggerId, slackUser);
+  const { options, goHome } = await appHomeService.manageUserDates(triggerId, slackUser);
 
   try {
-    await client.views.open(options);
+    if (goHome) {
+      await client.views.publish(options as ViewsPublishArguments);
+    } else {
+      await client.views.open(options as ViewsOpenArguments);
+    }
   } catch (error) {
     logger.error('appHomeController: manageUserDates error', { error });
   }
