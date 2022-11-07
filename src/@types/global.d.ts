@@ -1,4 +1,4 @@
-import type {ViewStateValue} from '@slack/bolt';
+import type { ViewStateValue } from '@slack/bolt';
 
 export type SlackUser = {
   id: string;

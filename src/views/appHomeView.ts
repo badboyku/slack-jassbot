@@ -1,7 +1,7 @@
-import {DateTime} from 'luxon';
-import {getBirthDate} from '../utils/datetime';
-import type {ViewsOpenArguments, ViewsPublishArguments} from '@slack/web-api';
-import type {User, UserDocType} from '../db/models/UserModel';
+import { DateTime } from 'luxon';
+import { getBirthDate } from '../utils/datetime';
+import type { ViewsOpenArguments, ViewsPublishArguments } from '@slack/web-api';
+import type { User, UserDocType } from '../db/models/UserModel';
 
 const appHomeRoot = (userId: string, user: User, headerCustom = ''): ViewsPublishArguments => {
   const { birthMonth, birthDay, workAnniversaryDate } = (user as UserDocType) || {};

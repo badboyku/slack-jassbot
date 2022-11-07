@@ -1,4 +1,4 @@
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 
 const getBirthDate = (birthMonth: number | null, birthDay: number | null): DateTime | undefined => {
   if (!birthMonth || !birthDay) {

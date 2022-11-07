@@ -1,4 +1,4 @@
-import {appHomeService} from '../services';
+import { appHomeService } from '../services';
 import logger from '../utils/logger';
 import type {
   AllMiddlewareArgs,
@@ -7,7 +7,7 @@ import type {
   SlackEventMiddlewareArgs,
   SlackViewMiddlewareArgs,
 } from '@slack/bolt';
-import type {ViewsOpenArguments, ViewsPublishArguments} from '@slack/web-api';
+import type { ViewsOpenArguments, ViewsPublishArguments } from '@slack/web-api';
 
 const appHomeOpened = async (args: SlackEventMiddlewareArgs<'app_home_opened'> & AllMiddlewareArgs) => {
   const { client, event } = args;

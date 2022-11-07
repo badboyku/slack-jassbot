@@ -1,8 +1,8 @@
 import logger from '../utils/logger';
 import appHomeView from '../views/appHomeView';
 import userService from './userService';
-import type {ViewsOpenArguments, ViewsPublishArguments} from '@slack/web-api';
-import type {SlackUser, ViewStateValues} from '../@types/global';
+import type { ViewsOpenArguments, ViewsPublishArguments } from '@slack/web-api';
+import type { SlackUser, ViewStateValues } from '../@types/global';
 
 const appHomeOpened = async (userId: string): Promise<ViewsPublishArguments> => {
   logger.debug('appHomeService: appHomeOpened called', { userId });

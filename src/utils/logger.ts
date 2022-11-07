@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import {LogLevel} from '@slack/bolt';
-import winston, {format} from 'winston';
+import { LogLevel } from '@slack/bolt';
+import winston, { format } from 'winston';
 import config from './config';
 
 export const getSlackLogLevel = () => {

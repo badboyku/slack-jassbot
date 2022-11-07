@@ -1,7 +1,7 @@
-import {DateTime} from 'luxon';
-import {UserModel} from '../db/models';
+import { DateTime } from 'luxon';
+import { UserModel } from '../db/models';
 import logger from '../utils/logger';
-import type {User} from '../db/models/UserModel';
+import type { User } from '../db/models/UserModel';
 
 const getUser = async (userId: string): Promise<User> => {
   logger.debug('userService: getUser called', { userId });

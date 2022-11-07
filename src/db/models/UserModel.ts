@@ -1,4 +1,4 @@
-import mongoose, {Document, Model, Schema, Types} from 'mongoose';
+import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 
 export type UserDocType = {
   userId: string;
