@@ -1,4 +1,5 @@
-import { appHomeService } from '../services';
+import {appHomeService} from '../services';
+import logger from '../utils/logger';
 import type {
   AllMiddlewareArgs,
   BlockAction,
@@ -6,10 +7,9 @@ import type {
   SlackEventMiddlewareArgs,
   SlackViewMiddlewareArgs,
 } from '@slack/bolt';
-import type { SaveUserDatesValues } from '../@types/global';
 
 const appHomeOpened = async (args: SlackEventMiddlewareArgs<'app_home_opened'> & AllMiddlewareArgs) => {
-  const { client, event, logger } = args;
+  const { client, event } = args;
   const { channel, tab, type, user: userId } = event;
   logger.debug('appHomeController: appHomeOpened called', { event: { channel, tab, type, userId } });
 
@@ -18,39 +18,53 @@ const appHomeOpened = async (args: SlackEventMiddlewareArgs<'app_home_opened'> &
     // await say(`Hello world, and welcome <@${event.user}>!`);
   }
   if (tab === 'home') {
-    await appHomeService.appHomeOpened({ id: userId }, client, logger);
+    const options = await appHomeService.appHomeOpened(userId);
+
+    try {
+      await client.views.publish(options);
+    } catch (error) {
+      logger.error('appHomeController: appHomeOpened error', { error });
+    }
   }
 
   logger.debug('appHomeController: appHomeOpened completed');
 };
 
 const manageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
-  const { ack, action, body, client, logger } = args;
-  const { trigger_id: triggerId, user } = body as BlockAction;
-  logger.debug('appHomeController: manageUserDates called', { action, triggerId, user });
+  const { ack, action, body, client } = args;
+  const { trigger_id: triggerId, user: slackUser } = body as BlockAction;
+  logger.debug('appHomeController: manageUserDates called', { action, triggerId, slackUser });
 
   await ack();
-  await appHomeService.manageUserDates(triggerId, user, client, logger);
+  const options = await appHomeService.manageUserDates(triggerId, slackUser);
+
+  try {
+    await client.views.open(options);
+  } catch (error) {
+    logger.error('appHomeController: manageUserDates error', { error });
+  }
 
   logger.debug('appHomeController: manageUserDates completed');
 };
 
 const saveUserDates = async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs) => {
-  const { ack, body, client, logger } = args;
-  const { user, view } = body;
+  const { ack, body, client } = args;
+  const { user: slackUser, view } = body;
   const {
     state: { values },
   } = view;
-  logger.debug('appHomeController: saveUserDates called', { user, values });
+  logger.debug('appHomeController: saveUserDates called', { slackUser, values });
 
   await ack();
-  await appHomeService.saveUserDates(user, values as SaveUserDatesValues, client, logger);
+  const options = await appHomeService.saveUserDates(slackUser, values);
+
+  try {
+    await client.views.publish(options);
+  } catch (error) {
+    logger.error('appHomeController: saveUserDates error', { error });
+  }
 
   logger.debug('appHomeController: saveUserDates completed');
 };
 
-export default {
-  appHomeOpened,
-  manageUserDates,
-  saveUserDates,
-};
+export default { appHomeOpened, manageUserDates, saveUserDates };

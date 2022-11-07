@@ -1,19 +1,15 @@
-export type SaveUserDatesValues = {
-  birthdayInput: {
-    birthdayDatepicker: { type: 'datepicker'; selected_date: string };
-  };
-  workAnniversaryInput: {
-    workAnniversaryDatepicker: { type: 'datepicker'; selected_date: string };
-  };
-};
+import type {ViewStateValue} from '@slack/bolt';
 
-export type User = {
+export type SlackUser = {
   id: string;
-  username?: string;
   name?: string;
   team_id?: string;
-  birthday?: string;
-  workAnniversary?: string;
+};
+
+export type ViewStateValues = {
+  [blockId: string]: {
+    [actionId: string]: ViewStateValue;
+  };
 };
 
 declare global {}

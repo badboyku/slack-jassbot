@@ -1,8 +1,16 @@
-import type { User } from '../@types/global';
-import type { ViewsOpenArguments, ViewsPublishArguments } from '@slack/web-api';
+import {DateTime} from 'luxon';
+import {getBirthDate} from '../utils/datetime';
+import type {ViewsOpenArguments, ViewsPublishArguments} from '@slack/web-api';
+import type {User, UserDocType} from '../db/models/UserModel';
 
-const appHomeRoot = (user: User): ViewsPublishArguments => {
-  const { id: userId, birthday, workAnniversary } = user;
+const appHomeRoot = (userId: string, user: User): ViewsPublishArguments => {
+  const { birthMonth, birthDay, workAnniversaryDate } = user as UserDocType;
+
+  const birthDate = getBirthDate(birthMonth, birthDay);
+  const birthDayStr = birthDate ? `\`${birthDate.toFormat('MMMM d')}\`` : '\n';
+  const workAnniversaryStr = workAnniversaryDate
+    ? `\`${DateTime.fromJSDate(workAnniversaryDate).toFormat('DDD')}\``
+    : '\n';
 
   return {
     user_id: userId,
@@ -10,22 +18,21 @@ const appHomeRoot = (user: User): ViewsPublishArguments => {
       type: 'home',
       blocks: [
         { type: 'section', text: { type: 'mrkdwn', text: '*Birthday*' } },
-        { type: 'section', text: { type: 'mrkdwn', text: `\`${birthday}\`` } },
+        { type: 'section', text: { type: 'mrkdwn', text: `${birthDayStr}` } },
         { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
         { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
         { type: 'section', text: { type: 'mrkdwn', text: '*Work Anniversary*' } },
-        { type: 'section', text: { type: 'mrkdwn', text: `\`${workAnniversary}\`` } },
+        { type: 'section', text: { type: 'mrkdwn', text: `${workAnniversaryStr}` } },
         { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
         { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
         {
           type: 'actions',
-          block_id: 'manageUserDates',
+          block_id: 'appHomeManageUserDates',
           elements: [
             {
               type: 'button',
-              action_id: 'manageUserDatesButton',
+              action_id: 'manageUserDates',
               text: { type: 'plain_text', text: 'Manage', emoji: true },
-              value: 'manageUserDates',
             },
           ],
         },
@@ -35,7 +42,11 @@ const appHomeRoot = (user: User): ViewsPublishArguments => {
 };
 
 const manageUserDates = (triggerId: string, user: User): ViewsOpenArguments => {
-  const { birthday, workAnniversary } = user;
+  const { birthMonth, birthDay, workAnniversaryDate } = user as UserDocType;
+
+  const birthDate = getBirthDate(birthMonth, birthDay);
+  const birthdayStr = birthDate ? birthDate.toISODate() : undefined;
+  const workAnniversaryStr = workAnniversaryDate ? DateTime.fromJSDate(workAnniversaryDate).toISODate() : undefined;
 
   return {
     trigger_id: triggerId,
@@ -43,32 +54,34 @@ const manageUserDates = (triggerId: string, user: User): ViewsOpenArguments => {
       type: 'modal',
       callback_id: 'saveUserDates',
       title: { type: 'plain_text', text: 'Manage Dates' },
-      submit: { type: 'plain_text', text: 'Save' },
       blocks: [
         {
           type: 'input',
-          block_id: 'birthdayInput',
+          block_id: 'birthday',
           label: { type: 'plain_text', text: 'Birthday', emoji: true },
           element: {
             type: 'datepicker',
-            action_id: 'birthdayDatepicker',
-            initial_date: birthday,
+            action_id: 'datepicker',
+            initial_date: birthdayStr,
             placeholder: { type: 'plain_text', text: 'Select a date', emoji: true },
           },
           hint: { type: 'plain_text', text: 'Year is ignored', emoji: true },
+          optional: true,
         },
         {
           type: 'input',
-          block_id: 'workAnniversaryInput',
+          block_id: 'workAnniversary',
           label: { type: 'plain_text', text: 'Work Anniversary', emoji: true },
           element: {
             type: 'datepicker',
-            action_id: 'workAnniversaryDatepicker',
-            initial_date: workAnniversary,
+            action_id: 'datepicker',
+            initial_date: workAnniversaryStr,
             placeholder: { type: 'plain_text', text: 'Select a date', emoji: true },
           },
+          optional: true,
         },
       ],
+      submit: { type: 'plain_text', text: 'Save' },
     },
   };
 };

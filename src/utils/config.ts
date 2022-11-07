@@ -3,6 +3,9 @@ const config = {
     logLevel: process.env.APP_LOG_LEVEL || 'info',
     port: Number(process.env.APP_PORT) || 3000,
   },
+  db: {
+    uri: process.env.DB_URI || '',
+  },
   slack: {
     logLevel: process.env.SLACK_LOG_LEVEL || 'info',
     appToken: process.env.SLACK_APP_TOKEN || '',
