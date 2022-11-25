@@ -1,4 +1,6 @@
 /* istanbul ignore file */
-import appHomeController from './appHomeController';
+import actionController from './actionController';
+import eventController from './eventController';
+import viewController from './viewController';
 
-export { appHomeController };
+export { actionController, eventController, viewController };

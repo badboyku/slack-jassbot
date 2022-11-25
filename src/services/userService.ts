@@ -42,7 +42,7 @@ const updateUserDates = async (
 ): Promise<User> => {
   logger.debug('userService: updateUserDates called', { userId, birthday, workAnniversary });
 
-  const user = await getUser(userId);
+  const user = await getOrCreateUser(userId);
   if (user) {
     const birthDate = birthday ? DateTime.fromISO(birthday) : null;
     user.birthMonth = birthDate ? birthDate.month : null;
