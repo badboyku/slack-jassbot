@@ -1,33 +1,35 @@
-import { appHomeService } from '../services';
+import { actionService } from '../services';
 import logger from '../utils/logger';
-import { appHomeView } from '../views';
+import { appHome, manageUserDatesModal } from '../views';
 import type { AllMiddlewareArgs, BlockAction, SlackActionMiddlewareArgs } from '@slack/bolt';
-import type { ViewsOpenArguments, ViewsPublishArguments } from '@slack/web-api';
 
 const manageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
-  const { ack, action, body, client } = args;
+  const { action, body, client } = args;
   const { trigger_id: triggerId, user: slackUser } = body as BlockAction;
   const { id: userId } = slackUser;
   logger.debug('actionController: manageUserDates called', { action, triggerId, slackUser });
 
-  try {
-    await ack();
+  const { user } = await actionService.manageUserDates(userId);
 
-    const { user } = await appHomeService.manageUserDates(userId);
-    const options = user
-      ? appHomeView.getManageUserDatesModalArgs(triggerId, user)
-      : appHomeView.getAppHomeArgs(userId, user);
+  if (user) {
+    const view = manageUserDatesModal.getView(user);
+    const options = { trigger_id: triggerId, view };
 
-    if (user) {
-      await client.views.open(options as ViewsOpenArguments);
-    } else {
-      await client.views.publish(options as ViewsPublishArguments);
+    try {
+      await client.views.open(options);
+    } catch (error) {
+      logger.error('actionController: manageUserDates views.open error', { error });
     }
-  } catch (error) {
-    logger.error('actionController: manageUserDates error', { error });
-  }
+  } else {
+    const view = appHome.getView(user);
+    const options = { user_id: userId, view };
 
-  logger.debug('actionController: manageUserDates completed');
+    try {
+      await client.views.publish(options);
+    } catch (error) {
+      logger.error('actionController: manageUserDates views.publish error', { error });
+    }
+  }
 };
 
 export default { manageUserDates };

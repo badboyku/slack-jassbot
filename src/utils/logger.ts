@@ -1,69 +1,53 @@
 /* istanbul ignore file */
-import { LogLevel } from '@slack/bolt';
-import winston, { format } from 'winston';
 import config from './config';
 
-export const getSlackLogLevel = () => {
-  const {
-    slack: { logLevel: slackLogLevel },
-  } = config;
+export const DEV = 'DEV';
 
-  switch (slackLogLevel) {
-    case 'debug':
-      return LogLevel.DEBUG;
-    case 'warn':
-      return LogLevel.WARN;
-    case 'error':
-      return LogLevel.ERROR;
-    case 'info':
+export const DEBUG = 'DEBUG';
+export const INFO = 'INFO';
+export const WARN = 'WARN';
+export const ERROR = 'ERROR';
+
+const getSeverityNum = (severity: string): number => {
+  switch (severity) {
+    case DEBUG:
+      return 0;
+    case INFO:
+      return 1;
+    case WARN:
+      return 2;
+    case ERROR:
+      return 3;
     default:
-      return LogLevel.INFO;
+      return -1;
   }
 };
 
-export const getSlackLogger = () => {
-  const getLogMsg = (msgs: Array<string | Record<string, unknown>>) => {
-    let message: string;
-    let msgExtra: Record<string, unknown> | undefined;
+const doLog = (severity: string, message: string, context?: Record<string, unknown>, minLogLevel?: string) => {
+  const {
+    app: { logLevel, logOutputFormat },
+  } = config;
 
-    if (!msgs.length) {
-      message = 'Unknown error occurred';
-    } else if (msgs.length === 2) {
-      message = msgs[0] as string;
-      msgExtra = msgs[1] as Record<string, unknown>;
-    } else {
-      message = msgs[0] as string;
-      msgs.shift();
-      msgExtra = msgs.length ? { msgExtra: msgs } : undefined;
-    }
+  const severityNum = getSeverityNum(severity);
+  const minSeverityNum = getSeverityNum(minLogLevel || logLevel);
+  if (severityNum < minSeverityNum) {
+    return;
+  }
 
-    return { message, ...msgExtra };
-  };
+  const log = { severity, message, context };
+  const logStringified = logOutputFormat === DEV ? JSON.stringify(log, null, 4) : JSON.stringify(log);
 
-  return {
-    debug: (...msgs: Array<string | Record<string, unknown>>) => logger.debug(getLogMsg(msgs)),
-    info: (...msgs: Array<string | Record<string, unknown>>) => logger.info(getLogMsg(msgs)),
-    warn: (...msgs: Array<string | Record<string, unknown>>) => logger.warn(getLogMsg(msgs)),
-    error: (...msgs: Array<string | Record<string, unknown>>) => logger.error(getLogMsg(msgs)),
-    setLevel: (_level: LogLevel) => {
-      // Do nothing.
-    },
-    getLevel: () => getSlackLogLevel(),
-    setName: (_name: string) => {
-      // Do nothing.
-    },
-  };
+  // eslint-disable-next-line no-console
+  console.log(logStringified);
 };
 
-const {
-  app: { logLevel: appLogLevel },
-} = config;
-const { combine, prettyPrint, timestamp } = format;
-
-const logger = winston.createLogger({
-  level: appLogLevel,
-  format: combine(timestamp(), prettyPrint({ depth: 8, colorize: true })),
-  transports: [new winston.transports.Console()],
-});
-
-export default logger;
+export default {
+  debug: (msg: string, context?: Record<string, unknown>, minLogLevel?: string) =>
+    doLog(DEBUG, msg, context, minLogLevel),
+  info: (msg: string, context?: Record<string, unknown>, minLogLevel?: string) =>
+    doLog(INFO, msg, context, minLogLevel),
+  warn: (msg: string, context?: Record<string, unknown>, minLogLevel?: string) =>
+    doLog(WARN, msg, context, minLogLevel),
+  error: (msg: string, context?: Record<string, unknown>, minLogLevel?: string) =>
+    doLog(ERROR, msg, context, minLogLevel),
+};

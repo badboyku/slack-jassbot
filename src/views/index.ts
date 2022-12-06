@@ -1,4 +1,5 @@
 /* istanbul ignore file */
-import appHomeView from './appHomeView';
+import appHome from './appHome';
+import manageUserDatesModal from './manageUserDatesModal';
 
-export { appHomeView };
+export { appHome, manageUserDatesModal };

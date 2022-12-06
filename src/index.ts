@@ -1,9 +1,10 @@
 /* istanbul ignore file */
 import { App } from '@slack/bolt';
+import db from './db';
 import registerListeners from './listeners';
 import config from './utils/config';
-import logger, { getSlackLogger, getSlackLogLevel } from './utils/logger';
-import db from './db';
+import logger from './utils/logger';
+import slackLogger from './utils/slackLogger';
 
 const {
   app: { port },
@@ -11,13 +12,7 @@ const {
 } = config;
 
 /** Initialization */
-const app = new App({
-  appToken,
-  token: botToken,
-  socketMode: true,
-  logger: getSlackLogger(),
-  logLevel: getSlackLogLevel(),
-});
+const app = new App({ appToken, token: botToken, socketMode: true, logger: slackLogger });
 
 /** Register Listeners */
 registerListeners(app);
@@ -26,10 +21,14 @@ registerListeners(app);
 (async () => {
   try {
     await app.start(port);
-    logger.info('⚡️ Bolt app is running! ⚡️');
-
-    db.connect();
+    logger.info('⚡️ App is running! ⚡️');
   } catch (error) {
     logger.error('Unable to start App', { error });
+  }
+
+  try {
+    db.connect();
+  } catch (error) {
+    logger.error('Unable to connect to db', { error });
   }
 })();

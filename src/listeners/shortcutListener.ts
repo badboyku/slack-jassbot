@@ -1,12 +1,17 @@
 /* istanbul ignore file */
+import logger from '../utils/logger';
 import type { AllMiddlewareArgs, App, SlackShortcutMiddlewareArgs } from '@slack/bolt';
 
 const register = (app: App) => {
   app.shortcut(/w*/, async (args: SlackShortcutMiddlewareArgs & AllMiddlewareArgs) => {
-    const { payload, shortcut, body, /* say, respond, */ ack, logger /* , client */ } = args;
-    logger.debug('shortcut:', { payload, shortcut, body });
+    const { ack, payload, shortcut, body } = args;
 
     await ack();
+
+    switch (true) {
+      default:
+        logger.error('Unknown app shortcut', { payload, shortcut, body });
+    }
   });
 };
 

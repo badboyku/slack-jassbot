@@ -1,5 +1,7 @@
 /* istanbul ignore file */
-import appHomeService from './appHomeService';
+import actionService from './actionService';
+import eventService from './eventService';
 import userService from './userService';
+import viewService from './viewService';
 
-export { appHomeService, userService };
+export { actionService, eventService, userService, viewService };

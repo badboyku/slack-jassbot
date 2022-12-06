@@ -1,24 +1,39 @@
-import mongoose, { Document, Model, Schema, Types } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import datetime from '../../utils/datetime';
+import type { Document, Model, Types } from 'mongoose';
+import type { DateTime } from 'luxon';
 
 export type UserDocType = {
   userId: string;
   birthMonth: number | null;
   birthDay: number | null;
-  workAnniversaryDate: Date | null;
+  workAnniversaryMonth: number | null;
+  workAnniversaryDay: number | null;
+  workAnniversaryYear: number | null;
 };
-type UserDocument = Document<{}, {}, UserDocType>;
-type UserMethods = {};
-type UserModel = Model<UserDocType, {}, UserMethods>;
-export type User = (UserDocument & UserDocType & { _id: Types.ObjectId }) | null;
+export type UserMethods = {
+  getNextBirthDate: () => DateTime | undefined;
+  getWorkAnniversaryDate: () => DateTime | undefined;
+};
+export type User = (UserDocType & Document<{}, {}, UserDocType> & UserMethods & { _id: Types.ObjectId }) | null;
 
-const schema = new Schema<UserDocType, UserModel, UserMethods>(
+const schema = new Schema<UserDocType, Model<UserDocType, {}, UserMethods>, UserMethods>(
   {
     userId: { type: String, index: true, unique: true },
     birthMonth: { type: Number, index: true, default: null },
     birthDay: { type: Number, index: true, default: null },
-    workAnniversaryDate: { type: Date, index: true, default: null },
+    workAnniversaryMonth: { type: Number, index: true, default: null },
+    workAnniversaryDay: { type: Number, index: true, default: null },
+    workAnniversaryYear: { type: Number, index: true, default: null },
   },
   { collection: 'users', timestamps: true },
 );
 
-export default mongoose.model<UserDocType, UserModel>('User', schema);
+schema.method('getNextBirthDate', function getNextBirthDate() {
+  return datetime.getNextBirthDate(this.birthMonth, this.birthDay);
+});
+schema.method('getWorkAnniversaryDate', function getWorkAnniversaryDate() {
+  return datetime.getWorkAnniversaryDate(this.workAnniversaryMonth, this.workAnniversaryDay, this.workAnniversaryYear);
+});
+
+export default mongoose.model<UserDocType, Model<UserDocType, {}, UserMethods>>('User', schema);

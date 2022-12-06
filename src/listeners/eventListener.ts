@@ -1,18 +1,36 @@
 /* istanbul ignore file */
 import { eventController } from '../controllers';
-import type { App } from '@slack/bolt';
-// import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
+import logger from '../utils/logger';
+import type { AllMiddlewareArgs, App, SlackEventMiddlewareArgs } from '@slack/bolt';
+import type {
+  AppHomeOpenedArgs,
+  AppMentionArgs,
+  MemberJoinedChannelArgs,
+  MemberLeftChannelArgs,
+} from '../controllers/eventController';
 
 const register = (app: App) => {
-  app.event('app_home_opened', eventController.appHomeOpened);
-  app.event('app_mention', eventController.appMention);
-  app.event('member_joined_channel', eventController.memberJoinedChannel);
-  app.event('member_left_channel', eventController.memberLeftChannel);
+  app.event(/w*/, async (args: SlackEventMiddlewareArgs & AllMiddlewareArgs) => {
+    const { payload, event, message, body } = args;
+    const { type } = event;
 
-  // app.event(/w*/, async (args: SlackEventMiddlewareArgs & AllMiddlewareArgs) => {
-  //   const { payload, event, message, body, logger } = args;
-  //   logger.debug('event:', { payload, event, message });
-  // });
+    switch (type) {
+      case 'app_home_opened':
+        await eventController.appHomeOpened(args as AppHomeOpenedArgs);
+        break;
+      case 'app_mention':
+        await eventController.appMention(args as AppMentionArgs);
+        break;
+      case 'member_joined_channel':
+        await eventController.memberJoinedChannel(args as MemberJoinedChannelArgs);
+        break;
+      case 'member_left_channel':
+        await eventController.memberLeftChannel(args as MemberLeftChannelArgs);
+        break;
+      default:
+        logger.error('Unknown app event', { payload, event, message, body });
+    }
+  });
 };
 
 export default { register };

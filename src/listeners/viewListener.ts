@@ -1,17 +1,23 @@
 /* istanbul ignore file */
 import { viewController } from '../controllers';
-import type { App } from '@slack/bolt';
-// import type { AllMiddlewareArgs, SlackViewMiddlewareArgs } from '@slack/bolt';
+import logger from '../utils/logger';
+import type { AllMiddlewareArgs, App, SlackViewMiddlewareArgs } from '@slack/bolt';
 
 const register = (app: App) => {
-  app.view('saveUserDates', viewController.saveUserDates);
+  app.view(/w*/, async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs) => {
+    const { ack, payload, view, body } = args;
+    const { callback_id: callbackId } = view;
 
-  // app.view(/w*/, async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs) => {
-  //   const { payload, view, body, ack, /* respond, */ logger /* , client */ } = args;
-  //   logger.debug('view:', { payload, view, body });
-  //
-  //   await ack();
-  // });
+    await ack();
+
+    switch (callbackId) {
+      case 'saveUserDates':
+        await viewController.saveUserDates(args);
+        break;
+      default:
+        logger.error('Unknown app view', { payload, view, body });
+    }
+  });
 };
 
 export default { register };
