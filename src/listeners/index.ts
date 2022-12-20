@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import actionListener from './actionListener';
 import commandListener from './commandListener';
 import eventListener from './eventListener';
@@ -9,7 +8,7 @@ import stepListener from './stepListener';
 import viewListener from './viewListener';
 import type { App } from '@slack/bolt';
 
-const registerListeners = (app: App) => {
+const register = (app: App) => {
   actionListener.register(app);
   commandListener.register(app);
   eventListener.register(app);
@@ -20,4 +19,4 @@ const registerListeners = (app: App) => {
   viewListener.register(app);
 };
 
-export default registerListeners;
+export default { register };

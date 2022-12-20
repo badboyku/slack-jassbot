@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-export default class FindOneError extends Error {
+export default class DbFindOneError extends Error {
   constructor(message = '') {
     super(message);
 

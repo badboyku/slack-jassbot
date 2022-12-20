@@ -5,9 +5,9 @@ import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 
 export type AppHomeOpenedArgs = SlackEventMiddlewareArgs<'app_home_opened'> & AllMiddlewareArgs;
 const appHomeOpened = async (args: AppHomeOpenedArgs) => {
-  const { event, client } = args;
-  const { channel, tab, type, user: userId } = event;
-  logger.debug('eventController: appHomeOpened called', { event: { channel, tab, type, userId } });
+  const { client, event } = args;
+  const { channel, tab, user: userId } = event;
+  logger.debug('eventController: appHomeOpened called', { event: { channel, tab, userId } });
 
   if (tab === 'messages') {
     // TODO: Do something when user opens message tab?
@@ -28,9 +28,9 @@ const appHomeOpened = async (args: AppHomeOpenedArgs) => {
 
 export type AppMentionArgs = SlackEventMiddlewareArgs<'app_mention'> & AllMiddlewareArgs;
 const appMention = async (args: AppMentionArgs) => {
-  const { event } = args;
-  const { channel, type, user: userId } = event;
-  logger.debug('eventController: appMention called', { event: { channel, type, userId } });
+  const { payload, event, message, body } = args;
+  // const { channel, type, user: userId } = event;
+  logger.debug('eventController: appMention called', { payload, event, message, body });
 
   // TODO: Need to send msg when someone calls JassBot and act on action/command they send.
 };
@@ -38,8 +38,10 @@ const appMention = async (args: AppMentionArgs) => {
 export type MemberJoinedChannelArgs = SlackEventMiddlewareArgs<'member_joined_channel'> & AllMiddlewareArgs;
 const memberJoinedChannel = async (args: MemberJoinedChannelArgs) => {
   const { event } = args;
-  const { channel, type, user: userId } = event;
-  logger.debug('eventController: memberJoinedChannel called', { event: { channel, type, userId } });
+  const { channel: channelId, channel_type: channelType, user: userId, inviter: inviterId } = event;
+  logger.debug('eventController: memberJoinedChannel called', { event: { channelId, channelType, userId, inviterId } });
+
+  await eventService.memberJoinedChannel(userId, { channelId, channelType, inviterId });
 
   // TODO: Need to keep track when JassBot joins channel.
   // TODO: Need to send msg if user does not have birthday or work anniversary set.
@@ -47,9 +49,9 @@ const memberJoinedChannel = async (args: MemberJoinedChannelArgs) => {
 
 export type MemberLeftChannelArgs = SlackEventMiddlewareArgs<'member_left_channel'> & AllMiddlewareArgs;
 const memberLeftChannel = async (args: MemberLeftChannelArgs) => {
-  const { event } = args;
-  const { channel, type, user: userId } = event;
-  logger.debug('eventController: memberLeftChannel called', { event: { channel, type, userId } });
+  const { payload, event, message, body } = args;
+  // const { channel, type, user: userId } = event;
+  logger.debug('eventController: memberLeftChannel called', { payload, event, message, body });
 
   // TODO: Need to keep track when JassBot leaves channel.
 };

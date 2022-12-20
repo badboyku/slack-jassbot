@@ -21,10 +21,15 @@ const getLogMsg = (msgs: Array<string | Record<string, unknown>>) => {
   return { message, context };
 };
 
-const doLog = (severity: string, msgs: Array<string | Record<string, unknown>>) => {
+const doLog = (severity: string, msgs: Array<string | Record<string, unknown>>, skipLog?: boolean) => {
+  if (skipLog) {
+    return;
+  }
+
   const {
     slack: { logLevel },
   } = config;
+
   const { message, context } = getLogMsg(msgs);
 
   switch (severity) {
@@ -45,18 +50,16 @@ const doLog = (severity: string, msgs: Array<string | Record<string, unknown>>) 
   }
 };
 
-const slackLogger = {
-  debug: (...msgs: Array<string | Record<string, unknown>>) => doLog(DEBUG, msgs),
-  info: (...msgs: Array<string | Record<string, unknown>>) => doLog(INFO, msgs),
-  warn: (...msgs: Array<string | Record<string, unknown>>) => doLog(WARN, msgs),
-  error: (...msgs: Array<string | Record<string, unknown>>) => doLog(ERROR, msgs),
-  setLevel: (_level: LogLevel) => {
-    // Do nothing.
-  },
-  getLevel: () => LogLevel.INFO,
-  setName: (_name: string) => {
-    // Do nothing.
-  },
+export const getSlackLogger = (skipLog?: boolean) => {
+  return {
+    debug: (...msgs: Array<string | Record<string, unknown>>) => doLog(DEBUG, msgs, skipLog),
+    info: (...msgs: Array<string | Record<string, unknown>>) => doLog(INFO, msgs, skipLog),
+    warn: (...msgs: Array<string | Record<string, unknown>>) => doLog(WARN, msgs, skipLog),
+    error: (...msgs: Array<string | Record<string, unknown>>) => doLog(ERROR, msgs, skipLog),
+    setLevel: (_level: LogLevel) => ({}),
+    getLevel: () => LogLevel.INFO,
+    setName: (_name: string) => ({}),
+  };
 };
 
-export default slackLogger;
+export default getSlackLogger();

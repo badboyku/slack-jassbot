@@ -1,21 +1,21 @@
 import { UserModel } from '../db/models';
-import { FindOneError, SaveError } from '../errors';
+import { DbFindOneError, DbSaveError } from '../errors';
 import logger from '../utils/logger';
 import type { User } from '../db/models/UserModel';
 
-const findUser = async (filter: { userId: string }, throwError = false): Promise<User> => {
-  logger.debug('userService: findUser called', { filter });
+const findUser = async (userId: string, throwError = false): Promise<User> => {
+  logger.debug('userService: findUser called', { userId });
 
   let user: User = null;
   try {
-    user = await UserModel.findOne(filter).exec();
+    user = await UserModel.findOne({ userId }).exec();
   } catch (error) {
     logger.error('userService: findUser failed', { error });
 
     if (throwError) {
       const { message: msg } = (error as Error) || {};
 
-      throw new FindOneError(`userService: findUser error${msg ? `: ${msg}` : ''}`);
+      throw new DbFindOneError(`userService: findUser error${msg ? `: ${msg}` : ''}`);
     }
   }
 
@@ -26,10 +26,10 @@ const findUser = async (filter: { userId: string }, throwError = false): Promise
   return user;
 };
 
-const createUser = async (data: { userId: string }, throwError = false): Promise<User> => {
-  logger.debug('userService: createUser called', data);
+const createUser = async (userId: string, throwError = false): Promise<User> => {
+  logger.debug('userService: createUser called', { userId });
 
-  const user = new UserModel({ ...data });
+  const user = new UserModel({ userId });
   try {
     await user.save();
 
@@ -40,7 +40,7 @@ const createUser = async (data: { userId: string }, throwError = false): Promise
     if (throwError) {
       const { message: msg } = (error as Error) || {};
 
-      throw new SaveError(`userService: createUser error${msg ? `: ${msg}` : ''}`);
+      throw new DbSaveError(`userService: createUser error${msg ? `: ${msg}` : ''}`);
     }
   }
 
@@ -50,9 +50,9 @@ const createUser = async (data: { userId: string }, throwError = false): Promise
 const findOrCreateUser = async (userId: string): Promise<User> => {
   logger.debug('userService: findOrCreateUser called', { userId });
 
-  let user = await findUser({ userId });
+  let user = await findUser(userId);
   if (!user) {
-    user = await createUser({ userId });
+    user = await createUser(userId);
   }
 
   return user;
@@ -88,7 +88,7 @@ const updateUser = async (userId: string, data: UpdateUserData, throwError = fal
       if (throwError) {
         const { message: msg } = (error as Error) || {};
 
-        throw new SaveError(`userService: updateUser error${msg ? `: ${msg}` : ''}`);
+        throw new DbSaveError(`userService: updateUser error${msg ? `: ${msg}` : ''}`);
       }
     }
   }

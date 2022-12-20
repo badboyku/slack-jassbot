@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import logger from '../utils/logger';
 import type { AllMiddlewareArgs, App, SlackEventMiddlewareArgs } from '@slack/bolt';
 

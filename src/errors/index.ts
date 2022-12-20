@@ -1,5 +1,6 @@
 /* istanbul ignore file */
-import FindOneError from './FindOneError';
-import SaveError from './SaveError';
+import DbFindOneError from './DbFindOneError';
+import DbSaveError from './DbSaveError';
+import SlackClientError from './SlackClientError';
 
-export { FindOneError, SaveError };
+export { DbFindOneError, DbSaveError, SlackClientError };

@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { eventController } from '../controllers';
 import logger from '../utils/logger';
 import type { AllMiddlewareArgs, App, SlackEventMiddlewareArgs } from '@slack/bolt';
@@ -24,7 +23,7 @@ const register = (app: App) => {
       case 'member_joined_channel':
         await eventController.memberJoinedChannel(args as MemberJoinedChannelArgs);
         break;
-      case 'member_left_channel':
+      case 'member_left_channel': // TODO: This event is not working!!!!
         await eventController.memberLeftChannel(args as MemberLeftChannelArgs);
         break;
       default:

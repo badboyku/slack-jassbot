@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-export default class SaveError extends Error {
+export default class DbSaveError extends Error {
   constructor(message = '') {
     super(message);
 

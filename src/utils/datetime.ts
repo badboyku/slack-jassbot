@@ -27,4 +27,5 @@ const getWorkAnniversaryDate = (
 
   return DateTime.fromISO(`${year}-${monthPad}-${dayPad}`);
 };
+
 export default { getNextBirthDate, getWorkAnniversaryDate };

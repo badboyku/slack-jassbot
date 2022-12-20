@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { viewController } from '../controllers';
 import logger from '../utils/logger';
 import type { AllMiddlewareArgs, App, SlackViewMiddlewareArgs } from '@slack/bolt';

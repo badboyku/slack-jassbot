@@ -10,6 +10,8 @@ export type UserDocType = {
   workAnniversaryMonth: number | null;
   workAnniversaryDay: number | null;
   workAnniversaryYear: number | null;
+  createdAt: Date;
+  updatedAt: Date;
 };
 export type UserMethods = {
   getNextBirthDate: () => DateTime | undefined;
@@ -25,14 +27,16 @@ const schema = new Schema<UserDocType, Model<UserDocType, {}, UserMethods>, User
     workAnniversaryMonth: { type: Number, index: true, default: null },
     workAnniversaryDay: { type: Number, index: true, default: null },
     workAnniversaryYear: { type: Number, index: true, default: null },
+    createdAt: { type: Date },
+    updatedAt: { type: Date },
   },
   { collection: 'users', timestamps: true },
 );
 
-schema.method('getNextBirthDate', function getNextBirthDate() {
+schema.method('getNextBirthDate', function getNextBirthDate(): DateTime | undefined {
   return datetime.getNextBirthDate(this.birthMonth, this.birthDay);
 });
-schema.method('getWorkAnniversaryDate', function getWorkAnniversaryDate() {
+schema.method('getWorkAnniversaryDate', function getWorkAnniversaryDate(): DateTime | undefined {
   return datetime.getWorkAnniversaryDate(this.workAnniversaryMonth, this.workAnniversaryDay, this.workAnniversaryYear);
 });
 

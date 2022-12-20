@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { actionController } from '../controllers';
 import logger from '../utils/logger';
 import type { AllMiddlewareArgs, App, BasicElementAction, SlackActionMiddlewareArgs } from '@slack/bolt';
