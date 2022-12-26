@@ -1,22 +1,21 @@
 import { slackClient } from '../clients';
 import logger from '../utils/logger';
-import channelService from './channelService';
-import type { AnyBulkWriteOperation } from 'mongodb';
-import type { Channel } from '@slack/web-api/dist/response/ConversationsListResponse';
 import type { ConversationsListArguments } from '@slack/web-api';
-import type { ChannelDocType } from '../db/models/ChannelModel';
+import type { Channel } from '@slack/web-api/dist/response/ConversationsListResponse';
 import type { SlackClientError } from '../errors';
 
 type GetChannelsResult = { channels: Channel[]; error?: SlackClientError };
 const getChannels = async (args?: ConversationsListArguments): Promise<GetChannelsResult> => {
   logger.debug('slackService: getChannels called', { args });
-  let channelsList: Channel[] = [];
+
+  let channels: Channel[] = [];
   let clientError: SlackClientError | undefined;
   let hasMore = false;
-  let nextCursor;
+  let cursor;
 
   do {
-    const options: ConversationsListArguments = { ...args, limit: 200, cursor: nextCursor, exclude_archived: false };
+    const options: ConversationsListArguments = { ...args, limit: 200, cursor, exclude_archived: false };
+    // eslint-disable-next-line no-await-in-loop
     const { response, error } = await slackClient.getConversationsList(options);
 
     if (error) {
@@ -26,18 +25,28 @@ const getChannels = async (args?: ConversationsListArguments): Promise<GetChanne
 
     if (response) {
       const { channels: channelsData, response_metadata: responseMetadata } = response;
+      const { next_cursor: nextCursor } = responseMetadata || {};
 
-      const channels = channelsData || [];
-      channelsList = channels.length ? [...channelsList, ...channels] : channelsList;
-
-      const { next_cursor: cursor } = responseMetadata || {};
-      nextCursor = cursor || '';
-
-      hasMore = Boolean(!error && nextCursor);
+      channels = [...(channelsData?.length ? channelsData : []), ...channels];
+      cursor = nextCursor || '';
+      hasMore = Boolean(!error && cursor);
     }
   } while (hasMore);
+  logger.debug('slackService: getChannels complete', { channelsCount: channels.length, error: clientError });
 
-  return { channels: channelsList, error: clientError };
+  return { channels, error: clientError };
+};
+
+const getPublicChannels = () => {
+  logger.debug('slackService: getPublicChannels called');
+
+  return getChannels({ types: 'public_channel' });
+};
+
+const getPrivateChannels = () => {
+  logger.debug('slackService: getPrivateChannels called');
+
+  return getChannels({ types: 'private_channel' });
 };
 
 type GetAllChannelsResult = {
@@ -57,52 +66,23 @@ const getAllChannels = async (): Promise<GetAllChannelsResult> => {
     if (status === 'fulfilled') {
       const { value } = result as PromiseFulfilledResult<GetChannelsResult>;
       const { channels: channelsValue, error: errorValue } = value;
+
       channels = channelsValue;
       error = errorValue;
     } else if (status === 'rejected') {
       const { reason } = result as PromiseRejectedResult;
+
       error = reason;
     }
 
     return { channels, error };
   };
 
-  const results = await Promise.allSettled([
-    getChannels({ types: 'public_channel' }),
-    getChannels({ types: 'private_channel' }),
-  ]);
-
+  const results = await Promise.allSettled([getPublicChannels(), getPrivateChannels()]);
   const { channels: publicChannels, error: publicChannelsError } = processResult(results[0]);
   const { channels: privateChannels, error: privateChannelsError } = processResult(results[1]);
 
   return { publicChannels, publicChannelsError, privateChannels, privateChannelsError };
 };
 
-type CheckChannelsResult = { complete: true };
-const checkChannels = async (): Promise<CheckChannelsResult> => {
-  logger.debug('slackService: checkChannels called');
-
-  const { publicChannels, privateChannels } = await getAllChannels();
-  logger.debug('slackService: getAllChannels complete', {
-    publicChannelsCount: publicChannels.length,
-    privateChannelsCount: privateChannels.length,
-  });
-
-  const ops: AnyBulkWriteOperation<ChannelDocType>[] = [];
-  [publicChannels, privateChannels].forEach((channels) => {
-    channels.forEach((channel) => {
-      const { id, is_member: isMember, is_private: isPrivate } = channel;
-      const filter = { channelId: id };
-      const update = { $set: { isPrivate, isMember } };
-
-      ops.push({ updateOne: { filter, update, upsert: true } });
-    });
-  });
-
-  const results = await channelService.bulkWriteChannels(ops);
-  logger.debug('bulkWriteChannels', { results });
-
-  return { complete: true };
-};
-
-export default { checkChannels, getAllChannels, getChannels };
+export default { getChannels, getPublicChannels, getPrivateChannels, getAllChannels };

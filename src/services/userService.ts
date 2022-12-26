@@ -1,9 +1,8 @@
 import { UserModel } from '../db/models';
-import { DbFindOneError, DbSaveError } from '../errors';
 import logger from '../utils/logger';
 import type { User } from '../db/models/UserModel';
 
-const findUser = async (userId: string, throwError = false): Promise<User> => {
+const findUser = async (userId: string): Promise<User> => {
   logger.debug('userService: findUser called', { userId });
 
   let user: User = null;
@@ -11,12 +10,6 @@ const findUser = async (userId: string, throwError = false): Promise<User> => {
     user = await UserModel.findOne({ userId }).exec();
   } catch (error) {
     logger.error('userService: findUser failed', { error });
-
-    if (throwError) {
-      const { message: msg } = (error as Error) || {};
-
-      throw new DbFindOneError(`userService: findUser error${msg ? `: ${msg}` : ''}`);
-    }
   }
 
   if (user) {
@@ -26,22 +19,15 @@ const findUser = async (userId: string, throwError = false): Promise<User> => {
   return user;
 };
 
-const createUser = async (userId: string, throwError = false): Promise<User> => {
+const createUser = async (userId: string): Promise<User> => {
   logger.debug('userService: createUser called', { userId });
 
   const user = new UserModel({ userId });
   try {
     await user.save();
-
     logger.debug('userService: createUser success', { user });
   } catch (error) {
     logger.error('userService: createUser failed', { error });
-
-    if (throwError) {
-      const { message: msg } = (error as Error) || {};
-
-      throw new DbSaveError(`userService: createUser error${msg ? `: ${msg}` : ''}`);
-    }
   }
 
   return user;
@@ -65,7 +51,7 @@ type UpdateUserData = {
   workAnniversaryDay?: number;
   workAnniversaryYear?: number;
 };
-const updateUser = async (userId: string, data: UpdateUserData, throwError = false): Promise<User> => {
+const updateUser = async (userId: string, data: UpdateUserData): Promise<User> => {
   logger.debug('userService: updateUser called', { userId, data });
 
   const user = await findOrCreateUser(userId);
@@ -80,16 +66,9 @@ const updateUser = async (userId: string, data: UpdateUserData, throwError = fal
 
     try {
       await user.save();
-
       logger.debug('userService: updateUser success', { user });
     } catch (error) {
       logger.error('userService: updateUser failed', { error });
-
-      if (throwError) {
-        const { message: msg } = (error as Error) || {};
-
-        throw new DbSaveError(`userService: updateUser error${msg ? `: ${msg}` : ''}`);
-      }
     }
   }
 

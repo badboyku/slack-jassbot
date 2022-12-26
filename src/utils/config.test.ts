@@ -1,20 +1,16 @@
 import config from './config';
 
 describe('config.ts', () => {
-  const expected = {
-    app: { logLevel: 'info', port: 3000 },
-    slack: {
-      apiHost: '',
-      appToken: '',
-      botToken: '',
-      clientId: '',
-      clientSecret: '',
-      logLevel: 'info',
-      signingSecret: '',
-    },
-  };
+  describe('with no env vars set', () => {
+    const expected = {
+      app: { logLevel: 'INFO', logOutputFormat: 'ELK', nodeEnv: 'TEST', port: 3000, isTsNode: false },
+      bree: { isDisabled: false, jobs: { updateMemberChannelsCron: '' } },
+      db: { uri: '' },
+      slack: { apiHost: '', appToken: '', botToken: '', botUserId: '', logLevel: 'INFO' },
+    };
 
-  test('should return config', () => {
-    expect(expected).toEqual(config);
+    it('should return config with defaults', () => {
+      expect(config).toEqual(expected);
+    });
   });
 });

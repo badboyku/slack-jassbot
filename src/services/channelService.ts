@@ -7,20 +7,20 @@ import type { Channel, ChannelDocType } from '../db/models/ChannelModel';
 type ChannelData = {
   channelId?: string;
   inviterId?: string;
-  isPrivate?: boolean;
   isMember?: boolean;
+  isPrivate?: boolean;
 };
 
 const bulkWriteChannels = async (
   ops: AnyBulkWriteOperation<ChannelDocType>[],
 ): Promise<BulkWriteResult | undefined> => {
   logger.debug('channelService: bulkWriteChannels called', { numOps: ops.length });
+  let result: BulkWriteResult | undefined;
 
   if (!ops.length) {
     return undefined;
   }
 
-  let result: BulkWriteResult | undefined;
   try {
     result = await ChannelModel.bulkWrite(ops);
   } catch (error) {
@@ -40,7 +40,6 @@ const createChannel = async (data: ChannelData): Promise<Channel> => {
   const channel = new ChannelModel(data);
   try {
     await channel.save();
-
     logger.debug('channelService: createChannel success', { channel });
   } catch (error) {
     logger.error('channelService: createChannel failed', { error });

@@ -1,27 +1,27 @@
 /* istanbul ignore file */
-import app from './app';
-import db from './db';
-import listeners from './listeners';
-import config from './utils/config';
+import app from './utils/app';
+import bree from './utils/bree';
+import db from './utils/db';
 import logger from './utils/logger';
 
 (async () => {
-  const {
-    app: { port },
-  } = config;
+  // Connect to database.
+  const { isConnected: isDbConnected } = await db.connect();
+  if (!isDbConnected) {
+    logger.error('Database failed to connect, exiting');
 
-  listeners.register(app);
-
-  try {
-    await app.start(port);
-    logger.info('⚡️ App is running! ⚡️');
-  } catch (error) {
-    logger.error('Unable to start App', { error });
+    process.exit(1);
   }
 
-  try {
-    db.connect();
-  } catch (error) {
-    logger.error('Unable to connect to db', { error });
+  // Start app.
+  const { isStarted: isAppStarted } = await app.start();
+  if (!isAppStarted) {
+    await db.disconnect();
+    logger.error('App failed to start, exiting');
+
+    process.exit(1);
   }
+
+  // Start bree.
+  await bree.start();
 })();

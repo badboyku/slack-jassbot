@@ -1,34 +1,61 @@
-// import Bree from 'bree';
-//
-// const {
-//   bree: { checkHostsOnlineCron, importAccountTxsCron },
-// } = config;
-//
-// const getBree = () => {
-//   const bree = new Bree({
-//     logger: false,
-//     defaultExtension: process.env.TS_NODE ? 'ts' : 'js',
-//     root: path.join(__dirname, '../jobs'),
-//     jobs: [
-//       { name: 'checkHostsOnline', cron: checkHostsOnlineCron },
-//       { name: 'importAccountTxs', cron: importAccountTxsCron },
-//     ],
-//     errorHandler: (error: Error, workerMetadata: { name: string; err?: Error }) => {
-//       logger.error('Bree error', { data: { error, workerMetadata } });
-//     },
-//     workerMessageHandler: (message: { name: string; message: unknown }) => {
-//       logger.debug('Worker completed', { data: { ...message } });
-//     },
-//   });
-//
-//   bree.on('worker created', (name: string) => {
-//     logger.debug('Worker created', { data: { name } });
-//   });
-//   bree.on('worker deleted', (name: string) => {
-//     logger.debug('Worker deleted', { data: { name } });
-//   });
-//
-//   return bree;
-// };
-//
-// export default getBree();
+import path from 'node:path';
+import Bree from 'bree';
+import Graceful from '@ladjs/graceful';
+import config from './config';
+import logger from './logger';
+
+const getBree = () => {
+  const {
+    app: { isTsNode },
+    bree: {
+      jobs: { updateMemberChannelsCron },
+    },
+  } = config;
+
+  const jobs = [];
+  if (updateMemberChannelsCron) {
+    jobs.push({ name: 'updateMemberChannels', cron: updateMemberChannelsCron });
+  }
+
+  const bree = new Bree({
+    logger: false,
+    defaultExtension: isTsNode ? 'ts' : 'js',
+    root: path.join(__dirname, '../jobs'),
+    jobs,
+    errorHandler: (error: Error, workerMetadata: { name: string; err?: Error }) => {
+      logger.error('Bree error', { data: { error, workerMetadata } });
+    },
+    workerMessageHandler: (message: { name: string; message: unknown }) => {
+      logger.debug('Worker completed', { data: { ...message } });
+    },
+  });
+
+  bree.on('worker created', (name: string) => {
+    logger.debug('Worker created', { data: { name } });
+  });
+  bree.on('worker deleted', (name: string) => {
+    logger.debug('Worker deleted', { data: { name } });
+  });
+
+  return bree;
+};
+
+const start = async () => {
+  const {
+    bree: { isDisabled },
+  } = config;
+
+  if (isDisabled) {
+    return;
+  }
+
+  const bree = getBree();
+
+  const graceful = new Graceful({ brees: [bree] });
+  graceful.listen();
+
+  await bree.start();
+  logger.info('Bree started');
+};
+
+export default { start };

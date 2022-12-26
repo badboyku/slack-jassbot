@@ -16,7 +16,9 @@ const saveUserDates = async (userId: string, values: ViewStateValues): Promise<S
       datepicker: { selected_date: workAnniversaryValue },
     },
   } = values;
+
   // TODO: sanitize values
+
   const birthdayDate = birthdayValue ? DateTime.fromISO(birthdayValue.toString()) : undefined;
   const workAnniversaryDate = workAnniversaryValue ? DateTime.fromISO(workAnniversaryValue.toString()) : undefined;
 
