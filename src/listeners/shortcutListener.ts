@@ -9,7 +9,7 @@ const register = (app: App) => {
 
     switch (true) {
       default:
-        logger.error('Unknown app shortcut', { payload, shortcut, body });
+        logger.warn('Unknown app shortcut', { payload, shortcut, body });
     }
   });
 };

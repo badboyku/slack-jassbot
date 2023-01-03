@@ -1,38 +1,21 @@
+import manageYourDates from './manageYourDates';
 import type { HomeView } from '@slack/web-api';
 import type { User } from '../db/models/UserModel';
 
-const HEADER_WELCOME =
-  '*Hi there!* :smiley:\nManage your birthday and work anniversary by clicking the manage button below.';
-const HEADER_USER_NOT_FOUND =
-  "*Oh no!* :scream:\nWe seem to be having issues retrieving your data, but don't worry it should show up eventually.";
-const HEADER_USER_SAVE_ERROR =
-  '*Oh no!* :scream:\nWe seem to be having issues saving your data, cross your fingers and please try again.';
+const getView = (user: User): HomeView => {
+  const nextBirthDate = user?.getNextBirthDate() || undefined;
+  const nextBirthDateStr = nextBirthDate ? `\`${nextBirthDate.toFormat('MMMM d')}\`` : '-----\n';
+  const workAnniversaryDate = user?.getWorkAnniversaryDate() || undefined;
+  const workAnniversaryStr = workAnniversaryDate ? `\`${workAnniversaryDate.toFormat('DDD')}\`` : '-----\n';
 
-const getView = (user: User, hasSaveError = false): HomeView => {
-  let headerStr = HEADER_WELCOME;
-  if (hasSaveError) {
-    headerStr = HEADER_USER_SAVE_ERROR;
-  } else if (!user) {
-    headerStr = HEADER_USER_NOT_FOUND;
-  }
-
-  let nextBirthDateStr = '-----\n';
-  let workAnniversaryStr = '-----\n';
-  if (user) {
-    const nextBirthDate = user.getNextBirthDate();
-    if (nextBirthDate) {
-      nextBirthDateStr = `\`${nextBirthDate.toFormat('MMMM d')}\``;
-    }
-    const workAnniversaryDate = user.getWorkAnniversaryDate();
-    if (workAnniversaryDate) {
-      workAnniversaryStr = `\`${workAnniversaryDate.toFormat('DDD')}\``;
-    }
-  }
+  const greeting = !user
+    ? "*Oh no!* :scream:\nWe seem to be having issues retrieving your data, but don't worry it should show up eventually."
+    : '*Hi there!* :smiley:\nUpdate your birthday and work anniversary by clicking the Manage Your Dates button below.';
 
   return {
     type: 'home',
     blocks: [
-      { type: 'section', text: { type: 'mrkdwn', text: headerStr } },
+      { type: 'section', text: { type: 'mrkdwn', text: greeting } },
       { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
       { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
       { type: 'section', text: { type: 'mrkdwn', text: '*Birthday*' } },
@@ -45,14 +28,8 @@ const getView = (user: User, hasSaveError = false): HomeView => {
       { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
       {
         type: 'actions',
-        block_id: 'appHomeManageUserDates',
-        elements: [
-          {
-            type: 'button',
-            action_id: 'manageUserDates',
-            text: { type: 'plain_text', text: 'Manage', emoji: true },
-          },
-        ],
+        block_id: 'appHomeActions',
+        elements: [manageYourDates.getButton()],
       },
     ],
   };

@@ -14,7 +14,7 @@ const register = (app: App) => {
         await actionController.manageUserDates(args);
         break;
       default:
-        logger.error('Unknown app action', { payload, action, body });
+        logger.warn('Unknown app action', { payload, action, body });
     }
   });
 };

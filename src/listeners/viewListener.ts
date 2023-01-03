@@ -10,11 +10,14 @@ const register = (app: App) => {
     await ack();
 
     switch (callbackId) {
+      case 'saveUserDatesRefreshAppHome':
+        await viewController.saveUserDates(args, true);
+        break;
       case 'saveUserDates':
         await viewController.saveUserDates(args);
         break;
       default:
-        logger.error('Unknown app view', { payload, view, body });
+        logger.warn('Unknown app view', { payload, view, body });
     }
   });
 };

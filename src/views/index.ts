@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 import appHome from './appHome';
-import manageUserDatesModal from './manageUserDatesModal';
+import channelWelcomeMessage from './channelWelcomeMessage';
+import manageUserDates from './manageYourDates';
 
-export { appHome, manageUserDatesModal };
+export { appHome, channelWelcomeMessage, manageUserDates };

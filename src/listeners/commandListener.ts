@@ -9,7 +9,7 @@ const register = (app: App) => {
 
     switch (true) {
       default:
-        logger.error('Unknown app command', { payload, command, body });
+        logger.warn('Unknown app command', { payload, command, body });
     }
   });
 };

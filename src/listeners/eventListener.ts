@@ -27,7 +27,7 @@ const register = (app: App) => {
         await eventController.memberLeftChannel(args as MemberLeftChannelArgs);
         break;
       default:
-        logger.error('Unknown app event', { payload, event, message, body });
+        logger.warn('Unknown app event', { payload, event, message, body });
     }
   });
 };

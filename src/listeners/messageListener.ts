@@ -7,7 +7,7 @@ const register = (app: App) => {
 
     switch (true) {
       default:
-        logger.error('Unknown app message', { payload, event, message, body });
+        logger.warn('Unknown app message', { payload, event, message, body });
     }
   });
 };

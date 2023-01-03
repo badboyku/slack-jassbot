@@ -9,7 +9,7 @@ const register = (app: App) => {
 
     switch (true) {
       default:
-        logger.error('Unknown app options', { payload, options, body });
+        logger.warn('Unknown app options', { payload, options, body });
     }
   });
 };

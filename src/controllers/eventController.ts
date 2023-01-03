@@ -1,6 +1,6 @@
 import { eventService } from '../services';
 import logger from '../utils/logger';
-import { appHome } from '../views';
+import { appHome, channelWelcomeMessage } from '../views';
 import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 
 export type AppHomeOpenedArgs = SlackEventMiddlewareArgs<'app_home_opened'> & AllMiddlewareArgs;
@@ -33,17 +33,28 @@ const appMention = async (args: AppMentionArgs) => {
   logger.debug('eventController: appMention called', { payload, event, message, body });
 
   // TODO: Need to send msg when someone calls JassBot and act on action/command they send.
+  // TODO: when receiving an app mention, check if user has a bday and/or work anniversary set,
+  //  and send msg to remind them to set it if missing
 };
 
 export type MemberJoinedChannelArgs = SlackEventMiddlewareArgs<'member_joined_channel'> & AllMiddlewareArgs;
 const memberJoinedChannel = async (args: MemberJoinedChannelArgs) => {
-  const { event } = args;
+  const { client, event } = args;
   const { channel: channelId, channel_type: channelType, user: userId, inviter: inviterId } = event;
   logger.debug('eventController: memberJoinedChannel called', { event: { channelId, channelType, userId, inviterId } });
 
-  await eventService.memberJoinedChannel(userId, { channelId, channelType, inviterId });
+  const { channel } = await eventService.memberJoinedChannel(userId, { channelId, channelType, inviterId });
 
-  // TODO: Need to keep track when JassBot joins channel.
+  if (channel) {
+    try {
+      const options = channelWelcomeMessage.getOptions(channelId);
+
+      await client.chat.postMessage(options);
+    } catch (error) {
+      logger.error('eventController: memberJoinedChannel chat.postMessage error', { error });
+    }
+  }
+
   // TODO: Need to send msg if user does not have birthday or work anniversary set.
 };
 
