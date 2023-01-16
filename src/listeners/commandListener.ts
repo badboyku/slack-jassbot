@@ -1,17 +1,15 @@
 import logger from '../utils/logger';
-import type { AllMiddlewareArgs, App, SlackCommandMiddlewareArgs } from '@slack/bolt';
+import type { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from '@slack/bolt';
 
-const register = (app: App) => {
-  app.command(/w*/, async (args: SlackCommandMiddlewareArgs & AllMiddlewareArgs) => {
-    const { ack, payload, command, body } = args;
+const commandListener = async (args: SlackCommandMiddlewareArgs & AllMiddlewareArgs) => {
+  const { ack, payload, command, body } = args;
 
-    await ack();
+  await ack();
 
-    switch (true) {
-      default:
-        logger.warn('Unknown app command', { payload, command, body });
-    }
-  });
+  switch (true) {
+    default:
+      logger.warn('Unknown app command', { payload, command, body });
+  }
 };
 
-export default { register };
+export default commandListener;

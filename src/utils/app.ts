@@ -1,6 +1,14 @@
 /* istanbul ignore file */
 import { App } from '@slack/bolt';
-import listeners from '../listeners';
+import {
+  actionListener,
+  commandListener,
+  eventListener,
+  messageListener,
+  optionsListener,
+  shortcutListener,
+  viewListener,
+} from '../listeners';
 import config from './config';
 import logger from './logger';
 import slackLogger, { getSlackLogger } from './slackLogger';
@@ -35,7 +43,13 @@ const start = async () => {
   } = config;
 
   const app = getApp();
-  listeners.register(app);
+  app.action(/w*/, actionListener);
+  app.command(/w*/, commandListener);
+  app.event(/w*/, eventListener);
+  app.message(/w*/, messageListener);
+  app.options(/w*/, optionsListener);
+  app.shortcut(/w*/, shortcutListener);
+  app.view(/w*/, viewListener);
 
   let isStarted = false;
   try {

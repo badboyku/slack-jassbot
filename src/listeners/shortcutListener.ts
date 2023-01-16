@@ -1,17 +1,15 @@
 import logger from '../utils/logger';
-import type { AllMiddlewareArgs, App, SlackShortcutMiddlewareArgs } from '@slack/bolt';
+import type { AllMiddlewareArgs, SlackShortcutMiddlewareArgs } from '@slack/bolt';
 
-const register = (app: App) => {
-  app.shortcut(/w*/, async (args: SlackShortcutMiddlewareArgs & AllMiddlewareArgs) => {
-    const { ack, payload, shortcut, body } = args;
+const shortcutListener = async (args: SlackShortcutMiddlewareArgs & AllMiddlewareArgs) => {
+  const { ack, payload, shortcut, body } = args;
 
-    await ack();
+  await ack();
 
-    switch (true) {
-      default:
-        logger.warn('Unknown app shortcut', { payload, shortcut, body });
-    }
-  });
+  switch (true) {
+    default:
+      logger.warn('Unknown app shortcut', { payload, shortcut, body });
+  }
 };
 
-export default { register };
+export default shortcutListener;

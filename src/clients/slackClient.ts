@@ -1,20 +1,22 @@
 import { SlackClientError } from '../errors';
 import { getAppNoLogging } from '../utils/app';
 import logger from '../utils/logger';
-import type { ConversationsListArguments, ConversationsListResponse, WebAPICallResult } from '@slack/web-api';
+import type {
+  ConversationsListArguments,
+  ConversationsListResponse,
+  ConversationsMembersArguments,
+  ConversationsMembersResponse,
+  WebAPICallResult,
+} from '@slack/web-api';
 
 export type SlackClientResult = {
-  response?: ConversationsListResponse;
+  response?: ConversationsListResponse | ConversationsMembersResponse;
   error?: SlackClientError;
 };
 
-const handleResponse =
-  (method: string) =>
-  (response: WebAPICallResult): SlackClientResult => {
-    logger.debug(`slackClient: ${method} success`);
-
-    return { response };
-  };
+const handleResponse = (response: WebAPICallResult): SlackClientResult => {
+  return { response };
+};
 
 const handleError =
   (method: string) =>
@@ -31,7 +33,14 @@ const getConversationsList = (options?: ConversationsListArguments): Promise<Sla
   const method = 'getConversationsList';
   logger.debug(`slackClient: ${method} called`, { options });
 
-  return getAppNoLogging().client.conversations.list(options).then(handleResponse(method)).catch(handleError(method));
+  return getAppNoLogging().client.conversations.list(options).then(handleResponse).catch(handleError(method));
 };
 
-export default { getConversationsList };
+const getConversationsMembers = (options?: ConversationsMembersArguments): Promise<SlackClientResult> => {
+  const method = 'getConversationsMembers';
+  logger.debug(`slackClient: ${method} called`, { options });
+
+  return getAppNoLogging().client.conversations.members(options).then(handleResponse).catch(handleError(method));
+};
+
+export default { getConversationsList, getConversationsMembers };

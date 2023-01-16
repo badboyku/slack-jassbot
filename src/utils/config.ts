@@ -11,7 +11,7 @@ export default {
   bree: {
     isDisabled: process.env.BREE_DISABLE?.toLowerCase() === 'true' || false,
     jobs: {
-      updateMemberChannelsCron: process.env.BREE_JOBS_UPDATE_MEMBER_CHANNELS_CRON || '',
+      updateChannelsCron: process.env.BREE_JOBS_UPDATE_CHANNELS_CRON || '',
     },
   },
   db: {

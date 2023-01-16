@@ -1,13 +1,17 @@
 import { slackClient } from '../clients';
 import logger from '../utils/logger';
-import type { ConversationsListArguments } from '@slack/web-api';
+import type {
+  ConversationsListArguments,
+  ConversationsListResponse,
+  ConversationsMembersArguments,
+  ConversationsMembersResponse,
+} from '@slack/web-api';
 import type { Channel } from '@slack/web-api/dist/response/ConversationsListResponse';
 import type { SlackClientError } from '../errors';
 
-type GetChannelsResult = { channels: Channel[]; error?: SlackClientError };
+export type GetChannelsResult = { channels: Channel[]; error?: SlackClientError };
 const getChannels = async (args?: ConversationsListArguments): Promise<GetChannelsResult> => {
   logger.debug('slackService: getChannels called', { args });
-
   let channels: Channel[] = [];
   let clientError: SlackClientError | undefined;
   let hasMore = false;
@@ -24,7 +28,7 @@ const getChannels = async (args?: ConversationsListArguments): Promise<GetChanne
     }
 
     if (response) {
-      const { channels: channelsData, response_metadata: responseMetadata } = response;
+      const { channels: channelsData, response_metadata: responseMetadata } = response as ConversationsListResponse;
       const { next_cursor: nextCursor } = responseMetadata || {};
 
       channels = [...(channelsData?.length ? channelsData : []), ...channels];
@@ -32,24 +36,15 @@ const getChannels = async (args?: ConversationsListArguments): Promise<GetChanne
       hasMore = Boolean(!error && cursor);
     }
   } while (hasMore);
-  logger.debug('slackService: getChannels complete', { channelsCount: channels.length, error: clientError });
+  logger.debug('slackService: getChannels complete', { args, channelsCount: channels.length, error: clientError });
 
   return { channels, error: clientError };
 };
 
-const getPublicChannels = () => {
-  logger.debug('slackService: getPublicChannels called');
+const getPublicChannels = () => getChannels({ types: 'public_channel' });
+const getPrivateChannels = () => getChannels({ types: 'private_channel' });
 
-  return getChannels({ types: 'public_channel' });
-};
-
-const getPrivateChannels = () => {
-  logger.debug('slackService: getPrivateChannels called');
-
-  return getChannels({ types: 'private_channel' });
-};
-
-type GetAllChannelsResult = {
+export type GetAllChannelsResult = {
   publicChannels: Channel[];
   publicChannelsError?: SlackClientError;
   privateChannels: Channel[];
@@ -85,4 +80,113 @@ const getAllChannels = async (): Promise<GetAllChannelsResult> => {
   return { publicChannels, publicChannelsError, privateChannels, privateChannelsError };
 };
 
-export default { getChannels, getPublicChannels, getPrivateChannels, getAllChannels };
+export type GetChannelMembersResult = { channel: string; members: string[]; error?: SlackClientError };
+const getChannelMembers = async (channel: string): Promise<GetChannelMembersResult> => {
+  logger.debug('slackService: getChannelMembers called', { channel });
+  let members: string[] = [];
+  let clientError: SlackClientError | undefined;
+  let hasMore = false;
+  let cursor;
+
+  do {
+    const options: ConversationsMembersArguments = { channel, limit: 200, cursor };
+    // eslint-disable-next-line no-await-in-loop
+    const { response, error } = await slackClient.getConversationsMembers(options);
+
+    if (error) {
+      clientError = error;
+      hasMore = false;
+    }
+
+    if (response) {
+      const { members: membersData, response_metadata: responseMetadata } = response as ConversationsMembersResponse;
+      const { next_cursor: nextCursor } = responseMetadata || {};
+
+      members = [...(membersData?.length ? membersData : []), ...members];
+      cursor = nextCursor || '';
+      hasMore = Boolean(!error && cursor);
+    }
+  } while (hasMore);
+  logger.debug('slackService: getChannelMembers complete', {
+    channel,
+    membersCount: members.length,
+    error: clientError,
+  });
+
+  return { channel, members, error: clientError };
+};
+
+export type GetAllChannelMembersResult = {
+  channels: Channel[];
+  channelsMembers: { [id: string]: string[] };
+  errors?: SlackClientError[];
+};
+const getAllChannelsMembers = async (): Promise<GetAllChannelMembersResult> => {
+  logger.debug('slackService: getAllChannelsMembers called');
+  const channelsMembers: { [id: string]: string[] } = {};
+  const errors: SlackClientError[] = [];
+
+  const { publicChannels, publicChannelsError, privateChannels, privateChannelsError } = await getAllChannels();
+  const channels = [...publicChannels, ...privateChannels];
+  if (publicChannelsError) {
+    errors.push(publicChannelsError);
+  }
+  if (privateChannelsError) {
+    errors.push(privateChannelsError);
+  }
+
+  const processResult = (result: PromiseSettledResult<GetChannelMembersResult>) => {
+    let channel = '';
+    let members: string[] = [];
+    let error: SlackClientError | undefined;
+
+    const { status } = result;
+    if (status === 'fulfilled') {
+      const { value } = result as PromiseFulfilledResult<GetChannelMembersResult>;
+      const { channel: channelValue, members: membersValue, error: errorValue } = value;
+
+      channel = channelValue;
+      members = membersValue;
+      error = errorValue;
+    } else if (status === 'rejected') {
+      const { reason } = result as PromiseRejectedResult;
+
+      error = reason;
+    }
+
+    return { channel, members, error };
+  };
+
+  const channelMembersPromises: Promise<GetChannelMembersResult>[] = [];
+  channels.forEach((channel) => {
+    const { id = '', num_members: numMembers = 0 } = channel;
+    channelsMembers[id] = [];
+
+    if (numMembers > 0) {
+      channelMembersPromises.push(getChannelMembers(id));
+    }
+  });
+
+  const results = await Promise.allSettled(channelMembersPromises);
+  results.forEach((result) => {
+    const { channel, members, error } = processResult(result);
+
+    if (channel) {
+      channelsMembers[channel] = members;
+    }
+    if (error) {
+      errors.push(error);
+    }
+  });
+
+  return { channels, channelsMembers, errors };
+};
+
+export default {
+  getChannels,
+  getPublicChannels,
+  getPrivateChannels,
+  getAllChannels,
+  getChannelMembers,
+  getAllChannelsMembers,
+};

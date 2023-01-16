@@ -8,13 +8,13 @@ const getBree = () => {
   const {
     app: { isTsNode },
     bree: {
-      jobs: { updateMemberChannelsCron },
+      jobs: { updateChannelsCron },
     },
   } = config;
 
   const jobs = [];
-  if (updateMemberChannelsCron) {
-    jobs.push({ name: 'updateMemberChannels', cron: updateMemberChannelsCron });
+  if (updateChannelsCron) {
+    jobs.push({ name: 'updateChannels', cron: updateChannelsCron });
   }
 
   const bree = new Bree({

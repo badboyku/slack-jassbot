@@ -1,22 +1,20 @@
 import { actionController } from '../controllers';
 import logger from '../utils/logger';
-import type { AllMiddlewareArgs, App, BasicElementAction, SlackActionMiddlewareArgs } from '@slack/bolt';
+import type { AllMiddlewareArgs, BasicElementAction, SlackActionMiddlewareArgs } from '@slack/bolt';
 
-const register = (app: App) => {
-  app.action(/w*/, async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
-    const { ack, payload, action, body } = args;
-    const { action_id: actionId } = action as BasicElementAction;
+const actionListener = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {
+  const { ack, payload, action, body } = args;
+  const { action_id: actionId } = action as BasicElementAction;
 
-    await ack();
+  await ack();
 
-    switch (actionId) {
-      case 'manageUserDates':
-        await actionController.manageUserDates(args);
-        break;
-      default:
-        logger.warn('Unknown app action', { payload, action, body });
-    }
-  });
+  switch (actionId) {
+    case 'manageUserDates':
+      await actionController.manageUserDates(args);
+      break;
+    default:
+      logger.warn('Unknown app action', { payload, action, body });
+  }
 };
 
-export default { register };
+export default actionListener;

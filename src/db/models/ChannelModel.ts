@@ -6,6 +6,8 @@ export type ChannelDocType = {
   inviterId: string | null;
   isMember: boolean;
   isPrivate: boolean;
+  numMembers: number;
+  members: string[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -20,6 +22,8 @@ const schema = new Schema<ChannelDocType, Model<ChannelDocType, {}, ChannelMetho
     inviterId: { type: String, default: null },
     isMember: { type: Boolean, required: true, default: true },
     isPrivate: { type: Boolean, required: true, default: false },
+    numMembers: { type: Number, required: true, default: 0 },
+    members: { type: [String], default: [] },
     createdAt: { type: Date },
     updatedAt: { type: Date },
   },

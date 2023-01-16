@@ -1,17 +1,15 @@
 import logger from '../utils/logger';
-import type { AllMiddlewareArgs, App, SlackOptionsMiddlewareArgs } from '@slack/bolt';
+import type { AllMiddlewareArgs, SlackOptionsMiddlewareArgs } from '@slack/bolt';
 
-const register = (app: App) => {
-  app.options(/w*/, async (args: SlackOptionsMiddlewareArgs & AllMiddlewareArgs) => {
-    const { ack, payload, options, body } = args;
+const optionsListener = async (args: SlackOptionsMiddlewareArgs & AllMiddlewareArgs) => {
+  const { ack, payload, options, body } = args;
 
-    await ack();
+  await ack();
 
-    switch (true) {
-      default:
-        logger.warn('Unknown app options', { payload, options, body });
-    }
-  });
+  switch (true) {
+    default:
+      logger.warn('Unknown app options', { payload, options, body });
+  }
 };
 
-export default { register };
+export default optionsListener;

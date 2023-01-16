@@ -1,25 +1,23 @@
 import { viewController } from '../controllers';
 import logger from '../utils/logger';
-import type { AllMiddlewareArgs, App, SlackViewMiddlewareArgs } from '@slack/bolt';
+import type { AllMiddlewareArgs, SlackViewMiddlewareArgs } from '@slack/bolt';
 
-const register = (app: App) => {
-  app.view(/w*/, async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs) => {
-    const { ack, payload, view, body } = args;
-    const { callback_id: callbackId } = view;
+const viewListener = async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs) => {
+  const { ack, payload, view, body } = args;
+  const { callback_id: callbackId } = view;
 
-    await ack();
+  await ack();
 
-    switch (callbackId) {
-      case 'saveUserDatesRefreshAppHome':
-        await viewController.saveUserDates(args, true);
-        break;
-      case 'saveUserDates':
-        await viewController.saveUserDates(args);
-        break;
-      default:
-        logger.warn('Unknown app view', { payload, view, body });
-    }
-  });
+  switch (callbackId) {
+    case 'saveUserDatesRefreshAppHome':
+      await viewController.saveUserDates(args, true);
+      break;
+    case 'saveUserDates':
+      await viewController.saveUserDates(args);
+      break;
+    default:
+      logger.warn('Unknown app view', { payload, view, body });
+  }
 };
 
-export default { register };
+export default viewListener;
