@@ -36,7 +36,7 @@ const getChannels = async (args?: ConversationsListArguments): Promise<GetChanne
       hasMore = Boolean(!error && cursor);
     }
   } while (hasMore);
-  logger.debug('slackService: getChannels complete', { args, channelsCount: channels.length, error: clientError });
+  logger.debug('slackService: getChannels completed', { args, channelsCount: channels.length, error: clientError });
 
   return { channels, error: clientError };
 };
@@ -107,7 +107,7 @@ const getChannelMembers = async (channel: string): Promise<GetChannelMembersResu
       hasMore = Boolean(!error && cursor);
     }
   } while (hasMore);
-  logger.debug('slackService: getChannelMembers complete', {
+  logger.debug('slackService: getChannelMembers completed', {
     channel,
     membersCount: members.length,
     error: clientError,
@@ -183,10 +183,10 @@ const getAllChannelsMembers = async (): Promise<GetAllChannelMembersResult> => {
 };
 
 export default {
-  getChannels,
-  getPublicChannels,
-  getPrivateChannels,
   getAllChannels,
-  getChannelMembers,
   getAllChannelsMembers,
+  getChannelMembers,
+  getChannels,
+  getPrivateChannels,
+  getPublicChannels,
 };

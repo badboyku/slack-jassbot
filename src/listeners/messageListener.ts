@@ -6,7 +6,7 @@ const messageListener = async (args: SlackEventMiddlewareArgs<'message'> & AllMi
 
   switch (true) {
     default:
-      logger.warn('Unknown app message', { payload, event, message, body });
+      logger.info('messageListener: unknown message', { payload, event, message, body });
   }
 };
 

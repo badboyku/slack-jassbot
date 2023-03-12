@@ -8,7 +8,7 @@ const commandListener = async (args: SlackCommandMiddlewareArgs & AllMiddlewareA
 
   switch (true) {
     default:
-      logger.warn('Unknown app command', { payload, command, body });
+      logger.info('commandListener: unknown command', { payload, command, body });
   }
 };
 

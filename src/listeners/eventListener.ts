@@ -26,7 +26,7 @@ const eventListener = async (args: SlackEventMiddlewareArgs & AllMiddlewareArgs)
       await eventController.memberLeftChannel(args as MemberLeftChannelArgs);
       break;
     default:
-      logger.warn('Unknown app event', { payload, event, message, body });
+      logger.info('eventListener: unknown event', { payload, event, message, body });
   }
 };
 

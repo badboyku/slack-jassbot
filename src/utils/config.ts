@@ -14,6 +14,9 @@ export default {
       updateChannelsCron: process.env.BREE_JOBS_UPDATE_CHANNELS_CRON || '',
     },
   },
+  crypto: {
+    key: process.env.CRYPTO_KEY || '',
+  },
   db: {
     uri: process.env.DB_URI || '',
   },

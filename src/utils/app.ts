@@ -21,7 +21,7 @@ const getApp = (customLogger?: Logger) => {
   } = config;
 
   const handleError = (error: CodedError) => {
-    logger.error('app: error', { error });
+    logger.warn('app: error has occurred', { error });
   };
 
   const app = new App({ appToken, token: botToken, socketMode: true, logger: customLogger || slackLogger });
@@ -54,14 +54,10 @@ const start = async () => {
   let isStarted = false;
   try {
     await app.start(port);
-
+    logger.info(`app: start success on port ${port}`);
     isStarted = true;
   } catch (error) {
-    logger.error('App failed to start', { error });
-  }
-
-  if (isStarted) {
-    logger.info(`App started on port ${port}`);
+    logger.warn('app: start failed', { error });
   }
 
   return { isStarted };

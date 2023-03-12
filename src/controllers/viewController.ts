@@ -10,25 +10,23 @@ const saveUserDates = async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs, 
   const {
     state: { values },
   } = view;
-  logger.debug('viewController: saveUserDates called', { slackUser, values, refreshAppHome });
+  logger.debug('viewController: saveUserDates called', { slackUser, refreshAppHome });
 
   const { user, hasSaveError } = await viewService.saveUserDates(userId, values);
 
   try {
     const options = manageUserDates.getSaveResult(userId, user, hasSaveError);
-
     await client.chat.postMessage(options);
   } catch (error) {
-    logger.error('viewController: saveUserDates chat.postMessage error', { error });
+    logger.warn('viewController: saveUserDates chat.postMessage error', { error });
   }
 
   if (refreshAppHome) {
     try {
       const options = { user_id: userId, view: appHome.getView(user) };
-
       await client.views.publish(options);
     } catch (error) {
-      logger.error('viewController: saveUserDates views.publish error', { error });
+      logger.warn('viewController: saveUserDates views.publish error', { error });
     }
   }
 };

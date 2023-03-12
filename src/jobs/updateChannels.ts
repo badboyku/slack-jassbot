@@ -13,15 +13,17 @@ import logger from '../utils/logger';
  *  members    - array list of userIds who are members of the channel
  */
 (async () => {
-  logger.info('Starting job: updateChannels');
+  logger.info('jobs: updateChannels called');
 
   const { isConnected: isDbConnected } = await db.connect();
   if (!isDbConnected) {
+    logger.info('jobs: updateChannels exiting', { error: 'Database failed to connect' });
+
     process.exit(1);
   }
 
-  const { result } = await breeService.updateChannels();
-  logger.info('Finished job: updateChannels', { result });
+  const { results } = await breeService.updateChannels();
+  logger.info('jobs: updateChannels completed', { results });
 
   await db.disconnect();
 

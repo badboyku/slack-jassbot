@@ -2,95 +2,100 @@ import { ChannelModel } from '../db/models';
 import logger from '../utils/logger';
 import type { AnyBulkWriteOperation, BulkWriteResult } from 'mongodb';
 import type { FilterQuery, UpdateQuery } from 'mongoose';
+import type { BulkWriteResults } from '../@types/global';
 import type { Channel, ChannelDocType } from '../db/models/ChannelModel';
 
 type ChannelData = {
   channelId?: string;
-  inviterId?: string;
   isMember?: boolean;
   isPrivate?: boolean;
+  numMembers?: number;
+  members?: string[];
 };
 
-const bulkWriteChannels = async (
-  ops: AnyBulkWriteOperation<ChannelDocType>[],
-): Promise<BulkWriteResult | undefined> => {
-  logger.debug('channelService: bulkWriteChannels called', { numOps: ops.length });
-  let result: BulkWriteResult | undefined;
+const bulkWrite = async (ops: AnyBulkWriteOperation<ChannelDocType>[]): Promise<BulkWriteResults | undefined> => {
+  logger.debug('channelService: bulkWrite called', { numOps: ops.length });
 
   if (!ops.length) {
     return undefined;
   }
 
+  let result: BulkWriteResult | undefined;
   try {
     result = await ChannelModel.bulkWrite(ops);
   } catch (error) {
-    logger.error('channelService: bulkWriteChannels failed', { error });
+    logger.warn('channelService: bulkWrite failed', { error });
   }
 
+  let results: BulkWriteResults | undefined;
   if (result) {
-    logger.debug('channelService: bulkWriteChannels success', { result });
+    const { ok, nInserted, nUpserted, nMatched, nModified, nRemoved } = result;
+    results = { ok, nInserted, nUpserted, nMatched, nModified, nRemoved };
+    logger.debug('channelService: bulkWrite success', { results });
   }
 
-  return result;
+  return results;
 };
 
-const createChannel = async (data: ChannelData): Promise<Channel> => {
-  logger.debug('channelService: createChannel called', { data });
+const create = async (data: ChannelData): Promise<Channel> => {
+  logger.debug('channelService: create called', { data });
 
   const channel = new ChannelModel(data);
   try {
     await channel.save();
-    logger.debug('channelService: createChannel success', { channel });
+    logger.debug('channelService: create success', { channel });
   } catch (error) {
-    logger.error('channelService: createChannel failed', { error });
+    logger.error('channelService: create failed', { error });
   }
 
   return channel;
 };
 
-const findChannel = async (filter: FilterQuery<ChannelData>): Promise<Channel> => {
-  logger.debug('channelService: findChannel called', { filter });
+const findOne = async (filter: FilterQuery<ChannelData>): Promise<Channel> => {
+  logger.debug('channelService: findOne called', { filter });
 
   let channel: Channel = null;
   try {
-    channel = await ChannelModel.findOne(filter).exec();
+    channel = await ChannelModel.findOne(filter);
   } catch (error) {
-    logger.error('channelService: findChannel failed', { error });
+    logger.warn('channelService: findOne failed', { error });
   }
 
   if (channel) {
-    logger.debug('channelService: findChannel success', { channel });
+    logger.debug('channelService: findOne success', { channel });
   }
 
   return channel;
 };
 
-const findAndUpdateChannel = async (filter: FilterQuery<ChannelData>, update?: UpdateQuery<ChannelData>) => {
-  logger.debug('channelService: findAndUpdateChannel called', { filter, update });
+const findOneAndUpdateByChannelId = async (channelId: string, data: UpdateQuery<ChannelData>): Promise<Channel> => {
+  logger.debug('channelService: findOneAndUpdateByChannelId called', { channelId, data });
+  const filter = { channelId };
+  const options = { new: true, setDefaultsOnInsert: true, upsert: true };
 
   let channel: Channel = null;
   try {
-    channel = await ChannelModel.findOneAndUpdate(filter, update, { new: true, upsert: true }).exec();
+    channel = await ChannelModel.findOneAndUpdate(filter, data, options);
   } catch (error) {
-    logger.error('channelService: findAndUpdateChannel failed', { error });
+    logger.warn('channelService: findOneAndUpdateByChannelId failed', { error });
   }
 
   if (channel) {
-    logger.debug('channelService: findAndUpdateChannel success', { channel });
+    logger.debug('channelService: findOneAndUpdateByChannelId success', { channel });
   }
 
   return channel;
 };
 
-const findOrCreateChannel = async (channelId: string, data?: ChannelData): Promise<Channel> => {
-  logger.debug('channelService: findOrCreateChannel called', { channelId, data });
+const findOneOrCreateByChannelId = async (channelId: string): Promise<Channel> => {
+  logger.debug('channelService: findOneOrCreateByChannelId called', { channelId });
 
-  let channel = await findChannel({ channelId });
+  let channel = await findOne({ channelId });
   if (!channel) {
-    channel = await createChannel({ ...data, channelId });
+    channel = await create({ channelId });
   }
 
   return channel;
 };
 
-export default { bulkWriteChannels, createChannel, findChannel, findAndUpdateChannel, findOrCreateChannel };
+export default { bulkWrite, create, findOne, findOneAndUpdateByChannelId, findOneOrCreateByChannelId };

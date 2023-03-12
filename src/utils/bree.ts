@@ -23,18 +23,18 @@ const getBree = () => {
     root: path.join(__dirname, '../jobs'),
     jobs,
     errorHandler: (error: Error, workerMetadata: { name: string; err?: Error }) => {
-      logger.error('Bree error', { data: { error, workerMetadata } });
+      logger.warn('bree: error has occurred', { data: { error, workerMetadata } });
     },
     workerMessageHandler: (message: { name: string; message: unknown }) => {
-      logger.debug('Worker completed', { data: { ...message } });
+      logger.debug('bree: worker completed', { data: { ...message } });
     },
   });
 
   bree.on('worker created', (name: string) => {
-    logger.debug('Worker created', { data: { name } });
+    logger.debug('bree: worker created', { data: { name } });
   });
   bree.on('worker deleted', (name: string) => {
-    logger.debug('Worker deleted', { data: { name } });
+    logger.debug('bree: worker deleted', { data: { name } });
   });
 
   return bree;
@@ -55,7 +55,7 @@ const start = async () => {
   graceful.listen();
 
   await bree.start();
-  logger.info('Bree started');
+  logger.info('bree: start success');
 };
 
 export default { start };

@@ -3,5 +3,8 @@ module.exports = {
   settings: {
     react: { version: '999.999.999' },
   },
-  rules: {},
+  rules: {
+    'import/no-extraneous-dependencies': 'off',
+    'no-restricted-syntax': ['off', { selector: 'ForOfExpression', message: '' }],
+  },
 };

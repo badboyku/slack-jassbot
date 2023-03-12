@@ -1,31 +1,12 @@
 import { DateTime } from 'luxon';
+import type { Zone } from 'luxon';
 
-const getNextBirthDate = (month: number | null, day: number | null): DateTime | undefined => {
-  if (!month || !day) {
-    return undefined;
-  }
-
-  const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-  const monthPad = month.toString().padStart(2, '0');
-  const dayPad = day.toString().padStart(2, '0');
-  const birthDate = DateTime.fromISO(`${today.year}-${monthPad}-${dayPad}`);
-
-  return birthDate < today ? birthDate.plus({ year: 1 }) : birthDate;
+const getDateTimeFromIso = (text?: string): DateTime | undefined => {
+  return text ? DateTime.fromISO(text) : undefined;
 };
 
-const getWorkAnniversaryDate = (
-  month: number | null,
-  day: number | null,
-  year: number | null,
-): DateTime | undefined => {
-  if (!month || !day || !year) {
-    return undefined;
-  }
-
-  const monthPad = month.toString().padStart(2, '0');
-  const dayPad = day.toString().padStart(2, '0');
-
-  return DateTime.fromISO(`${year}-${monthPad}-${dayPad}`);
+const getDateTimeFromJSDate = (date?: Date, options?: { zone?: string | Zone }): DateTime | undefined => {
+  return date ? DateTime.fromJSDate(date, options) : undefined;
 };
 
-export default { getNextBirthDate, getWorkAnniversaryDate };
+export default { getDateTimeFromIso, getDateTimeFromJSDate };

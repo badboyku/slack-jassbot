@@ -17,10 +17,9 @@ const manageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareAr
       const refreshAppHome = blockId.includes('appHome');
       const callbackId = refreshAppHome ? 'saveUserDatesRefreshAppHome' : 'saveUserDates';
       const options = { trigger_id: triggerId, view: manageUserDatesView.getModal(user, callbackId) };
-
       await client.views.open(options);
     } catch (error) {
-      logger.error('actionController: manageUserDates views.open error', { error });
+      logger.warn('actionController: manageUserDates views.open error', { error });
     }
   }
 };

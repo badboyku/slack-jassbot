@@ -21,7 +21,7 @@ const appHomeOpened = async (args: AppHomeOpenedArgs) => {
     try {
       await client.views.publish(options);
     } catch (error) {
-      logger.error('eventController: appHomeOpened views.publish error', { error });
+      logger.warn('eventController: appHomeOpened views.publish error', { error });
     }
   }
 };
@@ -40,22 +40,23 @@ const appMention = async (args: AppMentionArgs) => {
 export type MemberJoinedChannelArgs = SlackEventMiddlewareArgs<'member_joined_channel'> & AllMiddlewareArgs;
 const memberJoinedChannel = async (args: MemberJoinedChannelArgs) => {
   const { client, event } = args;
-  const { channel: channelId, channel_type: channelType, user: userId, inviter: inviterId } = event;
-  logger.debug('eventController: memberJoinedChannel called', { event: { channelId, channelType, userId, inviterId } });
+  const { channel: channelId, channel_type: channelType, user: userId } = event;
+  logger.debug('eventController: memberJoinedChannel called', { event: { channelId, channelType, userId } });
 
-  const { channel } = await eventService.memberJoinedChannel(userId, { channelId, channelType, inviterId });
+  const { channel } = await eventService.memberJoinedChannel(userId, channelId, channelType);
 
-  if (channel) {
-    try {
-      const options = channelWelcomeMessage.getOptions(channelId);
-
-      await client.chat.postMessage(options);
-    } catch (error) {
-      logger.error('eventController: memberJoinedChannel chat.postMessage error', { error });
-    }
+  if (!channel) {
+    return;
   }
 
-  // TODO: Need to send msg if user does not have birthday or work anniversary set.
+  if (channel.isMember) {
+    try {
+      const options = channelWelcomeMessage.getOptions(channelId);
+      await client.chat.postMessage(options);
+    } catch (error) {
+      logger.warn('eventController: memberJoinedChannel chat.postMessage error', { error });
+    }
+  }
 };
 
 export type MemberLeftChannelArgs = SlackEventMiddlewareArgs<'member_left_channel'> & AllMiddlewareArgs;

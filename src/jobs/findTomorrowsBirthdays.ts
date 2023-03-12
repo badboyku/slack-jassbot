@@ -8,15 +8,17 @@ import logger from '../utils/logger';
  * This job is to find all tomorrow's birthdays.
  */
 (async () => {
-  logger.info('Starting job: findTomorrowsBirthdays');
+  logger.info('jobs: findTomorrowsBirthdays called');
 
   const { isConnected: isDbConnected } = await db.connect();
   if (!isDbConnected) {
+    logger.info('jobs: findTomorrowsBirthdays exiting', { error: 'Database failed to connect' });
+
     process.exit(1);
   }
 
   await breeService.findTomorrowsBirthdays();
-  logger.info('Finished job: findTomorrowsBirthdays');
+  logger.info('jobs: findTomorrowsBirthdays completed');
 
   await db.disconnect();
 

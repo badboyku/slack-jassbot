@@ -13,7 +13,7 @@ const actionListener = async (args: SlackActionMiddlewareArgs & AllMiddlewareArg
       await actionController.manageUserDates(args);
       break;
     default:
-      logger.warn('Unknown app action', { payload, action, body });
+      logger.info('actionListener: unknown action', { payload, action, body });
   }
 };
 

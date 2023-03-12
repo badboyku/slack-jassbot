@@ -24,7 +24,7 @@ const handleError =
     const { code, data: response } = err;
     const { error, response_metadata: responseMetadata } = response || {};
     const { messages } = responseMetadata || {};
-    logger.error(`slackClient: ${method} error`, { code, error, messages });
+    logger.warn(`slackClient: ${method} error`, { code, error, messages });
 
     return { error: new SlackClientError(`${code}: ${error}`, response) };
   };

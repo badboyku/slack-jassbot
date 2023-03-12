@@ -6,7 +6,7 @@ type ManageUserDatesResult = { user: User };
 const manageUserDates = async (userId: string): Promise<ManageUserDatesResult> => {
   logger.debug('appHomeService: manageUserDates called', { userId });
 
-  const user = await userService.findOrCreateUser(userId);
+  const user = await userService.findOneOrCreateByUserId(userId);
 
   return { user };
 };

@@ -5,10 +5,12 @@ import db from './utils/db';
 import logger from './utils/logger';
 
 (async () => {
+  logger.info('Starting Application');
+
   // Connect to database.
   const { isConnected: isDbConnected } = await db.connect();
   if (!isDbConnected) {
-    logger.error('Database failed to connect, exiting');
+    logger.info('Application Exiting', { error: 'Database failed to connect' });
 
     process.exit(1);
   }
@@ -17,7 +19,7 @@ import logger from './utils/logger';
   const { isStarted: isAppStarted } = await app.start();
   if (!isAppStarted) {
     await db.disconnect();
-    logger.error('App failed to start, exiting');
+    logger.info('Application Exiting', { error: 'App failed to start' });
 
     process.exit(1);
   }

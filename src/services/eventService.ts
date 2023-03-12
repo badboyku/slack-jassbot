@@ -9,7 +9,7 @@ type AppHomeOpenedResult = { user: User };
 const appHomeOpened = async (userId: string): Promise<AppHomeOpenedResult> => {
   logger.debug('eventService: appHomeOpened called', { userId });
 
-  const user = await userService.findOrCreateUser(userId);
+  const user = await userService.findOneOrCreateByUserId(userId);
 
   return { user };
 };
@@ -17,22 +17,16 @@ const appHomeOpened = async (userId: string): Promise<AppHomeOpenedResult> => {
 type MemberJoinedChannelResult = { channel: Channel };
 const memberJoinedChannel = async (
   userId: string,
-  channelArg: { channelId: string; channelType: string; inviterId?: string },
+  channelId: string,
+  channelType: string,
 ): Promise<MemberJoinedChannelResult> => {
-  logger.debug('appHomeService: memberJoinedChannel called', { userId, channel: channelArg });
-
-  const { channelId, channelType, inviterId } = channelArg;
+  logger.debug('appHomeService: memberJoinedChannel called', { userId, channelId, channelType });
   const {
     slack: { botUserId },
   } = config;
 
-  if (!channelId || !userId || userId !== botUserId) {
-    return { channel: null };
-  }
-
-  const filter = { channelId };
-  const update = { inviterId, isMember: true, isPrivate: channelType === 'G' };
-  const channel = await channelService.findAndUpdateChannel(filter, update);
+  const data = { isMember: userId === botUserId, isPrivate: channelType === 'G' };
+  const channel = await channelService.findOneAndUpdateByChannelId(channelId, data); // TODO: Test this!!!
 
   return { channel };
 };

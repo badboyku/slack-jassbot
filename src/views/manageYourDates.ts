@@ -23,10 +23,9 @@ const getModal = (user: User, callbackId?: string): ModalView => {
         element: {
           type: 'datepicker',
           action_id: 'datepicker',
-          initial_date: user?.getNextBirthDate()?.toISODate() || undefined,
+          initial_date: user?.getBirthdayDate()?.toISODate() || undefined,
           placeholder: { type: 'plain_text', text: 'Select a date', emoji: true },
         },
-        hint: { type: 'plain_text', text: 'Year is ignored', emoji: true },
         optional: true,
       },
       {
@@ -47,18 +46,13 @@ const getModal = (user: User, callbackId?: string): ModalView => {
 };
 
 const getSaveResult = (userId: string, user: User, hasSaveError = false): ChatPostMessageArguments => {
-  const nextBirthDate = user?.getNextBirthDate() || undefined;
-  const nextBirthDateStr = nextBirthDate ? nextBirthDate.toFormat('MMMM d') : '-----';
-  const workAnniversaryDate = user?.getWorkAnniversaryDate() || undefined;
-  const workAnniversaryStr = workAnniversaryDate ? workAnniversaryDate.toFormat('DDD') : '-----';
-
   const fallbackText = hasSaveError
-    ? 'On no! I seem to be having issues saving your data, cross your fingers and please try again.'
+    ? 'On no! I seem to be having issues saving your dates, cross your fingers and please try again.'
     : 'Thank you! I have saved your dates.';
   const greeting = hasSaveError ? 'Oh no! :scream:' : 'Thank you! :smiley:';
   const message = hasSaveError
-    ? 'I seem to be having issues saving your data, cross your fingers and please try again.'
-    : `I have saved your dates.\nBirthday: ${nextBirthDateStr}\nWork Anniversary: ${workAnniversaryStr}`;
+    ? 'I seem to be having issues saving your dates, cross your fingers and please try again.'
+    : 'I have saved your dates.';
 
   return {
     channel: userId,

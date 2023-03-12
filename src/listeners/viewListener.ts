@@ -16,7 +16,7 @@ const viewListener = async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs) =
       await viewController.saveUserDates(args);
       break;
     default:
-      logger.warn('Unknown app view', { payload, view, body });
+      logger.info('viewListener: unknown view', { payload, view, body });
   }
 };
 

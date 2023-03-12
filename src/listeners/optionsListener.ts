@@ -8,7 +8,7 @@ const optionsListener = async (args: SlackOptionsMiddlewareArgs & AllMiddlewareA
 
   switch (true) {
     default:
-      logger.warn('Unknown app options', { payload, options, body });
+      logger.info('optionsListener: unknown options', { payload, options, body });
   }
 };
 

@@ -8,7 +8,7 @@ const shortcutListener = async (args: SlackShortcutMiddlewareArgs & AllMiddlewar
 
   switch (true) {
     default:
-      logger.warn('Unknown app shortcut', { payload, shortcut, body });
+      logger.info('shortcutListener: unknown shortcut', { payload, shortcut, body });
   }
 };
 
