@@ -35,7 +35,6 @@ import type { ChannelDocType } from '../db/models/ChannelModel';
   for await (const user of cursor) {
     userIds.push(user.userId);
   }
-  logger.debug('scripts: addChannels grabbed sample users');
 
   const ops: AnyBulkWriteOperation<ChannelDocType>[] = [];
   for (let i = 0; i < numChannels; i += 1) {

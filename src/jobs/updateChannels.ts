@@ -1,6 +1,6 @@
 import * as process from 'node:process';
 import { parentPort } from 'node:worker_threads';
-import { breeService } from '../services';
+import { jobService } from '../services';
 import db from '../utils/db';
 import logger from '../utils/logger';
 
@@ -13,7 +13,7 @@ import logger from '../utils/logger';
  *  members    - array list of userIds who are members of the channel
  */
 (async () => {
-  logger.info('jobs: updateChannels called');
+  logger.info('jobs: updateChannels started');
 
   const { isConnected: isDbConnected } = await db.connect();
   if (!isDbConnected) {
@@ -22,7 +22,7 @@ import logger from '../utils/logger';
     process.exit(1);
   }
 
-  const { results } = await breeService.updateChannels();
+  const { results } = await jobService.updateChannels();
   logger.info('jobs: updateChannels completed', { results });
 
   await db.disconnect();

@@ -1,6 +1,6 @@
 import * as process from 'node:process';
 import { parentPort } from 'node:worker_threads';
-import { breeService } from '../services';
+import { jobService } from '../services';
 import db from '../utils/db';
 import logger from '../utils/logger';
 
@@ -17,7 +17,7 @@ import logger from '../utils/logger';
     process.exit(1);
   }
 
-  await breeService.findTomorrowsBirthdays();
+  await jobService.findTomorrowsBirthdays();
   logger.info('jobs: findTomorrowsBirthdays completed');
 
   await db.disconnect();

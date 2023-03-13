@@ -1,13 +1,11 @@
 import crypto from '../utils/crypto';
 import datetime from '../utils/datetime';
-import logger from '../utils/logger';
 import userService from './userService';
 import type { ViewStateValues } from '../@types/global';
 import type { User } from '../db/models/UserModel';
 
 type SaveUserDatesResult = { user: User; hasSaveError: boolean };
 const saveUserDates = async (userId: string, values: ViewStateValues): Promise<SaveUserDatesResult> => {
-  logger.debug('viewService: saveUserDates called', { userId });
   const {
     birthday: {
       datepicker: { selected_date: birthdayValue },

@@ -7,9 +7,9 @@ export type AppHomeOpenedArgs = SlackEventMiddlewareArgs<'app_home_opened'> & Al
 const appHomeOpened = async (args: AppHomeOpenedArgs) => {
   const { client, event } = args;
   const { channel, tab, user: userId } = event;
-  logger.debug('eventController: appHomeOpened called', { event: { channel, tab, userId } });
 
   if (tab === 'messages') {
+    logger.debug('eventController: appHomeOpened called', { event: { channel, tab, userId } });
     // TODO: Do something when user opens message tab?
     // await say(`Hello world, and welcome <@${event.user}>!`);
   }
@@ -41,7 +41,6 @@ export type MemberJoinedChannelArgs = SlackEventMiddlewareArgs<'member_joined_ch
 const memberJoinedChannel = async (args: MemberJoinedChannelArgs) => {
   const { client, event } = args;
   const { channel: channelId, channel_type: channelType, user: userId } = event;
-  logger.debug('eventController: memberJoinedChannel called', { event: { channelId, channelType, userId } });
 
   const { channel } = await eventService.memberJoinedChannel(userId, channelId, channelType);
 
@@ -49,9 +48,12 @@ const memberJoinedChannel = async (args: MemberJoinedChannelArgs) => {
     return;
   }
 
-  if (channel.isMember) {
+  const { isMember } = channel;
+
+  if (isMember) {
+    const options = channelWelcomeMessage.getOptions(channelId);
+
     try {
-      const options = channelWelcomeMessage.getOptions(channelId);
       await client.chat.postMessage(options);
     } catch (error) {
       logger.warn('eventController: memberJoinedChannel chat.postMessage error', { error });
