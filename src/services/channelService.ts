@@ -14,7 +14,7 @@ type ChannelData = {
 };
 
 const bulkWrite = async (ops: AnyBulkWriteOperation<ChannelDocType>[]): Promise<BulkWriteResults | undefined> => {
-  if (!ops.length) {
+  if (ops.length === 0) {
     return undefined;
   }
 

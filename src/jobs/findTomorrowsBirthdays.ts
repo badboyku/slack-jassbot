@@ -8,7 +8,7 @@ import logger from '../utils/logger';
  * This job is to find all tomorrow's birthdays.
  */
 (async () => {
-  logger.info('jobs: findTomorrowsBirthdays called');
+  logger.info('jobs: findTomorrowsBirthdays started');
 
   const { isConnected: isDbConnected } = await db.connect();
   if (!isDbConnected) {
