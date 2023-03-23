@@ -2,12 +2,12 @@ import crypto from '../utils/crypto';
 import datetime from '../utils/datetime';
 import logger from '../utils/logger';
 import channelService from './channelService';
+import type {GetChannelMembersResult} from './slackService';
 import slackService from './slackService';
 import userService from './userService';
-import type { AnyBulkWriteOperation } from 'mongodb';
-import type { BulkWriteResults } from '../@types/global';
-import type { ChannelDocType } from '../db/models/ChannelModel';
-import type { GetChannelMembersResult } from './slackService';
+import type {AnyBulkWriteOperation} from 'mongodb';
+import type {BulkWriteResults} from '../@types/global';
+import type {ChannelDocType} from '../db/models/ChannelModel';
 
 const findTomorrowsBirthdays = async () => {
   logger.debug('jobService: findTomorrowsBirthdays called');
@@ -16,7 +16,8 @@ const findTomorrowsBirthdays = async () => {
   const birthdayLookup = tomorrow.toFormat('LL-dd');
 
   const filter = { birthdayLookup: crypto.createHmac(birthdayLookup) };
-  const users = await userService.findAll(filter);
+  const options = { batchSize: 1000, limit: 1000 };
+  const users = await userService.findAll(filter, options);
   logger.debug('users', { numUsers: users.length, user1: users[0], user2: users[1] });
 };
 

@@ -1,11 +1,17 @@
-import { UserModel } from '../db/models';
+import {UserModel} from '../db/models';
+import {
+  DB_DEFAULT_BATCH_SIZE,
+  DB_DEFAULT_LIMIT,
+  DB_DEFAULT_OPTIONS,
+  DB_DEFAULT_SORT,
+  DB_MAX_BATCH_SIZE,
+  DB_MAX_LIMIT,
+} from '../utils/constants';
 import logger from '../utils/logger';
-import type { AnyBulkWriteOperation } from 'mongodb';
-import type { FilterQuery, SortOrder, Types, UpdateQuery } from 'mongoose';
-import type { BulkWriteResults } from '../@types/global';
-import type { User, UserDocType } from '../db/models/UserModel';
-
-type Sort = string | { [key: string]: SortOrder | { $meta: 'textScore' } } | [string, SortOrder][] | undefined | null;
+import type {AnyBulkWriteOperation} from 'mongodb';
+import type {FilterQuery, Types, UpdateQuery} from 'mongoose';
+import type {BulkWriteResults, FindOptions} from '../@types/global';
+import type {User, UserDocType} from '../db/models/UserModel';
 
 type UserData = {
   userId?: string;
@@ -19,38 +25,31 @@ type UserData = {
   workAnniversaryRawLookup?: string; // TODO: REMOVE THIS!!!
 };
 
-const defaultBatchSize = 100;
-const maxBatchSize = 1000;
-const defaultLimit = 100;
-const maxLimit = 1000;
-const defaultSort: Sort = { _id: 1 };
+const bulkWrite = (ops: AnyBulkWriteOperation<UserDocType>[]): Promise<BulkWriteResults> | undefined => {
+  logger.debug('userService: bulkWrite called', { numOps: ops.length });
 
-const bulkWrite = async (ops: AnyBulkWriteOperation<UserDocType>[]): Promise<BulkWriteResults | undefined> => {
-  if (ops.length === 0) {
-    return undefined;
-  }
+  return ops.length > 0
+    ? UserModel.bulkWrite(ops)
+        .then((result) => {
+          const { ok, nInserted, nUpserted, nMatched, nModified, nRemoved } = result;
 
-  return UserModel.bulkWrite(ops)
-    .then((result) => {
-      const { ok, nInserted, nUpserted, nMatched, nModified, nRemoved } = result;
+          return { ok, nInserted, nUpserted, nMatched, nModified, nRemoved };
+        })
+        .catch((error) => {
+          logger.warn('userService: bulkWrite failed', { error });
 
-      return { ok, nInserted, nUpserted, nMatched, nModified, nRemoved };
-    })
-    .catch((error) => {
-      logger.warn('userService: bulkWrite failed', { error });
-
-      return undefined;
-    });
+          return undefined;
+        })
+    : undefined;
 };
 
-const create = async (data: UserData): Promise<User> => {
+const create = (data: UserData): Promise<User> => {
+  logger.debug('userService: create called', { data });
   const user = new UserModel(data);
 
   return user
     .save()
-    .then((result) => {
-      return result;
-    })
+    .then((result) => result)
     .catch((error) => {
       logger.warn('userService: create failed', { error });
 
@@ -58,16 +57,20 @@ const create = async (data: UserData): Promise<User> => {
     });
 };
 
-type FindOptions = { batchSize?: number; limit?: number; sort?: Sort };
 const find = async (filter: FilterQuery<UserData>, options?: FindOptions): Promise<User[]> => {
-  const { batchSize = defaultBatchSize, limit = defaultLimit, sort } = options || {};
+  logger.debug('userService: find called', { filter, options });
+  const {
+    batchSize = DB_DEFAULT_BATCH_SIZE,
+    limit = DB_DEFAULT_LIMIT,
+    sort = undefined,
+  } = options || DB_DEFAULT_OPTIONS;
   const users: User[] = [];
 
   try {
     const cursor = UserModel.find(filter)
       .sort(sort)
-      .limit(Math.min(limit, maxLimit))
-      .cursor({ batchSize: Math.min(batchSize, maxBatchSize) });
+      .limit(Math.min(limit, DB_MAX_LIMIT))
+      .cursor({ batchSize: Math.min(batchSize, DB_MAX_BATCH_SIZE) });
 
     // eslint-disable-next-line no-await-in-loop
     for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
@@ -80,36 +83,40 @@ const find = async (filter: FilterQuery<UserData>, options?: FindOptions): Promi
   return users;
 };
 
-const findAll = async (filter: FilterQuery<UserData>): Promise<User[]> => {
-  logger.debug('userService: findAll called', { filter });
+const findAll = async (filter: FilterQuery<UserData>, options?: FindOptions): Promise<User[]> => {
+  logger.debug('userService: findAll called', { filter, options });
+  const {
+    batchSize = DB_DEFAULT_BATCH_SIZE,
+    limit = DB_DEFAULT_LIMIT,
+    sort = DB_DEFAULT_SORT,
+  } = options || DB_DEFAULT_OPTIONS;
   let allUsers: User[] = [];
   let afterId: Types.ObjectId | undefined;
   let hasMore = false;
 
-  const pageSize = 100;
-  const options = { limit: pageSize, sort: defaultSort };
+  const findOptions = { batchSize, limit, sort };
 
   do {
     const findFilter = { ...filter, ...(afterId ? { _id: { $gt: afterId } } : {}) };
     // eslint-disable-next-line no-await-in-loop
-    const users = await find(findFilter, options);
+    const users = await find(findFilter, findOptions);
 
     if (users.length > 0) {
       allUsers = [...allUsers, ...users];
     }
 
     afterId = users.at(-1)?._id || undefined;
-    hasMore = users.length > 0 && users.length === pageSize;
+    hasMore = users.length > 0 && users.length === limit;
   } while (hasMore);
 
   return allUsers;
 };
 
-const findOne = async (filter: FilterQuery<UserData>): Promise<User> => {
+const findOne = (filter: FilterQuery<UserData>): Promise<User> => {
+  logger.debug('userService: findOne called', { filter });
+
   return UserModel.findOne(filter)
-    .then((result) => {
-      return result;
-    })
+    .then((result) => result)
     .catch((error) => {
       logger.warn('userService: findOne failed', { error });
 
@@ -117,14 +124,13 @@ const findOne = async (filter: FilterQuery<UserData>): Promise<User> => {
     });
 };
 
-const findOneAndUpdateByUserId = async (userId: string, data: UpdateQuery<UserData>): Promise<User> => {
+const findOneAndUpdateByUserId = (userId: string, data: UpdateQuery<UserData>): Promise<User> => {
+  logger.debug('userService: findOneAndUpdateByUserId called', { userId, data });
   const filter = { userId };
   const options = { new: true, setDefaultsOnInsert: true, upsert: true };
 
   return UserModel.findOneAndUpdate(filter, data, options)
-    .then((result) => {
-      return result;
-    })
+    .then((result) => result)
     .catch((error) => {
       logger.warn('userService: findOneAndUpdateByUserId failed', { error });
 
@@ -132,13 +138,10 @@ const findOneAndUpdateByUserId = async (userId: string, data: UpdateQuery<UserDa
     });
 };
 
-const findOneOrCreateByUserId = async (userId: string): Promise<User> => {
-  let user = await findOne({ userId });
-  if (!user) {
-    user = await create({ userId });
-  }
+const findOneOrCreateByUserId = (userId: string): Promise<User> => {
+  logger.debug('userService: findOneOrCreateByUserId called', { userId });
 
-  return user;
+  return findOne({ userId }).then((result) => result || create({ userId }).then((newResult) => newResult));
 };
 
 export default { bulkWrite, create, find, findAll, findOne, findOneAndUpdateByUserId, findOneOrCreateByUserId };
