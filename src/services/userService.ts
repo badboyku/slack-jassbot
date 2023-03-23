@@ -1,4 +1,4 @@
-import {UserModel} from '../db/models';
+import { UserModel } from '../db/models';
 import {
   DB_DEFAULT_BATCH_SIZE,
   DB_DEFAULT_LIMIT,
@@ -8,10 +8,10 @@ import {
   DB_MAX_LIMIT,
 } from '../utils/constants';
 import logger from '../utils/logger';
-import type {AnyBulkWriteOperation} from 'mongodb';
-import type {FilterQuery, Types, UpdateQuery} from 'mongoose';
-import type {BulkWriteResults, FindOptions} from '../@types/global';
-import type {User, UserDocType} from '../db/models/UserModel';
+import type { AnyBulkWriteOperation } from 'mongodb';
+import type { FilterQuery, Types, UpdateQuery } from 'mongoose';
+import type { BulkWriteResults, FindOptions } from '../@types/global';
+import type { User, UserDocType } from '../db/models/UserModel';
 
 type UserData = {
   userId?: string;

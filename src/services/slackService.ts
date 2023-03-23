@@ -1,13 +1,13 @@
-import {slackClient} from '../clients';
-import {SLACK_DEFAULT_LIMIT} from '../utils/constants';
+import { slackClient } from '../clients';
+import { SLACK_DEFAULT_LIMIT } from '../utils/constants';
 import type {
   ConversationsListArguments,
   ConversationsListResponse,
   ConversationsMembersArguments,
   ConversationsMembersResponse,
 } from '@slack/web-api';
-import type {Channel} from '@slack/web-api/dist/response/ConversationsListResponse';
-import type {SlackClientError} from '../errors';
+import type { Channel } from '@slack/web-api/dist/response/ConversationsListResponse';
+import type { SlackClientError } from '../errors';
 
 export type GetChannelMembersResult = { channelId: string; members: string[]; error?: SlackClientError };
 const getChannelMembers = async (channelId: string): Promise<GetChannelMembersResult> => {

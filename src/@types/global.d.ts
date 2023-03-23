@@ -1,5 +1,5 @@
-import type {SortOrder} from 'mongoose';
-import type {ViewStateValue} from '@slack/bolt';
+import type { SortOrder } from 'mongoose';
+import type { ViewStateValue } from '@slack/bolt';
 
 export type BulkWriteResults =
   | {

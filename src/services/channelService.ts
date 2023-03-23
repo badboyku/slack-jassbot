@@ -1,4 +1,4 @@
-import {ChannelModel} from '../db/models';
+import { ChannelModel } from '../db/models';
 import {
   DB_DEFAULT_BATCH_SIZE,
   DB_DEFAULT_LIMIT,
@@ -8,10 +8,10 @@ import {
   DB_MAX_LIMIT,
 } from '../utils/constants';
 import logger from '../utils/logger';
-import type {AnyBulkWriteOperation} from 'mongodb';
-import type {FilterQuery, Types, UpdateQuery} from 'mongoose';
-import type {BulkWriteResults, FindOptions} from '../@types/global';
-import type {Channel, ChannelDocType} from '../db/models/ChannelModel';
+import type { AnyBulkWriteOperation } from 'mongodb';
+import type { FilterQuery, Types, UpdateQuery } from 'mongoose';
+import type { BulkWriteResults, FindOptions } from '../@types/global';
+import type { Channel, ChannelDocType } from '../db/models/ChannelModel';
 
 type ChannelData = {
   channelId?: string;

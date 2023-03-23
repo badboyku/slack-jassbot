@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import type {Sort} from '../@types/global';
+import type { Sort } from '../@types/global';
 
 // Find options
 export const DB_DEFAULT_BATCH_SIZE = 100;
