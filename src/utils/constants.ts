@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import type { Sort } from '@types';
 
 // Database
