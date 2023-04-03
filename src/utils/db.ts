@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import config from './config';
-import logger from './logger';
+import { config, logger } from '@utils';
 
-const connect = async (): Promise<{ isConnected: boolean }> => {
+export type DbConnectResult = { isConnected: boolean };
+const connect = async (): Promise<DbConnectResult> => {
   const {
     db: { uri },
   } = config;
@@ -20,7 +20,8 @@ const connect = async (): Promise<{ isConnected: boolean }> => {
   return { isConnected };
 };
 
-const disconnect = async (): Promise<{ isDisconnected: boolean }> => {
+export type DbDisconnectResult = { isDisconnected: boolean };
+const disconnect = async (): Promise<DbDisconnectResult> => {
   let isDisconnected = false;
   try {
     await mongoose.disconnect();

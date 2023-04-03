@@ -1,8 +1,8 @@
+/* istanbul ignore file */
 import mongoose, { Schema } from 'mongoose';
-import crypto from '../../utils/crypto';
-import datetime from '../../utils/datetime';
-import type { Document, Model, Types } from 'mongoose';
+import { crypto, dateTime } from '@utils';
 import type { DateTime } from 'luxon';
+import type { Document, Model, Types } from 'mongoose';
 
 export type UserDocType = {
   userId: string;
@@ -41,10 +41,10 @@ const schema = new Schema<UserDocType, Model<UserDocType, {}, UserMethods>, User
 );
 
 schema.method('getBirthdayDate', function getBirthdayDate(): DateTime | undefined {
-  return datetime.getDateTimeFromIso(crypto.decrypt(this.birthday));
+  return dateTime.getDateTimeFromIso(crypto.decrypt(this.birthday));
 });
 schema.method('getWorkAnniversaryDate', function getWorkAnniversaryDate(): DateTime | undefined {
-  return datetime.getDateTimeFromIso(crypto.decrypt(this.workAnniversary));
+  return dateTime.getDateTimeFromIso(crypto.decrypt(this.workAnniversary));
 });
 
 export default mongoose.model<UserDocType, Model<UserDocType, {}, UserMethods>>('User', schema);

@@ -1,13 +1,10 @@
 /* istanbul ignore file */
 import { faker } from '@faker-js/faker';
-import { userService } from '../services';
-import crypto from '../utils/crypto';
-import datetime from '../utils/datetime';
-import db from '../utils/db';
-import logger from '../utils/logger';
+import { userService } from '@services';
+import { crypto, dateTime, db, logger } from '@utils';
 import type { DateTime } from 'luxon';
 import type { AnyBulkWriteOperation } from 'mongodb';
-import type { UserDocType } from '../db/models/UserModel';
+import type { UserDocType } from '@db/models/UserModel';
 
 (async () => {
   const maxNumUsers = 5000;
@@ -28,8 +25,8 @@ import type { UserDocType } from '../db/models/UserModel';
     let birthdayDate: DateTime | undefined;
     let workAnniversaryDate: DateTime | undefined;
     if (i % 10 !== 0) {
-      birthdayDate = datetime.getDateTimeFromJSDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' }));
-      workAnniversaryDate = datetime.getDateTimeFromJSDate(faker.date.past(20));
+      birthdayDate = dateTime.getDateTimeFromJSDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' }));
+      workAnniversaryDate = dateTime.getDateTimeFromJSDate(faker.date.past(20));
     }
     const birthday = birthdayDate?.toISODate() || '';
     const birthdayLookup = birthdayDate?.toFormat('LL-dd') || '';

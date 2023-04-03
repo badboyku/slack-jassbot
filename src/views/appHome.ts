@@ -1,6 +1,6 @@
-import manageYourDates from './manageYourDates';
+import { manageUserDates } from '@views';
 import type { HomeView } from '@slack/web-api';
-import type { User } from '../db/models/UserModel';
+import type { User } from '@db/models/UserModel';
 
 const getView = (user: User): HomeView => {
   const birthday = user?.getBirthdayDate()?.toFormat('`DDD`') || '-----';
@@ -26,7 +26,7 @@ const getView = (user: User): HomeView => {
       {
         type: 'actions',
         block_id: 'appHomeActions',
-        elements: [manageYourDates.getButton()],
+        elements: [manageUserDates.getButton()],
       },
     ],
   };

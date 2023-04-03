@@ -1,8 +1,7 @@
-import crypto from '../utils/crypto';
-import datetime from '../utils/datetime';
-import userService from './userService';
-import type { ViewStateValues } from '../@types/global';
-import type { User } from '../db/models/UserModel';
+import { userService } from '@services';
+import { crypto, dateTime } from '@utils';
+import type { User } from '@db/models/UserModel';
+import type { ViewStateValues } from '@types';
 
 type SaveUserDatesResult = { user: User; hasSaveError: boolean };
 const saveUserDates = async (userId: string, values: ViewStateValues): Promise<SaveUserDatesResult> => {
@@ -15,8 +14,8 @@ const saveUserDates = async (userId: string, values: ViewStateValues): Promise<S
     },
   } = values;
 
-  const birthdayDate = datetime.getDateTimeFromIso(birthdayValue?.toString() || '');
-  const workAnniversaryDate = datetime.getDateTimeFromIso(workAnniversaryValue?.toString() || '');
+  const birthdayDate = dateTime.getDateTimeFromIso(birthdayValue?.toString() || '');
+  const workAnniversaryDate = dateTime.getDateTimeFromIso(workAnniversaryValue?.toString() || '');
   const birthday = birthdayDate?.toISODate() || '';
   const birthdayLookup = birthdayDate?.toFormat('LL-dd') || '';
   const workAnniversary = workAnniversaryDate?.toISODate() || '';

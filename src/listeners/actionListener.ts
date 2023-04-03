@@ -1,5 +1,5 @@
-import { actionController } from '../controllers';
-import logger from '../utils/logger';
+import { actionController } from '@controllers';
+import { logger } from '@utils';
 import type { AllMiddlewareArgs, BasicElementAction, SlackActionMiddlewareArgs } from '@slack/bolt';
 
 const actionListener = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {

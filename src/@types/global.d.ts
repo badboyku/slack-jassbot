@@ -20,6 +20,8 @@ export type Sort =
   | null;
 export type FindOptions = { batchSize?: number; limit?: number; sort?: Sort };
 
+export type LogContext = Record<string, unknown>;
+
 export type ViewStateValues = { [blockId: string]: { [actionId: string]: ViewStateValue } };
 
 declare global {}

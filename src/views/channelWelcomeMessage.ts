@@ -1,4 +1,4 @@
-import manageYourDates from './manageYourDates';
+import { manageUserDates } from '@views';
 import type { ChatPostMessageArguments } from '@slack/web-api';
 
 const getOptions = (channel: string): ChatPostMessageArguments => {
@@ -28,7 +28,7 @@ const getOptions = (channel: string): ChatPostMessageArguments => {
       {
         type: 'actions',
         block_id: 'channelWelcomeMessageActions',
-        elements: [manageYourDates.getButton()],
+        elements: [manageUserDates.getButton()],
       },
     ],
   };

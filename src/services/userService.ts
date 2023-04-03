@@ -1,17 +1,17 @@
-import { UserModel } from '../db/models';
+import { UserModel } from '@db/models';
+import { logger } from '@utils';
 import {
-  DB_DEFAULT_BATCH_SIZE,
-  DB_DEFAULT_LIMIT,
-  DB_DEFAULT_OPTIONS,
-  DB_DEFAULT_SORT,
+  DEFAULT_DB_BATCH_SIZE,
+  DEFAULT_DB_LIMIT,
+  DEFAULT_DB_FIND_OPTIONS,
+  DEFAULT_DB_SORT,
   DB_MAX_BATCH_SIZE,
   DB_MAX_LIMIT,
-} from '../utils/constants';
-import logger from '../utils/logger';
+} from '@utils/constants';
 import type { AnyBulkWriteOperation } from 'mongodb';
 import type { FilterQuery, Types, UpdateQuery } from 'mongoose';
-import type { BulkWriteResults, FindOptions } from '../@types/global';
-import type { User, UserDocType } from '../db/models/UserModel';
+import type { User, UserDocType } from '@db/models/UserModel';
+import type { BulkWriteResults, FindOptions } from '@types';
 
 type UserData = {
   userId?: string;
@@ -60,10 +60,10 @@ const create = (data: UserData): Promise<User> => {
 const find = async (filter: FilterQuery<UserData>, options?: FindOptions): Promise<User[]> => {
   logger.debug('userService: find called', { filter, options });
   const {
-    batchSize = DB_DEFAULT_BATCH_SIZE,
-    limit = DB_DEFAULT_LIMIT,
+    batchSize = DEFAULT_DB_BATCH_SIZE,
+    limit = DEFAULT_DB_LIMIT,
     sort = undefined,
-  } = options || DB_DEFAULT_OPTIONS;
+  } = options || DEFAULT_DB_FIND_OPTIONS;
   const users: User[] = [];
 
   try {
@@ -86,10 +86,10 @@ const find = async (filter: FilterQuery<UserData>, options?: FindOptions): Promi
 const findAll = async (filter: FilterQuery<UserData>, options?: FindOptions): Promise<User[]> => {
   logger.debug('userService: findAll called', { filter, options });
   const {
-    batchSize = DB_DEFAULT_BATCH_SIZE,
-    limit = DB_DEFAULT_LIMIT,
-    sort = DB_DEFAULT_SORT,
-  } = options || DB_DEFAULT_OPTIONS;
+    batchSize = DEFAULT_DB_BATCH_SIZE,
+    limit = DEFAULT_DB_LIMIT,
+    sort = DEFAULT_DB_SORT,
+  } = options || DEFAULT_DB_FIND_OPTIONS;
   let allUsers: User[] = [];
   let afterId: Types.ObjectId | undefined;
   let hasMore = false;

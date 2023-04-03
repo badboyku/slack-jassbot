@@ -1,6 +1,6 @@
-import { actionService } from '../services';
-import logger from '../utils/logger';
-import { manageUserDates as manageUserDatesView } from '../views';
+import { actionService } from '@services';
+import { logger } from '@utils';
+import { manageUserDates as manageUserDatesView } from '@views';
 import type { AllMiddlewareArgs, BlockAction, ButtonAction, SlackActionMiddlewareArgs } from '@slack/bolt';
 
 const manageUserDates = async (args: SlackActionMiddlewareArgs & AllMiddlewareArgs) => {

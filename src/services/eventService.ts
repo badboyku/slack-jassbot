@@ -1,8 +1,7 @@
-import config from '../utils/config';
-import channelService from './channelService';
-import userService from './userService';
-import type { Channel } from '../db/models/ChannelModel';
-import type { User } from '../db/models/UserModel';
+import { channelService, userService } from '@services';
+import { config } from '@utils';
+import type { Channel } from '@db/models/ChannelModel';
+import type { User } from '@db/models/UserModel';
 
 type AppHomeOpenedResult = { user: User };
 const appHomeOpened = async (userId: string): Promise<AppHomeOpenedResult> => {

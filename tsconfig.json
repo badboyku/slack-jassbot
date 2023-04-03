@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
@@ -11,6 +12,28 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "outDir": "./dist",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@clients/*": ["./src/clients/*"],
+      "@clients": ["./src/clients"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@controllers": ["./src/controllers"],
+      "@db/*": ["./src/db/*"],
+      "@db": ["./src/db"],
+      "@errors/*": ["./src/errors/*"],
+      "@errors": ["./src/errors"],
+      "@listeners/*": ["./src/listeners/*"],
+      "@listeners": ["./src/listeners"],
+      "@services/*": ["./src/services/*"],
+      "@services": ["./src/services"],
+      "@types": ["./src/@types/global.d.ts"],
+      "@utilHelpers/*": ["./src/utilHelpers/*"],
+      "@utilHelpers": ["./src/utilHelpers"],
+      "@utils/*": ["./src/utils/*"],
+      "@utils": ["./src/utils"],
+      "@views/*": ["./src/views/*"],
+      "@views": ["./src/views"]
+    },
     "preserveConstEnums": true,
     "removeComments": true,
     "resolveJsonModule": true,
@@ -19,4 +42,5 @@
     "target": "es2021"
   },
   "include": ["./src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

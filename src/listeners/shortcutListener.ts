@@ -1,4 +1,4 @@
-import logger from '../utils/logger';
+import { logger } from '@utils';
 import type { AllMiddlewareArgs, SlackShortcutMiddlewareArgs } from '@slack/bolt';
 
 const shortcutListener = async (args: SlackShortcutMiddlewareArgs & AllMiddlewareArgs) => {

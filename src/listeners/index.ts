@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import actionListener from './actionListener';
 import commandListener from './commandListener';
 import eventListener from './eventListener';

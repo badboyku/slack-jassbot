@@ -1,5 +1,5 @@
-import userService from './userService';
-import type { User } from '../db/models/UserModel';
+import { userService } from '@services';
+import type { User } from '@db/models/UserModel';
 
 type ManageUserDatesResult = { user: User };
 const manageUserDates = async (userId: string): Promise<ManageUserDatesResult> => {

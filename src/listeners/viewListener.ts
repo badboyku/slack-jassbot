@@ -1,5 +1,5 @@
-import { viewController } from '../controllers';
-import logger from '../utils/logger';
+import { viewController } from '@controllers';
+import { logger } from '@utils';
 import type { AllMiddlewareArgs, SlackViewMiddlewareArgs } from '@slack/bolt';
 
 const viewListener = async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs) => {

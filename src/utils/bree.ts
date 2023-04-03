@@ -1,35 +1,13 @@
-import path from 'node:path';
-import Bree from 'bree';
-import Graceful from '@ladjs/graceful';
-import config from './config';
-import logger from './logger';
+import { breeHelper, gracefulHelper } from '@utilHelpers';
+import { config, logger } from '@utils';
 
-const getBree = () => {
-  const {
-    app: { isTsNode },
-    bree: {
-      jobs: { updateChannelsCron },
-    },
-  } = config;
-
-  const jobs = [];
-  if (updateChannelsCron) {
-    jobs.push({ name: 'updateChannels', cron: updateChannelsCron });
+const start = async () => {
+  if (config.bree.isDisabled) {
+    return;
   }
 
-  const bree = new Bree({
-    logger: false,
-    defaultExtension: isTsNode ? 'ts' : 'js',
-    root: path.join(__dirname, '../jobs'),
-    jobs,
-    errorHandler: (error: Error, workerMetadata: { name: string; err?: Error }) => {
-      logger.warn('bree: error has occurred', { data: { error, workerMetadata } });
-    },
-    workerMessageHandler: (message: { name: string; message: unknown }) => {
-      logger.debug('bree: worker completed', { data: { ...message } });
-    },
-  });
-
+  const breeOptions = breeHelper.getBreeOptions();
+  const bree = breeHelper.getBree(breeOptions);
   bree.on('worker created', (name: string) => {
     logger.debug('bree: worker created', { data: { name } });
   });
@@ -37,21 +15,8 @@ const getBree = () => {
     logger.debug('bree: worker deleted', { data: { name } });
   });
 
-  return bree;
-};
-
-const start = async () => {
-  const {
-    bree: { isDisabled },
-  } = config;
-
-  if (isDisabled) {
-    return;
-  }
-
-  const bree = getBree();
-
-  const graceful = new Graceful({ brees: [bree] });
+  const gracefulOptions = gracefulHelper.getGracefulOptions(bree);
+  const graceful = gracefulHelper.getGraceful(gracefulOptions);
   graceful.listen();
 
   await bree.start();

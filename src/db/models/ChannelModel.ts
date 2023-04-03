@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import mongoose, { Schema } from 'mongoose';
 import type { Document, Model, Types } from 'mongoose';
 

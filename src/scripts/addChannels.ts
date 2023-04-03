@@ -1,12 +1,10 @@
 /* istanbul ignore file */
 import { faker } from '@faker-js/faker';
-import { channelService } from '../services';
-import config from '../utils/config';
-import db from '../utils/db';
-import logger from '../utils/logger';
-import { UserModel } from '../db/models';
+import { UserModel } from '@db/models';
+import { channelService } from '@services';
+import { config, db, logger } from '@utils';
 import type { AnyBulkWriteOperation } from 'mongodb';
-import type { ChannelDocType } from '../db/models/ChannelModel';
+import type { ChannelDocType } from '@db/models/ChannelModel';
 
 (async () => {
   const maxNumChannels = 5000;

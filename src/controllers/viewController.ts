@@ -1,6 +1,6 @@
-import { viewService } from '../services';
-import logger from '../utils/logger';
-import { appHome, manageUserDates } from '../views';
+import { viewService } from '@services';
+import { logger } from '@utils';
+import { appHome, manageUserDates } from '@views';
 import type { AllMiddlewareArgs, SlackViewMiddlewareArgs } from '@slack/bolt';
 
 const saveUserDates = async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs, refreshAppHome = false) => {

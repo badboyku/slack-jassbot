@@ -1,8 +1,8 @@
-import * as process from 'node:process';
+/* istanbul ignore file */
+import process from 'node:process';
 import { parentPort } from 'node:worker_threads';
-import { jobService } from '../services';
-import db from '../utils/db';
-import logger from '../utils/logger';
+import { jobService } from '@services';
+import { db, logger } from '@utils';
 
 /**
  * This job is to find all tomorrow's birthdays.

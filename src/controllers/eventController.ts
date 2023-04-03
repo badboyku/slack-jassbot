@@ -1,6 +1,6 @@
-import { eventService } from '../services';
-import logger from '../utils/logger';
-import { appHome, channelWelcomeMessage } from '../views';
+import { eventService } from '@services';
+import { logger } from '@utils';
+import { appHome, channelWelcomeMessage } from '@views';
 import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 
 export type AppHomeOpenedArgs = SlackEventMiddlewareArgs<'app_home_opened'> & AllMiddlewareArgs;

@@ -1,4 +1,4 @@
-import logger from '../utils/logger';
+import { logger } from '@utils';
 import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 
 const messageListener = async (args: SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs) => {

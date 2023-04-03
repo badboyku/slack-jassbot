@@ -1,6 +1,6 @@
-import { SlackClientError } from '../errors';
-import { getAppNoLogging } from '../utils/app';
-import logger from '../utils/logger';
+import { SlackClientError } from '@errors';
+import { logger } from '@utils';
+import { getApp } from '@utils/app';
 import type {
   ConversationsListArguments,
   ConversationsListResponse,
@@ -28,14 +28,11 @@ const handleError = (method: string) => (err: { code: string; data: WebAPICallRe
 };
 
 const getConversationsList = (options?: ConversationsListArguments): Promise<SlackClientResult> => {
-  return getAppNoLogging()
-    .client.conversations.list(options)
-    .then(handleResponse)
-    .catch(handleError('getConversationsList'));
+  return getApp().client.conversations.list(options).then(handleResponse).catch(handleError('getConversationsList'));
 };
 
 const getConversationsMembers = (options?: ConversationsMembersArguments): Promise<SlackClientResult> => {
-  return getAppNoLogging()
+  return getApp()
     .client.conversations.members(options)
     .then(handleResponse)
     .catch(handleError('getConversationsMembers'));

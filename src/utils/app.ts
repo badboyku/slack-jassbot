@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { App } from '@slack/bolt';
 import {
   actionListener,
@@ -8,40 +7,28 @@ import {
   optionsListener,
   shortcutListener,
   viewListener,
-} from '../listeners';
-import config from './config';
-import logger from './logger';
-import slackLogger, { getSlackLogger } from './slackLogger';
-import type { CodedError, Logger } from '@slack/bolt';
+} from '@listeners';
+import { config, logger, slackLogger } from '@utils';
+import type { CodedError } from '@slack/bolt';
 import type { ErrorHandler } from '@slack/bolt/dist/App';
 
-const getApp = (customLogger?: Logger) => {
-  const {
-    slack: { appToken, botToken },
-  } = config;
-
+export const getApp = () => {
   const handleError = (error: CodedError) => {
     logger.warn('app: error has occurred', { error });
   };
 
-  const app = new App({ appToken, token: botToken, socketMode: true, logger: customLogger || slackLogger });
+  const app = new App({
+    appToken: config.slack.appToken,
+    token: config.slack.botToken,
+    socketMode: true,
+    logger: slackLogger,
+  });
   app.error(handleError as ErrorHandler);
 
   return app;
 };
 
-export const getAppNoLogging = () => {
-  const skipLog = true;
-  const customLogger = getSlackLogger(skipLog);
-
-  return getApp(customLogger);
-};
-
 const start = async () => {
-  const {
-    app: { port },
-  } = config;
-
   const app = getApp();
   app.action(/w*/, actionListener);
   app.command(/w*/, commandListener);
@@ -53,8 +40,8 @@ const start = async () => {
 
   let isStarted = false;
   try {
-    await app.start(port);
-    logger.info(`app: start success on port ${port}`);
+    await app.start(config.app.port);
+    logger.info(`app: start success on port ${config.app.port}`);
     isStarted = true;
   } catch (error) {
     logger.warn('app: start failed', { error });

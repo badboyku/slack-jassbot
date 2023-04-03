@@ -1,8 +1,5 @@
 /* istanbul ignore file */
-import app from './utils/app';
-import bree from './utils/bree';
-import db from './utils/db';
-import logger from './utils/logger';
+import { app, bree, db, logger } from '@utils';
 
 (async () => {
   logger.info('Starting Application');

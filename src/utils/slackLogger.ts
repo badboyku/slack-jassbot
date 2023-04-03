@@ -1,65 +1,58 @@
-/* istanbul ignore file */
 import { LogLevel } from '@slack/bolt';
-import config from './config';
-import logger, { DEBUG, ERROR, INFO, WARN } from './logger';
+import { LOG_LEVEL_DEBUG, LOG_LEVEL_ERROR, LOG_LEVEL_INFO, LOG_LEVEL_WARN } from '@utils/constants';
+import { config, logger } from '@utils';
+import { getSeverityNum } from '@utils/logger';
+import type { Logger } from '@slack/logger';
+import type { LogContext } from '@types';
 
-const getLogMsg = (msgs: Array<string | Record<string, unknown>>) => {
-  let message: string;
-  let context: Record<string, unknown> | undefined;
+const skipLog = (severity: string): boolean => getSeverityNum(severity) < getSeverityNum(config.slack.logLevel);
 
-  if (!msgs.length) {
-    message = 'Unknown error occurred';
-  } else if (msgs.length === 2) {
-    message = msgs[0] as string;
-    context = msgs[1] as Record<string, unknown>;
-  } else {
-    message = msgs[0] as string;
-    msgs.shift();
-    context = msgs.length ? { msgExtra: msgs } : undefined;
+const getLogMessageAndContext = (...msgs: string[]): [string, LogContext | undefined] => {
+  const messages = [...msgs];
+  let message = 'Unknown message';
+  let context: LogContext | undefined;
+
+  if (messages.length) {
+    // eslint-disable-next-line prefer-destructuring
+    message = messages[0];
+    messages.shift();
+    if (messages.length) {
+      context = { msgExtra: messages };
+    }
+
+    const index = message.indexOf(':');
+    if (index > -1) {
+      const messageStr = message.slice(0, index).trim();
+      const contextStr = message.slice(index + 1, message.length).trim();
+
+      if (contextStr.startsWith('{') && contextStr.endsWith('}') && contextStr !== '{}') {
+        try {
+          const data = JSON.parse(contextStr);
+
+          message = messageStr;
+          context = { ...context, data };
+        } catch (error) {
+          // Do nothing.
+        }
+      }
+    }
   }
 
-  return { message, context };
+  return [message, context];
 };
 
-const doLog = (severity: string, msgs: Array<string | Record<string, unknown>>, skipLog?: boolean) => {
-  if (skipLog) {
-    return;
-  }
-
-  const {
-    slack: { logLevel },
-  } = config;
-
-  const { message, context } = getLogMsg(msgs);
-
-  switch (severity) {
-    case DEBUG:
-      logger.debug(message, context, logLevel);
-      break;
-    case INFO:
-      logger.info(message, context, logLevel);
-      break;
-    case WARN:
-      logger.warn(message, context, logLevel);
-      break;
-    case ERROR:
-      logger.error(message, context, logLevel);
-      break;
-    default:
+const slackLogger: Logger = {
+  debug: (...msgs: string[]) => !skipLog(LOG_LEVEL_DEBUG) && logger.debug(...getLogMessageAndContext(...msgs)),
+  info: (...msgs: string[]) => !skipLog(LOG_LEVEL_INFO) && logger.info(...getLogMessageAndContext(...msgs)),
+  warn: (...msgs: string[]) => !skipLog(LOG_LEVEL_WARN) && logger.warn(...getLogMessageAndContext(...msgs)),
+  error: (...msgs: string[]) => !skipLog(LOG_LEVEL_ERROR) && logger.error(...getLogMessageAndContext(...msgs)),
+  setLevel: /* istanbul ignore next */ (_level: LogLevel) => {
     // Do nothing.
-  }
+  },
+  getLevel: /* istanbul ignore next */ () => LogLevel.INFO,
+  setName: /* istanbul ignore next */ (_name: string) => {
+    // Do nothing.
+  },
 };
 
-export const getSlackLogger = (skipLog?: boolean) => {
-  return {
-    debug: (...msgs: Array<string | Record<string, unknown>>) => doLog(DEBUG, msgs, skipLog),
-    info: (...msgs: Array<string | Record<string, unknown>>) => doLog(INFO, msgs, skipLog),
-    warn: (...msgs: Array<string | Record<string, unknown>>) => doLog(WARN, msgs, skipLog),
-    error: (...msgs: Array<string | Record<string, unknown>>) => doLog(ERROR, msgs, skipLog),
-    setLevel: (_level: LogLevel) => ({}),
-    getLevel: () => LogLevel.INFO,
-    setName: (_name: string) => ({}),
-  };
-};
-
-export default getSlackLogger();
+export default slackLogger;

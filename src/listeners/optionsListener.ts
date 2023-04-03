@@ -1,4 +1,4 @@
-import logger from '../utils/logger';
+import { logger } from '@utils';
 import type { AllMiddlewareArgs, SlackOptionsMiddlewareArgs } from '@slack/bolt';
 
 const optionsListener = async (args: SlackOptionsMiddlewareArgs & AllMiddlewareArgs) => {
