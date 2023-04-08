@@ -1,7 +1,6 @@
 import { breeHelper, gracefulHelper } from '@utilHelpers';
 import { bree, config, logger } from '@utils';
 import type Bree from 'bree';
-import type { BreeOptions } from 'bree';
 import type Graceful from '@ladjs/graceful';
 import type { GracefulOptions } from '@ladjs/graceful';
 
@@ -26,7 +25,6 @@ describe('utils bree', () => {
 
       beforeEach(async () => {
         config.bree = configBreeDefault;
-        jest.spyOn(breeHelper, 'getBreeOptions').mockReturnValueOnce(options as unknown as BreeOptions);
         jest.spyOn(breeHelper, 'getBree').mockReturnValueOnce(breeMock as unknown as Bree);
         jest.spyOn(gracefulHelper, 'getGracefulOptions').mockReturnValueOnce(options as unknown as GracefulOptions);
         jest.spyOn(gracefulHelper, 'getGraceful').mockReturnValueOnce(gracefulMock as unknown as Graceful);
@@ -44,12 +42,8 @@ describe('utils bree', () => {
         jest.restoreAllMocks();
       });
 
-      it('calls breeHelper.getBreeOptions', () => {
-        expect(breeHelper.getBreeOptions).toHaveBeenCalled();
-      });
-
       it('calls breeHelper.getBree', () => {
-        expect(breeHelper.getBree).toHaveBeenCalledWith(options);
+        expect(breeHelper.getBree).toHaveBeenCalled();
       });
 
       it('calls logger.debug with worker created event', () => {

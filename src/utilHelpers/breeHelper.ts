@@ -3,10 +3,6 @@ import Bree from 'bree';
 import { config, logger } from '@utils';
 import type { BreeOptions, Job } from 'bree';
 
-const getBree = (options?: BreeOptions): Bree => {
-  return new Bree(options);
-};
-
 const getBreeOptions = (): BreeOptions => {
   const jobs: Job[] = [];
   if (config.bree.jobs.updateChannelsCron) {
@@ -26,5 +22,7 @@ const getBreeOptions = (): BreeOptions => {
     },
   };
 };
+
+const getBree = (options: BreeOptions = getBreeOptions()): Bree => new Bree(options);
 
 export default { getBree, getBreeOptions };

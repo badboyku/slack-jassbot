@@ -1,4 +1,3 @@
-import { App } from '@slack/bolt';
 import {
   actionListener,
   commandListener,
@@ -8,28 +7,21 @@ import {
   shortcutListener,
   viewListener,
 } from '@listeners';
-import { config, logger, slackLogger } from '@utils';
+import { appHelper } from '@utilHelpers';
+import { config, logger } from '@utils';
 import type { CodedError } from '@slack/bolt';
 import type { ErrorHandler } from '@slack/bolt/dist/App';
 
-export const getApp = () => {
+export type AppStartResult = { isStarted: boolean };
+const start = async (): Promise<AppStartResult> => {
   const handleError = (error: CodedError) => {
     logger.warn('app: error has occurred', { error });
   };
 
-  const app = new App({
-    appToken: config.slack.appToken,
-    token: config.slack.botToken,
-    socketMode: true,
-    logger: slackLogger,
-  });
+  const app = appHelper.getApp();
   app.error(handleError as ErrorHandler);
 
-  return app;
-};
-
-const start = async () => {
-  const app = getApp();
+  // Add listeners.
   app.action(/w*/, actionListener);
   app.command(/w*/, commandListener);
   app.event(/w*/, eventListener);

@@ -16,10 +16,6 @@ describe('utilHelpers breeHelper', () => {
         result = breeHelper.getBree();
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
       it('returns new Bree object', () => {
         expect(result).toBeTruthy();
       });
