@@ -1,6 +1,7 @@
+import { App } from '@slack/bolt';
 import { config, slackLogger } from '@utils';
 import { appHelper } from '@utils/helpers';
-import type { App, AppOptions } from '@slack/bolt';
+import type { AppOptions } from '@slack/bolt';
 
 jest.mock('@slack/bolt');
 jest.mock('@utils/config');

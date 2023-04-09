@@ -4,7 +4,7 @@ import { userService } from '@services';
 import { crypto, dateTime, db, logger } from '@utils';
 import type { DateTime } from 'luxon';
 import type { AnyBulkWriteOperation } from 'mongodb';
-import type { UserDocType } from '@db/models/UserModel';
+import type { UserDocType } from '@types';
 
 (async () => {
   const maxNumUsers = 5000;

@@ -1,6 +1,6 @@
 import type { ModalView } from '@slack/types';
 import type { ChatPostMessageArguments } from '@slack/web-api';
-import type { User } from '@db/models/UserModel';
+import type { User } from '@types';
 
 const getButton = (actionId?: string) => {
   return {

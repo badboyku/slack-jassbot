@@ -1,6 +1,7 @@
+import Bree from 'bree';
 import { config, logger } from '@utils';
 import { breeHelper } from '@utils/helpers';
-import type Bree, { BreeOptions, Job } from 'bree';
+import type { BreeOptions, Job } from 'bree';
 
 jest.mock('bree');
 jest.mock('@utils/config');

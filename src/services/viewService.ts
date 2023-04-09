@@ -1,10 +1,7 @@
 import { userService } from '@services';
 import { crypto, dateTime } from '@utils';
-import type { ViewStateValue } from '@slack/bolt';
-import type { User } from '@db/models/UserModel';
+import type { SaveUserDatesResult, ViewStateValues } from '@types';
 
-type ViewStateValues = { [blockId: string]: { [actionId: string]: ViewStateValue } };
-type SaveUserDatesResult = { user: User; hasSaveError: boolean };
 const saveUserDates = async (userId: string, values: ViewStateValues): Promise<SaveUserDatesResult> => {
   const {
     birthday: {

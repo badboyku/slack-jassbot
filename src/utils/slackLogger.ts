@@ -3,7 +3,7 @@ import { LOG_LEVEL_DEBUG, LOG_LEVEL_ERROR, LOG_LEVEL_INFO, LOG_LEVEL_WARN } from
 import { config, logger } from '@utils';
 import { loggerHelper } from '@utils/helpers';
 import type { Logger } from '@slack/logger';
-import type { LogContext } from '@utils/logger';
+import type { LogContext } from '@types';
 
 const skipLog = (severity: string): boolean =>
   loggerHelper.getSeverityNum(severity) < loggerHelper.getSeverityNum(config.slack.logLevel);

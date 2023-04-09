@@ -1,29 +1,16 @@
 import { UserModel } from '@db/models';
 import { logger } from '@utils';
 import {
-  DEFAULT_DB_BATCH_SIZE,
-  DEFAULT_DB_LIMIT,
-  DEFAULT_DB_FIND_OPTIONS,
-  DEFAULT_DB_SORT,
   DB_MAX_BATCH_SIZE,
   DB_MAX_LIMIT,
+  DEFAULT_DB_BATCH_SIZE,
+  DEFAULT_DB_FIND_OPTIONS,
+  DEFAULT_DB_LIMIT,
+  DEFAULT_DB_SORT,
 } from '@utils/constants';
 import type { AnyBulkWriteOperation } from 'mongodb';
 import type { FilterQuery, Types, UpdateQuery } from 'mongoose';
-import type { User, UserDocType } from '@db/models/UserModel';
-import type { BulkWriteResults, FindOptions } from '@types';
-
-type UserData = {
-  userId?: string;
-  birthday?: string;
-  birthdayLookup?: string;
-  birthdayRaw?: string; // TODO: REMOVE THIS!!!
-  birthdayRawLookup?: string; // TODO: REMOVE THIS!!!
-  workAnniversary?: string;
-  workAnniversaryLookup?: string;
-  workAnniversaryRaw?: string; // TODO: REMOVE THIS!!!
-  workAnniversaryRawLookup?: string; // TODO: REMOVE THIS!!!
-};
+import type { BulkWriteResults, FindOptions, User, UserData, UserDocType } from '@types';
 
 const bulkWrite = (ops: AnyBulkWriteOperation<UserDocType>[]): Promise<BulkWriteResults> | undefined => {
   logger.debug('userService: bulkWrite called', { numOps: ops.length });

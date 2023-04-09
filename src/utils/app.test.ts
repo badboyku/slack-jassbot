@@ -10,7 +10,7 @@ import {
 import { app, config, logger } from '@utils';
 import { appHelper } from '@utils/helpers';
 import type { App, CodedError } from '@slack/bolt';
-import type { AppStartResult } from '@utils/app';
+import type { AppStartResult } from '@types';
 
 jest.mock('@listeners/actionListener');
 jest.mock('@listeners/commandListener');

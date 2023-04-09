@@ -1,25 +1,16 @@
 import { ChannelModel } from '@db/models';
 import { logger } from '@utils';
 import {
-  DEFAULT_DB_BATCH_SIZE,
-  DEFAULT_DB_LIMIT,
-  DEFAULT_DB_FIND_OPTIONS,
-  DEFAULT_DB_SORT,
   DB_MAX_BATCH_SIZE,
   DB_MAX_LIMIT,
+  DEFAULT_DB_BATCH_SIZE,
+  DEFAULT_DB_FIND_OPTIONS,
+  DEFAULT_DB_LIMIT,
+  DEFAULT_DB_SORT,
 } from '@utils/constants';
 import type { AnyBulkWriteOperation } from 'mongodb';
 import type { FilterQuery, Types, UpdateQuery } from 'mongoose';
-import type { Channel, ChannelDocType } from '@db/models/ChannelModel';
-import type { BulkWriteResults, FindOptions } from '@types';
-
-type ChannelData = {
-  channelId?: string;
-  isMember?: boolean;
-  isPrivate?: boolean;
-  numMembers?: number;
-  members?: string[];
-};
+import type { BulkWriteResults, Channel, ChannelData, ChannelDocType, FindOptions } from '@types';
 
 const bulkWrite = (ops: AnyBulkWriteOperation<ChannelDocType>[]): Promise<BulkWriteResults> | undefined => {
   logger.debug('channelService: bulkWrite called', { numOps: ops.length });

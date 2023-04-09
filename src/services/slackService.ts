@@ -1,15 +1,10 @@
 import { slackClient } from '@clients';
 import { DEFAULT_SLACK_GET_LIMIT } from '@utils/constants';
-import type {
-  ConversationsListArguments,
-  ConversationsListResponse,
-  ConversationsMembersArguments,
-  ConversationsMembersResponse,
-} from '@slack/web-api';
-import type { Channel } from '@slack/web-api/dist/response/ConversationsListResponse';
+import type { ConversationsListArguments, ConversationsMembersArguments } from '@slack/web-api';
+import type { Channel as SlackChannel } from '@slack/web-api/dist/response/ConversationsListResponse';
 import type { SlackClientError } from '@errors';
+import type { GetChannelMembersResult, GetChannelsResult } from '@types';
 
-export type GetChannelMembersResult = { channelId: string; members: string[]; error?: SlackClientError };
 const getChannelMembers = async (channelId: string): Promise<GetChannelMembersResult> => {
   let members: string[] = [];
   let error: SlackClientError | undefined;
@@ -26,7 +21,7 @@ const getChannelMembers = async (channelId: string): Promise<GetChannelMembersRe
     }
 
     if (response) {
-      const { members: data, response_metadata: responseMetadata } = response as ConversationsMembersResponse;
+      const { members: data, response_metadata: responseMetadata } = response;
       const { next_cursor: nextCursor } = responseMetadata || {};
 
       if (data?.length) {
@@ -42,9 +37,8 @@ const getChannelMembers = async (channelId: string): Promise<GetChannelMembersRe
   return { channelId, members, error };
 };
 
-export type GetChannelsResult = { channels: Channel[]; error?: SlackClientError };
 const getChannels = async (args?: ConversationsListArguments): Promise<GetChannelsResult> => {
-  let channels: Channel[] = [];
+  let channels: SlackChannel[] = [];
   let error: SlackClientError | undefined;
   let cursor = '';
   let hasMore = false;
@@ -64,7 +58,7 @@ const getChannels = async (args?: ConversationsListArguments): Promise<GetChanne
     }
 
     if (response) {
-      const { channels: data, response_metadata: responseMetadata } = response as ConversationsListResponse;
+      const { channels: data, response_metadata: responseMetadata } = response;
       const { next_cursor: nextCursor } = responseMetadata || {};
 
       if (data?.length) {

@@ -1,13 +1,6 @@
 import process from 'node:process';
 import { LOG_FORMAT_ELK, LOG_LEVEL_INFO } from '@utils/constants';
-
-export type Config = {
-  app: { logLevel: string; logOutputFormat: string; nodeEnv: string; port: number; isTsNode: boolean };
-  bree: { isDisabled: boolean; jobs: { updateChannelsCron: string } };
-  crypto: { key: string };
-  db: { uri: string };
-  slack: { apiHost: string; appToken: string; botToken: string; botUserId: string; logLevel: string };
-};
+import type { Config } from '@types';
 
 const config: Config = {
   app: {

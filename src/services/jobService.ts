@@ -1,9 +1,7 @@
 import { channelService, slackService, userService } from '@services';
 import { crypto, dateTime, logger } from '@utils';
 import type { AnyBulkWriteOperation } from 'mongodb';
-import type { ChannelDocType } from '@db/models/ChannelModel';
-import type { GetChannelMembersResult } from '@services/slackService';
-import type { BulkWriteResults } from '@types';
+import type { ChannelDocType, GetChannelMembersResult, UpdateChannelsResult } from '@types';
 
 const findTomorrowsBirthdays = async () => {
   logger.debug('jobService: findTomorrowsBirthdays called');
@@ -17,7 +15,6 @@ const findTomorrowsBirthdays = async () => {
   logger.debug('users', { numUsers: users.length, user1: users[0], user2: users[1] });
 };
 
-type UpdateChannelsResult = { results: BulkWriteResults | undefined };
 const updateChannels = async (): Promise<UpdateChannelsResult> => {
   const { channels } = await slackService.getChannels({ types: 'public_channel,private_channel' });
 

@@ -1,9 +1,8 @@
 import { eventService } from '@services';
 import { logger } from '@utils';
 import { appHome, channelWelcomeMessage } from '@views';
-import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
+import type { AppHomeOpenedArgs, AppMentionArgs, MemberJoinedChannelArgs, MemberLeftChannelArgs } from '@types';
 
-export type AppHomeOpenedArgs = SlackEventMiddlewareArgs<'app_home_opened'> & AllMiddlewareArgs;
 const appHomeOpened = async (args: AppHomeOpenedArgs) => {
   const { client, event } = args;
   const { channel, tab, user: userId } = event;
@@ -26,7 +25,6 @@ const appHomeOpened = async (args: AppHomeOpenedArgs) => {
   }
 };
 
-export type AppMentionArgs = SlackEventMiddlewareArgs<'app_mention'> & AllMiddlewareArgs;
 const appMention = async (args: AppMentionArgs) => {
   const { payload, event, message, body } = args;
   // const { channel, type, user: userId } = event;
@@ -37,7 +35,6 @@ const appMention = async (args: AppMentionArgs) => {
   //  and send msg to remind them to set it if missing
 };
 
-export type MemberJoinedChannelArgs = SlackEventMiddlewareArgs<'member_joined_channel'> & AllMiddlewareArgs;
 const memberJoinedChannel = async (args: MemberJoinedChannelArgs) => {
   const { client, event } = args;
   const { channel: channelId, channel_type: channelType, user: userId } = event;
@@ -61,7 +58,6 @@ const memberJoinedChannel = async (args: MemberJoinedChannelArgs) => {
   }
 };
 
-export type MemberLeftChannelArgs = SlackEventMiddlewareArgs<'member_left_channel'> & AllMiddlewareArgs;
 const memberLeftChannel = async (args: MemberLeftChannelArgs) => {
   const { payload, event, message, body } = args;
   // const { channel, type, user: userId } = event;

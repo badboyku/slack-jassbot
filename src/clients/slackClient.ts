@@ -3,18 +3,8 @@ import { logger } from '@utils';
 import { appHelper } from '@utils/helpers';
 import type { CodedError } from '@slack/bolt';
 import type { ErrorHandler } from '@slack/bolt/dist/App';
-import type {
-  ConversationsListArguments,
-  ConversationsListResponse,
-  ConversationsMembersArguments,
-  ConversationsMembersResponse,
-  WebAPICallResult,
-} from '@slack/web-api';
-
-export type SlackClientResult = {
-  response?: ConversationsListResponse | ConversationsMembersResponse;
-  error?: SlackClientError;
-};
+import type { ConversationsListArguments, ConversationsMembersArguments, WebAPICallResult } from '@slack/web-api';
+import type { SlackClientGetConversationListResult, SlackClientGetConversationsMembersResult } from '@types';
 
 const getApp = () => {
   const handleError = (error: CodedError) => {
@@ -40,11 +30,13 @@ const handleError = (method: string) => (err: { code: string; data: WebAPICallRe
   return { error: new SlackClientError(`${code}: ${error}`, response) };
 };
 
-const getConversationsList = (options?: ConversationsListArguments): Promise<SlackClientResult> => {
+const getConversationsList = (options?: ConversationsListArguments): Promise<SlackClientGetConversationListResult> => {
   return getApp().client.conversations.list(options).then(handleResponse).catch(handleError('getConversationsList'));
 };
 
-const getConversationsMembers = (options?: ConversationsMembersArguments): Promise<SlackClientResult> => {
+const getConversationsMembers = (
+  options?: ConversationsMembersArguments,
+): Promise<SlackClientGetConversationsMembersResult> => {
   return getApp()
     .client.conversations.members(options)
     .then(handleResponse)

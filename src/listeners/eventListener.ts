@@ -1,12 +1,7 @@
 import { eventController } from '@controllers';
 import { logger } from '@utils';
 import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
-import type {
-  AppHomeOpenedArgs,
-  AppMentionArgs,
-  MemberJoinedChannelArgs,
-  MemberLeftChannelArgs,
-} from '@controllers/eventController';
+import type { AppHomeOpenedArgs, AppMentionArgs, MemberJoinedChannelArgs, MemberLeftChannelArgs } from '@types';
 
 const eventListener = async (args: SlackEventMiddlewareArgs & AllMiddlewareArgs) => {
   const { payload, event, message, body } = args;

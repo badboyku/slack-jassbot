@@ -1,26 +1,19 @@
 import { channelService, userService } from '@services';
 import { config } from '@utils';
-import type { Channel } from '@db/models/ChannelModel';
-import type { User } from '@db/models/UserModel';
+import type { AppHomeOpenedResult, MemberJoinedChannelResult } from '@types';
 
-type AppHomeOpenedResult = { user: User };
 const appHomeOpened = async (userId: string): Promise<AppHomeOpenedResult> => {
   const user = await userService.findOneOrCreateByUserId(userId);
 
   return { user };
 };
 
-type MemberJoinedChannelResult = { channel: Channel };
 const memberJoinedChannel = async (
   userId: string,
   channelId: string,
   channelType: string,
 ): Promise<MemberJoinedChannelResult> => {
-  const {
-    slack: { botUserId },
-  } = config;
-
-  const data = { isMember: userId === botUserId, isPrivate: channelType === 'G' };
+  const data = { isMember: userId === config.slack.botUserId, isPrivate: channelType === 'G' };
   const channel = await channelService.findOneAndUpdateByChannelId(channelId, data);
 
   return { channel };

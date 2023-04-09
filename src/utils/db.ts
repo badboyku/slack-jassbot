@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { config, logger } from '@utils';
+import type { DbConnectResult, DbDisconnectResult } from '@types';
 
-export type DbConnectResult = { isConnected: boolean };
 const connect = async (): Promise<DbConnectResult> => {
   const {
     db: { uri },
@@ -20,7 +20,6 @@ const connect = async (): Promise<DbConnectResult> => {
   return { isConnected };
 };
 
-export type DbDisconnectResult = { isDisconnected: boolean };
 const disconnect = async (): Promise<DbDisconnectResult> => {
   let isDisconnected = false;
   try {

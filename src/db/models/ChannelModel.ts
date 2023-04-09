@@ -1,22 +1,9 @@
 /* istanbul ignore file */
 import mongoose, { Schema } from 'mongoose';
-import type { Document, Model, Types } from 'mongoose';
+import type { Model } from 'mongoose';
+import type { ChannelDocType, ChannelMethods } from '@types';
 
-export type ChannelDocType = {
-  channelId: string;
-  isMember: boolean;
-  isPrivate: boolean;
-  numMembers: number;
-  members: string[];
-  createdAt: Date;
-  updatedAt: Date;
-};
-export type ChannelMethods = {};
-export type Channel =
-  | (ChannelDocType & Document<{}, {}, ChannelDocType> & ChannelMethods & { _id: Types.ObjectId })
-  | null;
-
-const schema = new Schema<ChannelDocType, Model<ChannelDocType, {}, ChannelMethods>, ChannelMethods>(
+const schema: Schema = new Schema<ChannelDocType, Model<ChannelDocType, {}, ChannelMethods>, ChannelMethods>(
   {
     channelId: { type: String, index: true, unique: true },
     isMember: { type: Boolean, index: true, required: true, default: true },

@@ -1,6 +1,6 @@
 /* eslint-disable global-require, @typescript-eslint/no-var-requires */
 import process from 'node:process';
-import type { Config } from '@utils/config';
+import type { Config } from '@types';
 
 describe('utils config', () => {
   const ENV_BACKUP = process.env;
