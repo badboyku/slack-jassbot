@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import type { WebAPICallResult } from '@slack/web-api';
 
 export default class SlackClientError extends Error {
