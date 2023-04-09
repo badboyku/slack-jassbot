@@ -1,6 +1,6 @@
 import Graceful from '@ladjs/graceful';
-import type Bree from 'bree';
 import type { GracefulOptions } from '@ladjs/graceful';
+import type Bree from 'bree';
 
 const getGraceful = (options?: GracefulOptions): Graceful => new Graceful(options);
 

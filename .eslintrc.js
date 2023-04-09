@@ -17,7 +17,6 @@ module.exports = {
           ['@listeners', './src/listeners'],
           ['@services', './src/services'],
           ['@types', './src/@types/global.d.ts'],
-          ['@utilHelpers', './src/utilHelpers'],
           ['@utils', './src/utils'],
           ['@views', './src/views'],
         ],

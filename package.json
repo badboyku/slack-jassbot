@@ -75,8 +75,6 @@
       "^@services/(.*)": "<rootDir>/src/services/$1",
       "^@services": "<rootDir>/src/services",
       "^@types": "<rootDir>/src/@types/global.d.ts",
-      "^@utilHelpers/(.*)": "<rootDir>/src/utilHelpers/$1",
-      "^@utilHelpers": "<rootDir>/src/utilHelpers",
       "^@utils/(.*)": "<rootDir>/src/utils/$1",
       "^@utils": "<rootDir>/src/utils",
       "^@views/(.*)": "<rootDir>/src/views/$1",

@@ -38,7 +38,7 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
 
     const { status } = result;
     if (status === 'fulfilled') {
-      const { value } = result as PromiseFulfilledResult<GetChannelMembersResult>;
+      const { value } = result;
       const { channelId: channelIdValue, members: membersValue } = value;
 
       channelId = channelIdValue;

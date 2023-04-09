@@ -1,5 +1,5 @@
-import { breeHelper, gracefulHelper } from '@utilHelpers';
 import { config, logger } from '@utils';
+import { breeHelper, gracefulHelper } from '@utils/helpers';
 
 const start = async () => {
   if (config.bree.isDisabled) {

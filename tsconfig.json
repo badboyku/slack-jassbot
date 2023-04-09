@@ -27,8 +27,6 @@
       "@services/*": ["./src/services/*"],
       "@services": ["./src/services"],
       "@types": ["./src/@types/global.d.ts"],
-      "@utilHelpers/*": ["./src/utilHelpers/*"],
-      "@utilHelpers": ["./src/utilHelpers"],
       "@utils/*": ["./src/utils/*"],
       "@utils": ["./src/utils"],
       "@views/*": ["./src/views/*"],

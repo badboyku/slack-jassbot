@@ -1,15 +1,14 @@
-import { breeHelper, gracefulHelper } from '@utilHelpers';
 import { bree, config, logger } from '@utils';
+import { breeHelper, gracefulHelper } from '@utils/helpers';
 import type Bree from 'bree';
-import type Graceful from '@ladjs/graceful';
-import type { GracefulOptions } from '@ladjs/graceful';
+import type Graceful, { GracefulOptions } from '@ladjs/graceful';
 
 jest.mock('bree');
 jest.mock('@ladjs/graceful');
-jest.mock('@utilHelpers/breeHelper');
-jest.mock('@utilHelpers/gracefulHelper');
 jest.mock('@utils/config');
 jest.mock('@utils/logger');
+jest.mock('@utils/helpers/breeHelper');
+jest.mock('@utils/helpers/gracefulHelper');
 
 describe('utils bree', () => {
   const configBreeDefault = { jobs: { updateChannelsCron: '' }, isDisabled: false };

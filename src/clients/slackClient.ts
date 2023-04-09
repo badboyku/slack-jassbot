@@ -1,6 +1,6 @@
 import { SlackClientError } from '@errors';
-import { appHelper } from '@utilHelpers';
 import { logger } from '@utils';
+import { appHelper } from '@utils/helpers';
 import type { CodedError } from '@slack/bolt';
 import type { ErrorHandler } from '@slack/bolt/dist/App';
 import type {

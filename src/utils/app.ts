@@ -7,8 +7,8 @@ import {
   shortcutListener,
   viewListener,
 } from '@listeners';
-import { appHelper } from '@utilHelpers';
 import { config, logger } from '@utils';
+import { appHelper } from '@utils/helpers';
 import type { CodedError } from '@slack/bolt';
 import type { ErrorHandler } from '@slack/bolt/dist/App';
 
