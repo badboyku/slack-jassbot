@@ -1,11 +1,12 @@
 import { LogLevel } from '@slack/bolt';
 import { LOG_LEVEL_DEBUG, LOG_LEVEL_ERROR, LOG_LEVEL_INFO, LOG_LEVEL_WARN } from '@utils/constants';
 import { config, logger } from '@utils';
-import { getSeverityNum } from '@utils/logger';
+import { loggerHelper } from '@utils/helpers';
 import type { Logger } from '@slack/logger';
-import type { LogContext } from '@types';
+import type { LogContext } from '@utils/logger';
 
-const skipLog = (severity: string): boolean => getSeverityNum(severity) < getSeverityNum(config.slack.logLevel);
+const skipLog = (severity: string): boolean =>
+  loggerHelper.getSeverityNum(severity) < loggerHelper.getSeverityNum(config.slack.logLevel);
 
 const getLogMessageAndContext = (...msgs: string[]): [string, LogContext | undefined] => {
   const messages = [...msgs];

@@ -1,5 +1,4 @@
 import type { SortOrder } from 'mongoose';
-import type { ViewStateValue } from '@slack/bolt';
 
 export type BulkWriteResults =
   | {
@@ -19,9 +18,5 @@ export type Sort =
   | undefined
   | null;
 export type FindOptions = { batchSize?: number; limit?: number; sort?: Sort };
-
-export type LogContext = Record<string, unknown>;
-
-export type ViewStateValues = { [blockId: string]: { [actionId: string]: ViewStateValue } };
 
 declare global {}

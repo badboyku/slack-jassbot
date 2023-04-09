@@ -12,7 +12,7 @@ const getBreeOptions = (): BreeOptions => {
   return {
     logger: false,
     defaultExtension: config.app.isTsNode ? 'ts' : 'js',
-    root: path.join(__dirname, '../jobs'),
+    root: path.join(__dirname, '../../jobs'),
     jobs,
     errorHandler: (error: Error, workerMetadata: { name: string; err?: Error }) => {
       logger.warn('bree: error has occurred', { data: { error, workerMetadata } });

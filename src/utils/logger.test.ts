@@ -1,6 +1,5 @@
 /* eslint-disable no-console, testing-library/no-debugging-utils */
 import { config, logger } from '@utils';
-import { getSeverityNum } from '@utils/logger';
 
 jest.mock('@utils/config');
 
@@ -218,23 +217,6 @@ describe('utils logger', () => {
 
       it('calls JSON.stringify with spaces', () => {
         expect(JSON.stringify).toHaveBeenCalledWith({ severity: 'ERROR', message, context }, null, 4);
-      });
-    });
-  });
-
-  describe('calling function getSeverityNum', () => {
-    const testCases = [
-      { severity: 'DEBUG', num: 0 },
-      { severity: 'INFO', num: 1 },
-      { severity: 'WARN', num: 2 },
-      { severity: 'ERROR', num: 3 },
-      { severity: 'unknown', num: 3 },
-    ];
-    testCases.forEach(({ severity, num }) => {
-      describe(`with severity ${severity}`, () => {
-        it(`returns severity num ${num}`, () => {
-          expect(getSeverityNum(severity)).toEqual(num);
-        });
       });
     });
   });
