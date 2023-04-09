@@ -1,8 +1,8 @@
-import type { ModalView } from '@slack/types';
+import type { Button, ModalView } from '@slack/types';
 import type { ChatPostMessageArguments } from '@slack/web-api';
 import type { User } from '@types';
 
-const getButton = (actionId?: string) => {
+const getButton = (actionId?: string): Button => {
   return {
     type: 'button',
     action_id: actionId || 'manageUserDates',
@@ -45,7 +45,7 @@ const getModal = (user: User, callbackId?: string): ModalView => {
   };
 };
 
-const getSaveResult = (userId: string, user: User, hasSaveError = false): ChatPostMessageArguments => {
+const getSaveResult = (userId: string, hasSaveError = false): ChatPostMessageArguments => {
   const fallbackText = hasSaveError
     ? 'On no! I seem to be having issues saving your dates, cross your fingers and please try again.'
     : 'Thank you! I have saved your dates.';

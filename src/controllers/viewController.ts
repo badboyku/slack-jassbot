@@ -12,7 +12,7 @@ const saveUserDates = async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs, 
   } = view;
 
   const { user, hasSaveError } = await viewService.saveUserDates(userId, values);
-  const saveResultOptions = manageUserDates.getSaveResult(userId, user, hasSaveError);
+  const saveResultOptions = manageUserDates.getSaveResult(userId, hasSaveError);
 
   try {
     await client.chat.postMessage(saveResultOptions);
