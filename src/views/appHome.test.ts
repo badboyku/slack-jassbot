@@ -43,6 +43,7 @@ describe('views appHome', () => {
           getWorkAnniversaryDate: jest.fn().mockReturnValueOnce({ toFormat }),
         } as unknown as User;
         jest.spyOn(manageUserDates, 'getButton').mockReturnValueOnce(button as unknown as Button);
+
         view = appHome.getView(user);
       });
 
@@ -85,6 +86,7 @@ describe('views appHome', () => {
       beforeEach(() => {
         user = null;
         jest.spyOn(manageUserDates, 'getButton').mockReturnValueOnce(button as unknown as Button);
+
         view = appHome.getView(user);
       });
 
@@ -110,6 +112,7 @@ describe('views appHome', () => {
           }),
         } as unknown as User;
         jest.spyOn(manageUserDates, 'getButton').mockReturnValueOnce(button as unknown as Button);
+
         view = appHome.getView(user);
       });
 
@@ -135,6 +138,7 @@ describe('views appHome', () => {
           }),
         } as unknown as User;
         jest.spyOn(manageUserDates, 'getButton').mockReturnValueOnce(button as unknown as Button);
+
         view = appHome.getView(user);
       });
 

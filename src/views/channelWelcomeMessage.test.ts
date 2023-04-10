@@ -13,6 +13,7 @@ describe('views channelWelcomeMessage', () => {
     describe('successfully', () => {
       beforeEach(() => {
         jest.spyOn(manageUserDates, 'getButton').mockReturnValueOnce(button as unknown as Button);
+
         options = channelWelcomeMessage.getOptions(channel);
       });
 

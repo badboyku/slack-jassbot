@@ -30,6 +30,7 @@ describe('listeners command', () => {
       jest.spyOn(logger, 'info').mockImplementationOnce(() => {
         // Do nothing.
       });
+
       commandListener(args as unknown as SlackCommandMiddlewareArgs & AllMiddlewareArgs);
     });
 

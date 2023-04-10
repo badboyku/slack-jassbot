@@ -67,35 +67,35 @@ describe('utils app', () => {
         expect(appHelper.getApp).toHaveBeenCalled();
       });
 
-      it('calls logger.warn with error occurring in app', () => {
+      it('calls logger.warn with ErrorHandler', () => {
         expect(logger.warn).toHaveBeenCalledWith('app: error has occurred', { error: err });
       });
 
-      it('calls app.action', () => {
+      it('calls app.action with actionListener', () => {
         expect(appMock.action).toHaveBeenCalledWith(/w*/, actionListener);
       });
 
-      it('calls app.command', () => {
+      it('calls app.command with commandListener', () => {
         expect(appMock.command).toHaveBeenCalledWith(/w*/, commandListener);
       });
 
-      it('calls app.event', () => {
+      it('calls app.event with eventListener', () => {
         expect(appMock.event).toHaveBeenCalledWith(/w*/, eventListener);
       });
 
-      it('calls app.message', () => {
+      it('calls app.message with messageListener', () => {
         expect(appMock.message).toHaveBeenCalledWith(/w*/, messageListener);
       });
 
-      it('calls app.options', () => {
+      it('calls app.options with optionsListener', () => {
         expect(appMock.options).toHaveBeenCalledWith(/w*/, optionsListener);
       });
 
-      it('calls app.shortcut', () => {
+      it('calls app.shortcut with shortcutListener', () => {
         expect(appMock.shortcut).toHaveBeenCalledWith(/w*/, shortcutListener);
       });
 
-      it('calls app.view', () => {
+      it('calls app.view with viewListener', () => {
         expect(appMock.view).toHaveBeenCalledWith(/w*/, viewListener);
       });
 

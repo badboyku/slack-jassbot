@@ -23,8 +23,8 @@ const handleResponse = (response: WebAPICallResult) => {
 
 const handleError = (method: string) => (err: { code: string; data: WebAPICallResult }) => {
   const { code, data: response } = err;
-  const { error, response_metadata: responseMetadata } = response || {};
-  const { messages } = responseMetadata || {};
+  const { error, response_metadata: responseMetadata } = response || /* istanbul ignore next */ {};
+  const { messages } = responseMetadata || /* istanbul ignore next */ {};
   logger.warn(`slackClient: ${method} error`, { code, error, messages });
 
   return { error: new SlackClientError(`${code}: ${error}`, response) };

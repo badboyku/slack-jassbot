@@ -56,6 +56,7 @@ describe('listeners view', () => {
       jest.spyOn(logger, 'info').mockImplementationOnce(() => {
         // Do nothing.
       });
+
       viewListener(args as unknown as SlackViewMiddlewareArgs & AllMiddlewareArgs);
     });
 

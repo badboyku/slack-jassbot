@@ -68,6 +68,7 @@ describe('listeners event', () => {
       jest.spyOn(logger, 'info').mockImplementationOnce(() => {
         // Do nothing.
       });
+
       eventListener(args as unknown as SlackEventMiddlewareArgs & AllMiddlewareArgs);
     });
 

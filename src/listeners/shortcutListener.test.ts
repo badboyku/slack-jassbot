@@ -30,6 +30,7 @@ describe('listeners shortcut', () => {
       jest.spyOn(logger, 'info').mockImplementationOnce(() => {
         // Do nothing.
       });
+
       shortcutListener(args as unknown as SlackShortcutMiddlewareArgs & AllMiddlewareArgs);
     });
 

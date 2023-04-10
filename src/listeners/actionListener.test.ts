@@ -44,6 +44,7 @@ describe('listeners action', () => {
       jest.spyOn(logger, 'info').mockImplementationOnce(() => {
         // Do nothing.
       });
+
       actionListener(args as unknown as SlackActionMiddlewareArgs & AllMiddlewareArgs);
     });
 
