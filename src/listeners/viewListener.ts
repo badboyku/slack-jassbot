@@ -9,11 +9,11 @@ const viewListener = async (args: SlackViewMiddlewareArgs & AllMiddlewareArgs) =
   await ack();
 
   switch (callbackId) {
-    case 'saveUserDatesRefreshAppHome':
-      await viewController.saveUserDates(args, true);
-      break;
     case 'saveUserDates':
       await viewController.saveUserDates(args);
+      break;
+    case 'saveUserDatesRefreshAppHome':
+      await viewController.saveUserDates(args, true);
       break;
     default:
       logger.info('viewListener: unknown view', { payload, view, body });
