@@ -1,6 +1,8 @@
 import { bree, config, logger } from '@utils';
 import { breeHelper, gracefulHelper } from '@utils/helpers';
 import type Bree from 'bree';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import type Graceful, { GracefulOptions } from '@ladjs/graceful';
 
 jest.mock('@utils/config');
