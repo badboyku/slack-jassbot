@@ -2,6 +2,8 @@ import { appHome, manageUserDates } from '@views';
 import type { Button, HomeView } from '@slack/types';
 import type { User } from '@types';
 
+jest.mock('@views/manageUserDates');
+
 describe('views appHome', () => {
   describe('calling function getView', () => {
     const greetingSuccess =

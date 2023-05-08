@@ -1,9 +1,11 @@
 import { LogLevel } from '@slack/bolt';
-import { LOG_LEVEL_DEBUG, LOG_LEVEL_ERROR, LOG_LEVEL_INFO, LOG_LEVEL_WARN } from '@utils/constants';
 import { config, logger } from '@utils';
+import { LOG_LEVELS } from '@utils/constants';
 import { loggerHelper } from '@utils/helpers';
 import type { Logger } from '@slack/logger';
 import type { LogContext } from '@types';
+
+const { DEBUG, INFO, WARN, ERROR } = LOG_LEVELS;
 
 const skipLog = (severity: string): boolean =>
   loggerHelper.getSeverityNum(severity) < loggerHelper.getSeverityNum(config.slack.logLevel);
@@ -43,10 +45,10 @@ const getLogMessageAndContext = (...msgs: string[]): [string, LogContext | undef
 };
 
 const slackLogger: Logger = {
-  debug: (...msgs: string[]) => !skipLog(LOG_LEVEL_DEBUG) && logger.debug(...getLogMessageAndContext(...msgs)),
-  info: (...msgs: string[]) => !skipLog(LOG_LEVEL_INFO) && logger.info(...getLogMessageAndContext(...msgs)),
-  warn: (...msgs: string[]) => !skipLog(LOG_LEVEL_WARN) && logger.warn(...getLogMessageAndContext(...msgs)),
-  error: (...msgs: string[]) => !skipLog(LOG_LEVEL_ERROR) && logger.error(...getLogMessageAndContext(...msgs)),
+  debug: (...msgs: string[]) => !skipLog(DEBUG) && logger.debug(...getLogMessageAndContext(...msgs)),
+  info: (...msgs: string[]) => !skipLog(INFO) && logger.info(...getLogMessageAndContext(...msgs)),
+  warn: (...msgs: string[]) => !skipLog(WARN) && logger.warn(...getLogMessageAndContext(...msgs)),
+  error: (...msgs: string[]) => !skipLog(ERROR) && logger.error(...getLogMessageAndContext(...msgs)),
   setLevel: /* istanbul ignore next */ (_level: LogLevel) => {
     // Do nothing.
   },

@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import appHome from './appHome';
-import channelWelcomeMessage from './channelWelcomeMessage';
-import manageUserDates from './manageUserDates';
+import appHome from '@views/appHome';
+import channelWelcomeMessage from '@views/channelWelcomeMessage';
+import manageUserDates from '@views/manageUserDates';
 
 export { appHome, channelWelcomeMessage, manageUserDates };

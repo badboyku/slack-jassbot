@@ -1,6 +1,6 @@
-import { ChatPostMessageArguments } from '@slack/web-api';
 import { channelWelcomeMessage, manageUserDates } from '@views';
 import type { Button } from '@slack/types';
+import type { ChatPostMessageArguments } from '@slack/web-api';
 
 jest.mock('@views/manageUserDates');
 

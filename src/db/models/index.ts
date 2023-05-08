@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import ChannelModel from './ChannelModel';
-import UserModel from './UserModel';
+import ChannelModel from '@db/models/ChannelModel';
+import UserModel from '@db/models/UserModel';
 
 export { ChannelModel, UserModel };

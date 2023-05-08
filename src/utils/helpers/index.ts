@@ -1,7 +1,7 @@
 /* istanbul ignore file */
-import appHelper from './appHelper';
-import breeHelper from './breeHelper';
-import gracefulHelper from './gracefulHelper';
-import loggerHelper from './loggerHelper';
+import appHelper from '@utils/helpers/appHelper';
+import breeHelper from '@utils/helpers/breeHelper';
+import gracefulHelper from '@utils/helpers/gracefulHelper';
+import loggerHelper from '@utils/helpers/loggerHelper';
 
 export { appHelper, breeHelper, gracefulHelper, loggerHelper };

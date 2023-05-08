@@ -1,11 +1,8 @@
-import Bree from 'bree';
-import Graceful from '@ladjs/graceful';
 import { bree, config, logger } from '@utils';
 import { breeHelper, gracefulHelper } from '@utils/helpers';
-import type { GracefulOptions } from '@ladjs/graceful';
+import type Bree from 'bree';
+import type Graceful, { GracefulOptions } from '@ladjs/graceful';
 
-jest.mock('bree');
-jest.mock('@ladjs/graceful');
 jest.mock('@utils/config');
 jest.mock('@utils/logger');
 jest.mock('@utils/helpers/breeHelper');

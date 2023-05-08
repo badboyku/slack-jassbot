@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 import { config } from '@utils';
+import { LOG_FORMATS, LOG_LEVELS } from '@utils/constants';
 import { loggerHelper } from '@utils/helpers';
-import { LOG_FORMAT_DEV, LOG_LEVEL_DEBUG, LOG_LEVEL_ERROR, LOG_LEVEL_INFO, LOG_LEVEL_WARN } from '@utils/constants';
 import type { LogContext, Logger } from '@types';
+
+const { DEBUG, INFO, WARN, ERROR } = LOG_LEVELS;
 
 const skipLog = (severity: string): boolean =>
   loggerHelper.getSeverityNum(severity) < loggerHelper.getSeverityNum(config.app.logLevel);
@@ -10,18 +12,18 @@ const skipLog = (severity: string): boolean =>
 const getLogMessage = (severity: string, message: string, context?: LogContext): string => {
   const log = { severity, message, context };
 
-  return config.app.logOutputFormat === LOG_FORMAT_DEV ? JSON.stringify(log, null, 4) : JSON.stringify(log);
+  return config.app.logOutputFormat === LOG_FORMATS.DEV ? JSON.stringify(log, null, 4) : JSON.stringify(log);
 };
 
 const logger: Logger = {
   debug: (message: string, context?: LogContext) =>
-    !skipLog(LOG_LEVEL_DEBUG) && console.debug(getLogMessage(LOG_LEVEL_DEBUG, message, context)),
+    !skipLog(DEBUG) && console.debug(getLogMessage(DEBUG, message, context)),
   info: (message: string, context?: LogContext) =>
-    !skipLog(LOG_LEVEL_INFO) && console.info(getLogMessage(LOG_LEVEL_INFO, message, context)),
+    !skipLog(INFO) && console.info(getLogMessage(INFO, message, context)),
   warn: (message: string, context?: LogContext) =>
-    !skipLog(LOG_LEVEL_WARN) && console.warn(getLogMessage(LOG_LEVEL_WARN, message, context)),
+    !skipLog(WARN) && console.warn(getLogMessage(WARN, message, context)),
   error: (message: string, context?: LogContext) =>
-    !skipLog(LOG_LEVEL_ERROR) && console.error(getLogMessage(LOG_LEVEL_ERROR, message, context)),
+    !skipLog(ERROR) && console.error(getLogMessage(ERROR, message, context)),
 };
 
 export default logger;

@@ -1,4 +1,4 @@
 /* istanbul ignore file */
-import SlackClientError from './SlackClientError';
+import SlackClientError from '@errors/SlackClientError';
 
 export { SlackClientError };

@@ -1,6 +1,6 @@
-import { ChatPostMessageArguments } from '@slack/web-api';
 import { manageUserDates } from '@views';
 import type { Button, Datepicker, InputBlock, ModalView } from '@slack/types';
+import type { ChatPostMessageArguments } from '@slack/web-api';
 import type { User } from '@types';
 
 describe('views manageUserDates', () => {

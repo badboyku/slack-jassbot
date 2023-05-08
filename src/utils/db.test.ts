@@ -3,6 +3,7 @@ import { config, db, logger } from '@utils';
 import type { Mongoose } from 'mongoose';
 import type { DbConnectResult, DbDisconnectResult } from '@types';
 
+jest.mock('mongoose');
 jest.mock('@utils/config');
 jest.mock('@utils/logger');
 

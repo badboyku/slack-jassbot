@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import actionController from './actionController';
-import eventController from './eventController';
-import viewController from './viewController';
+import actionController from '@controllers/actionController';
+import eventController from '@controllers/eventController';
+import viewController from '@controllers/viewController';
 
 export { actionController, eventController, viewController };
