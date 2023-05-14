@@ -3,19 +3,13 @@ import { crypto, dateTime } from '@utils';
 import type { SaveUserDatesResult, ViewStateValues } from '@types';
 
 const saveUserDates = async (userId: string, values: ViewStateValues): Promise<SaveUserDatesResult> => {
-  const {
-    birthday: {
-      datepicker: { selected_date: birthdayValue },
-    },
-    workAnniversary: {
-      datepicker: { selected_date: workAnniversaryValue },
-    },
-  } = values;
-
-  const birthdayDate = dateTime.getDateTimeFromIso(birthdayValue?.toString() || '');
-  const workAnniversaryDate = dateTime.getDateTimeFromIso(workAnniversaryValue?.toString() || '');
+  const birthdayValue = values?.birthday?.datepicker?.selected_date?.toString() || '';
+  const birthdayDate = dateTime.getDateTimeFromIso(birthdayValue);
   const birthday = birthdayDate?.toISODate() || '';
   const birthdayLookup = birthdayDate?.toFormat('LL-dd') || '';
+
+  const workAnniversaryValue = values?.workAnniversary?.datepicker?.selected_date?.toString() || '';
+  const workAnniversaryDate = dateTime.getDateTimeFromIso(workAnniversaryValue);
   const workAnniversary = workAnniversaryDate?.toISODate() || '';
   const workAnniversaryLookup = workAnniversaryDate?.toFormat('LL-dd') || '';
 

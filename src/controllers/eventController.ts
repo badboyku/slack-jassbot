@@ -7,6 +7,7 @@ const appHomeOpened = async (args: AppHomeOpenedArgs) => {
   const { client, event } = args;
   const { channel, tab, user: userId } = event;
 
+  /* istanbul ignore next TODO: add unit tests */
   if (tab === 'messages') {
     logger.debug('eventController: appHomeOpened called', { event: { channel, tab, userId } });
     // TODO: Do something when user opens message tab?
@@ -25,6 +26,7 @@ const appHomeOpened = async (args: AppHomeOpenedArgs) => {
   }
 };
 
+/* istanbul ignore next TODO: add unit tests */
 const appMention = async (args: AppMentionArgs) => {
   const { payload, event, message, body } = args;
   // const { channel, type, user: userId } = event;
@@ -58,6 +60,7 @@ const memberJoinedChannel = async (args: MemberJoinedChannelArgs) => {
   }
 };
 
+/* istanbul ignore next TODO: add unit tests */
 const memberLeftChannel = async (args: MemberLeftChannelArgs) => {
   const { payload, event, message, body } = args;
   // const { channel, type, user: userId } = event;
