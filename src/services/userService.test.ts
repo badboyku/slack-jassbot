@@ -17,7 +17,7 @@ type UserDocument = Document<{}, {}, UserDocType> & Omit<UserDocType, never>;
 jest.mock('@db/models/UserModel');
 jest.mock('@utils/logger');
 
-describe('services User', () => {
+describe('services user', () => {
   const user1 = { _id: 'yin', userId: 'foo' };
   const user2 = { _id: 'yang', userId: 'bar' };
   const error = 'error';
