@@ -21,7 +21,8 @@ export type MemberJoinedChannelArgs = SlackEventMiddlewareArgs<'member_joined_ch
 export type MemberLeftChannelArgs = SlackEventMiddlewareArgs<'member_left_channel'> & AllMiddlewareArgs;
 
 /** Db Types */
-export type DocType = { createdAt: Date; updatedAt: Date };
+export type DocDates = { createdAt: Date; updatedAt: Date };
+export type DocId = { _id: Types.ObjectId };
 
 // Channel
 export type ChannelData = {
@@ -31,11 +32,9 @@ export type ChannelData = {
   numMembers?: number;
   members?: string[];
 };
-export type ChannelDocType = ChannelData & DocType;
 export type ChannelMethods = {};
-export type Channel =
-  | (ChannelDocType & Document<{}, {}, ChannelDocType> & ChannelMethods & { _id: Types.ObjectId })
-  | null;
+export type ChannelDocType = ChannelData & ChannelMethods & DocDates & DocId;
+export type Channel = (ChannelDocType & Document<{}, {}, ChannelDocType>) | null;
 
 // User
 export type UserData = {
@@ -49,16 +48,23 @@ export type UserData = {
   workAnniversaryRaw?: string; // TODO: REMOVE THIS!!!
   workAnniversaryRawLookup?: string; // TODO: REMOVE THIS!!!
 };
-export type UserDocType = UserData & DocType;
 export type UserMethods = {
   getBirthdayDate: () => DateTime | undefined;
   getWorkAnniversaryDate: () => DateTime | undefined;
 };
-export type User = (UserDocType & Document<{}, {}, UserDocType> & UserMethods & { _id: Types.ObjectId }) | null;
+export type UserDocType = UserData & UserMethods & DocDates & DocId;
+export type User = (UserDocType & Document<{}, {}, UserDocType>) | null;
 
 /** Services Types */
 export type BulkWriteResults =
-  | { ok: number; nInserted: number; nUpserted: number; nMatched: number; nModified: number; nRemoved: number }
+  | {
+      ok: number;
+      insertedCount: number;
+      upsertedCount: number;
+      matchedCount: number;
+      modifiedCount: number;
+      deletedCount: number;
+    }
   | undefined;
 
 export type Sort =

@@ -1,12 +1,11 @@
 import { ChannelModel } from '@db/models';
 import { logger } from '@utils';
 import {
-  DB_MAX_BATCH_SIZE,
-  DB_MAX_LIMIT,
-  DEFAULT_DB_BATCH_SIZE,
-  DEFAULT_DB_FIND_OPTIONS,
-  DEFAULT_DB_LIMIT,
-  DEFAULT_DB_SORT,
+  DB_BATCH_SIZE_DEFAULT,
+  DB_BATCH_SIZE_MAX,
+  DB_LIMIT_DEFAULT,
+  DB_LIMIT_MAX,
+  DB_SORT_DEFAULT,
 } from '@utils/constants';
 import type { AnyBulkWriteOperation } from 'mongodb';
 import type { FilterQuery, Types, UpdateQuery } from 'mongoose';
@@ -18,9 +17,9 @@ const bulkWrite = (ops: AnyBulkWriteOperation<ChannelDocType>[]): Promise<BulkWr
   return ops.length > 0
     ? ChannelModel.bulkWrite(ops)
         .then((result) => {
-          const { ok, nInserted, nUpserted, nMatched, nModified, nRemoved } = result;
+          const { ok, insertedCount, upsertedCount, matchedCount, modifiedCount, deletedCount } = result;
 
-          return { ok, nInserted, nUpserted, nMatched, nModified, nRemoved };
+          return { ok, insertedCount, upsertedCount, matchedCount, modifiedCount, deletedCount };
         })
         .catch((error) => {
           logger.warn('channelService: bulkWrite failed', { error });
@@ -32,10 +31,8 @@ const bulkWrite = (ops: AnyBulkWriteOperation<ChannelDocType>[]): Promise<BulkWr
 
 const create = async (data: ChannelData): Promise<Channel> => {
   logger.debug('channelService: create called', { data });
-  const channel = new ChannelModel(data);
 
-  return channel
-    .save()
+  return ChannelModel.create(data)
     .then((result) => result)
     .catch((error) => {
       logger.warn('channelService: create failed', { error });
@@ -46,18 +43,14 @@ const create = async (data: ChannelData): Promise<Channel> => {
 
 const find = async (filter: FilterQuery<ChannelData>, options?: FindOptions): Promise<Channel[]> => {
   logger.debug('channelService: find called', { filter, options });
-  const {
-    batchSize = DEFAULT_DB_BATCH_SIZE,
-    limit = DEFAULT_DB_LIMIT,
-    sort = undefined,
-  } = options || DEFAULT_DB_FIND_OPTIONS;
+  const { batchSize = DB_BATCH_SIZE_DEFAULT, limit = DB_LIMIT_DEFAULT, sort = undefined } = options || {};
   const channels: Channel[] = [];
 
   try {
     const cursor = ChannelModel.find(filter)
       .sort(sort)
-      .limit(Math.min(limit, DB_MAX_LIMIT))
-      .cursor({ batchSize: Math.min(batchSize, DB_MAX_BATCH_SIZE) });
+      .limit(Math.min(limit, DB_LIMIT_MAX))
+      .cursor({ batchSize: Math.min(batchSize, DB_BATCH_SIZE_MAX) });
 
     // eslint-disable-next-line no-await-in-loop
     for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
@@ -72,16 +65,12 @@ const find = async (filter: FilterQuery<ChannelData>, options?: FindOptions): Pr
 
 const findAll = async (filter: FilterQuery<ChannelData>, options?: FindOptions): Promise<Channel[]> => {
   logger.debug('channelService: findAll called', { filter, options });
-  const {
-    batchSize = DEFAULT_DB_BATCH_SIZE,
-    limit = DEFAULT_DB_LIMIT,
-    sort = DEFAULT_DB_SORT,
-  } = options || DEFAULT_DB_FIND_OPTIONS;
+  const { limit = DB_LIMIT_DEFAULT, sort = DB_SORT_DEFAULT } = options || {};
   let allChannels: Channel[] = [];
   let afterId: Types.ObjectId | undefined;
   let hasMore = false;
 
-  const findOptions = { batchSize, limit, sort };
+  const findOptions = { ...options, limit, sort };
 
   do {
     const findFilter = { ...filter, ...(afterId ? { _id: { $gt: afterId } } : {}) };

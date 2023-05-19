@@ -2,12 +2,11 @@
 import type { Sort } from '@types';
 
 // Database
-export const DEFAULT_DB_BATCH_SIZE = 100;
-export const DEFAULT_DB_LIMIT = 100;
-export const DEFAULT_DB_SORT: Sort = { _id: 1 };
-export const DEFAULT_DB_FIND_OPTIONS = { batchSize: DEFAULT_DB_BATCH_SIZE, limit: DEFAULT_DB_LIMIT, sort: undefined };
-export const DB_MAX_BATCH_SIZE = 1000;
-export const DB_MAX_LIMIT = 1000;
+export const DB_BATCH_SIZE_DEFAULT = 100;
+export const DB_BATCH_SIZE_MAX = 1000;
+export const DB_LIMIT_DEFAULT = 100;
+export const DB_LIMIT_MAX = 1000;
+export const DB_SORT_DEFAULT: Sort = { _id: 1 };
 
 // Logger
 export const LOG_FORMATS = { DEV: 'DEV', ELK: 'ELK' };
