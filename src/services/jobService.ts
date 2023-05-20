@@ -3,6 +3,7 @@ import { crypto, dateTime, logger } from '@utils';
 import type { AnyBulkWriteOperation } from 'mongodb';
 import type { ChannelDocType, GetChannelMembersResult, UpdateChannelsResult } from '@types';
 
+/* istanbul ignore next TODO: add unit tests */
 const findTomorrowsBirthdays = async () => {
   logger.debug('jobService: findTomorrowsBirthdays called');
 
@@ -24,7 +25,7 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
     const { id: channelId = '', num_members: numMembers = 0 } = channel;
     channelsMembers[channelId] = [];
 
-    if (numMembers > 0) {
+    if (channelId.length && numMembers > 0) {
       channelMembersPromises.push(slackService.getChannelMembers(channelId));
     }
   });
