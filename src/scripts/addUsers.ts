@@ -7,10 +7,8 @@ import type { AnyBulkWriteOperation } from 'mongodb';
 import type { UserDocType } from '@types';
 
 (async () => {
-  const maxNumUsers = 5000;
-  const defaultNumUsers = 1000;
   const numUsersArg = Number(process.argv[2]) || undefined;
-  const numUsers = Math.min(numUsersArg || defaultNumUsers, maxNumUsers);
+  const numUsers = Math.min(numUsersArg || 1000, 5000);
   logger.info('scripts: addUsers called', { numUsersArg, numUsers });
 
   const { isConnected: isDbConnected } = await db.connect();
@@ -20,20 +18,24 @@ import type { UserDocType } from '@types';
     process.exit(1);
   }
 
+  let birthdayDate: DateTime | undefined;
+  let workAnniversaryDate: DateTime | undefined;
   const ops: AnyBulkWriteOperation<UserDocType>[] = [];
+
   for (let i = 0; i < numUsers; i += 1) {
-    let birthdayDate: DateTime | undefined;
-    let workAnniversaryDate: DateTime | undefined;
     if (i % 10 !== 0) {
       birthdayDate = dateTime.getDateTimeFromJSDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' }));
-      workAnniversaryDate = dateTime.getDateTimeFromJSDate(faker.date.past(20));
+      workAnniversaryDate = dateTime.getDateTimeFromJSDate(faker.date.past({ years: 20 }));
+    } else {
+      birthdayDate = undefined;
+      workAnniversaryDate = undefined;
     }
     const birthday = birthdayDate?.toISODate() || '';
     const birthdayLookup = birthdayDate?.toFormat('LL-dd') || '';
     const workAnniversary = workAnniversaryDate?.toISODate() || '';
     const workAnniversaryLookup = workAnniversaryDate?.toFormat('LL-dd') || '';
 
-    const filter = { userId: `TEST${faker.random.alphaNumeric(7, { casing: 'upper' })}` };
+    const filter = { userId: `TEST${faker.string.alphanumeric({ length: 7, casing: 'upper' })}` };
     const update = {
       $set: {
         birthday: crypto.encrypt(birthday),

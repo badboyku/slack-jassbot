@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-// import { jobService } from '@services';
+import { jobService } from '@services';
 import { db, logger } from '@utils';
 
 (async () => {
@@ -12,7 +12,7 @@ import { db, logger } from '@utils';
     process.exit(1);
   }
 
-  // await jobService.findTomorrowsBirthdays();
+  await jobService.findTomorrowsBirthdays();
   logger.info('scripts: test completed');
 
   await db.disconnect();

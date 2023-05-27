@@ -27,6 +27,7 @@ export type DocId = { _id: Types.ObjectId };
 // Channel
 export type ChannelData = {
   channelId?: string;
+  name?: string;
   isMember?: boolean;
   isPrivate?: boolean;
   numMembers?: number;

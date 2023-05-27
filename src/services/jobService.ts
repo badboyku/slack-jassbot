@@ -5,15 +5,29 @@ import type { ChannelDocType, GetChannelMembersResult, UpdateChannelsResult } fr
 
 /* istanbul ignore next TODO: add unit tests */
 const findTomorrowsBirthdays = async () => {
-  logger.debug('jobService: findTomorrowsBirthdays called');
+  // const options = { batchSize: 5000, limit: 10000 };
 
-  const tomorrow = dateTime.getDateTime().plus({ days: 1 });
-  const birthdayLookup = tomorrow.toFormat('LL-dd');
+  // Get all users
+  const birthdayLookup = dateTime.getDateTime().plus({ days: 1 }).toFormat('LL-dd');
+  const birthdayFilter = { birthdayLookup: crypto.createHmac(birthdayLookup) };
+  const users = await userService.findAll(birthdayFilter);
+  logger.info('users', { numUsers: users.length });
 
-  const filter = { birthdayLookup: crypto.createHmac(birthdayLookup) };
-  const options = { batchSize: 1000, limit: 1000 };
-  const users = await userService.findAll(filter, options);
-  logger.debug('users', { numUsers: users.length, user1: users[0], user2: users[1] });
+  // Get all users userIds
+  const members: string[] = [];
+  users.forEach((user) => {
+    const { userId = '' } = user || {};
+
+    if (userId.length) {
+      members.push(userId);
+    }
+  });
+  logger.info('members', { numMembers: members.length });
+
+  // Get all channels for userIds
+  const channelFilter = { members: { $in: members } };
+  const channels = await channelService.findAll(channelFilter);
+  logger.info('channels', { numChannels: channels.length });
 };
 
 const updateChannels = async (): Promise<UpdateChannelsResult> => {
@@ -57,9 +71,9 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
 
   const ops: AnyBulkWriteOperation<ChannelDocType>[] = [];
   channels.forEach((channel) => {
-    const { id: channelId, is_member: isMember, is_private: isPrivate, num_members: numMembers } = channel;
+    const { id: channelId, name, is_member: isMember, is_private: isPrivate, num_members: numMembers } = channel;
     const filter = { channelId };
-    const update = { $set: { isMember, isPrivate, numMembers, members: channelsMembers[channelId as string] } };
+    const update = { $set: { name, isMember, isPrivate, numMembers, members: channelsMembers[channelId as string] } };
     ops.push({ updateOne: { filter, update, upsert: true } });
   });
 

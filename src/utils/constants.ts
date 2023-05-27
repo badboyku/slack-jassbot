@@ -2,10 +2,10 @@
 import type { Sort } from '@types';
 
 // Database
-export const DB_BATCH_SIZE_DEFAULT = 100;
-export const DB_BATCH_SIZE_MAX = 1000;
-export const DB_LIMIT_DEFAULT = 100;
-export const DB_LIMIT_MAX = 1000;
+export const DB_BATCH_SIZE_DEFAULT = 1000;
+export const DB_BATCH_SIZE_MAX = 5000;
+export const DB_LIMIT_DEFAULT = 1000;
+export const DB_LIMIT_MAX = 5000;
 export const DB_SORT_DEFAULT: Sort = { _id: 1 };
 
 // Logger

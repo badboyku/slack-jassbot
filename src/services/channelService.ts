@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { ChannelModel } from '@db/models';
 import { logger } from '@utils';
 import {
@@ -64,16 +65,14 @@ const find = async (filter: FilterQuery<ChannelData>, options?: FindOptions): Pr
 };
 
 const findAll = async (filter: FilterQuery<ChannelData>, options?: FindOptions): Promise<Channel[]> => {
-  logger.debug('channelService: findAll called', { filter, options });
   const { limit = DB_LIMIT_DEFAULT, sort = DB_SORT_DEFAULT } = options || {};
+  const findOptions = { ...options, limit, sort };
   let allChannels: Channel[] = [];
   let afterId: Types.ObjectId | undefined;
   let hasMore = false;
 
-  const findOptions = { ...options, limit, sort };
-
   do {
-    const findFilter = { ...filter, ...(afterId ? { _id: { $gt: afterId } } : {}) };
+    const findFilter = { ...filter, ...(afterId ? { _id: { $gt: new ObjectId(afterId) } } : {}) };
     // eslint-disable-next-line no-await-in-loop
     const channels = await find(findFilter, findOptions);
 
