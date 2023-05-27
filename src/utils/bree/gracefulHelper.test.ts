@@ -1,11 +1,11 @@
 import Graceful from '@ladjs/graceful';
-import { gracefulHelper } from '@utils/helpers';
+import { gracefulHelper } from '@utils';
 import type { GracefulOptions } from '@ladjs/graceful';
 import type Bree from 'bree';
 
 jest.mock('@ladjs/graceful');
 
-describe('utils/helpers gracefulHelper', () => {
+describe('utils gracefulHelper', () => {
   describe('calling function getGraceful', () => {
     describe('successfully', () => {
       let result: Graceful;

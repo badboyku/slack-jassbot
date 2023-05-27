@@ -4,7 +4,7 @@ import { logger } from '@utils';
 import type { AllMiddlewareArgs, SlackActionMiddlewareArgs } from '@slack/bolt';
 
 jest.mock('@controllers/actionController');
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 
 describe('listeners action', () => {
   const ack = jest.fn();

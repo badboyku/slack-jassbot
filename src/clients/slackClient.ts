@@ -1,6 +1,5 @@
 import { SlackClientError } from '@errors';
-import { logger } from '@utils';
-import { appHelper } from '@utils/helpers';
+import { appHelper, logger } from '@utils';
 import type { CodedError } from '@slack/bolt';
 import type { ErrorHandler } from '@slack/bolt/dist/App';
 import type { ConversationsListArguments, ConversationsMembersArguments, WebAPICallResult } from '@slack/web-api';

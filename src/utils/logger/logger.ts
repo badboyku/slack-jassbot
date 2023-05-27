@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
-import { config } from '@utils';
+import { config, loggerHelper } from '@utils';
 import { LOG_FORMATS, LOG_LEVELS } from '@utils/constants';
-import { loggerHelper } from '@utils/helpers';
 import type { LogContext, Logger } from '@types';
 
 const { DEBUG, INFO, WARN, ERROR } = LOG_LEVELS;

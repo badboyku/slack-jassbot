@@ -1,7 +1,6 @@
 import { LogLevel } from '@slack/bolt';
-import { config, logger } from '@utils';
+import { config, logger, loggerHelper } from '@utils';
 import { LOG_LEVELS } from '@utils/constants';
-import { loggerHelper } from '@utils/helpers';
 import type { Logger } from '@slack/logger';
 import type { LogContext } from '@types';
 

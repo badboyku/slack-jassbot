@@ -2,7 +2,7 @@
 import { config, logger, slackLogger } from '@utils';
 
 jest.mock('@utils/config');
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 
 describe('utils slackLogger', () => {
   const msg = 'message';

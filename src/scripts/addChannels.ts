@@ -67,7 +67,14 @@ const getMembers = (userIds: string[] = []): string[] => {
 
     const filter = { channelId: `TEST${faker.string.alphanumeric({ length: 7, casing: 'upper' })}` };
     const update = {
-      $set: { isMember, isPrivate: faker.datatype.boolean(), numMembers: members.length, members, __v: 0 },
+      $set: {
+        name: faker.word.words({ count: { min: 1, max: 8 } }).replaceAll(' ', '-'),
+        isMember,
+        isPrivate: faker.datatype.boolean(),
+        numMembers: members.length,
+        members,
+        __v: 0,
+      },
     };
 
     ops.push({ updateOne: { filter, update, upsert: true } });

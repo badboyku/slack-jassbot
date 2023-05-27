@@ -7,7 +7,7 @@ import type { ModalView } from '@slack/types';
 import type { ManageUserDatesResult } from '@types';
 
 jest.mock('@services/actionService');
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 jest.mock('@views/manageUserDates');
 
 describe('controllers action', () => {

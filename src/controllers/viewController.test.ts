@@ -7,7 +7,7 @@ import type { HomeView } from '@slack/web-api';
 import type { SaveUserDatesResult } from '@types';
 
 jest.mock('@services/viewService');
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 jest.mock('@views/appHome');
 jest.mock('@views/manageUserDates');
 

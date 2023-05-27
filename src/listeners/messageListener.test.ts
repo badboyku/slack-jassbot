@@ -2,7 +2,7 @@ import { messageListener } from '@listeners';
 import { logger } from '@utils';
 import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 
 describe('listeners message', () => {
   const payload = 'payload';

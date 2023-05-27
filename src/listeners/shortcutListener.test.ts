@@ -2,7 +2,7 @@ import { shortcutListener } from '@listeners';
 import { logger } from '@utils';
 import type { AllMiddlewareArgs, SlackShortcutMiddlewareArgs } from '@slack/bolt';
 
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 
 describe('listeners shortcut', () => {
   const ack = jest.fn();

@@ -1,13 +1,12 @@
 import { App } from '@slack/bolt';
-import { config, slackLogger } from '@utils';
-import { appHelper } from '@utils/helpers';
+import { appHelper, config, slackLogger } from '@utils';
 import type { AppOptions } from '@slack/bolt';
 
 jest.mock('@slack/bolt');
 jest.mock('@utils/config');
 jest.mock('@utils/slackLogger');
 
-describe('utils/helpers appHelper', () => {
+describe('utils appHelper', () => {
   describe('calling function getApp', () => {
     describe('successfully', () => {
       let result: App;

@@ -4,7 +4,7 @@ import { logger } from '@utils';
 import type { AllMiddlewareArgs, SlackViewMiddlewareArgs } from '@slack/bolt';
 
 jest.mock('@controllers/viewController');
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 
 describe('listeners view', () => {
   const ack = jest.fn();

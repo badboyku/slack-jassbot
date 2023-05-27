@@ -11,7 +11,7 @@ import type {
 import type { ChatPostMessageArguments, HomeView } from '@slack/web-api';
 
 jest.mock('@services/eventService');
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 jest.mock('@views/appHome');
 jest.mock('@views/channelWelcomeMessage');
 

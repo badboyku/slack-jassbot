@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { UserModel } from '@db/models';
 import { userService } from '@services';
 import { logger } from '@utils';
@@ -15,11 +16,11 @@ import type { BulkWriteResults, User, UserDocType } from '@types';
 type UserDocument = Document<{}, {}, UserDocType> & Omit<UserDocType, never>;
 
 jest.mock('@db/models/UserModel');
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 
 describe('services user', () => {
-  const user1 = { _id: 'yin', userId: 'foo' };
-  const user2 = { _id: 'yang', userId: 'bar' };
+  const user1 = { _id: '6471bdeb1eda180988fb5a19', userId: 'foo' };
+  const user2 = { _id: '6471bee81eda180988fb5b0e', userId: 'bar' };
   const error = 'error';
 
   describe('calling function bulkWrite', () => {
@@ -512,7 +513,7 @@ describe('services user', () => {
       });
 
       it('calls UserModel.find for second call with _id filter of last User in page', () => {
-        expect(UserModel.find).toHaveBeenNthCalledWith(2, { ...filter, _id: { $gt: user2._id } });
+        expect(UserModel.find).toHaveBeenNthCalledWith(2, { ...filter, _id: { $gt: new ObjectId(user2._id) } });
       });
     });
   });

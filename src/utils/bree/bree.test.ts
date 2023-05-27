@@ -1,14 +1,11 @@
-import { bree, config, logger } from '@utils';
-import { breeHelper, gracefulHelper } from '@utils/helpers';
+import { bree, breeHelper, config, gracefulHelper, logger } from '@utils';
 import type Bree from 'bree';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import type Graceful, { GracefulOptions } from '@ladjs/graceful';
 
+jest.mock('@utils/bree/breeHelper');
+jest.mock('@utils/bree/gracefulHelper');
 jest.mock('@utils/config');
-jest.mock('@utils/logger');
-jest.mock('@utils/helpers/breeHelper');
-jest.mock('@utils/helpers/gracefulHelper');
+jest.mock('@utils/logger/logger');
 
 describe('utils bree', () => {
   const configBreeDefault = { jobs: { updateChannelsCron: '' }, isDisabled: false };

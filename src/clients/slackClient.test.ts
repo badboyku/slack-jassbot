@@ -1,9 +1,11 @@
 import { slackClient } from '@clients';
 import { SlackClientError } from '@errors';
-import { logger } from '@utils';
-import { appHelper } from '@utils/helpers';
+import { appHelper, logger } from '@utils';
 import type { App, CodedError } from '@slack/bolt';
 import type { SlackClientGetConversationListResult, SlackClientGetConversationsMembersResult } from '@types';
+
+jest.mock('@utils/app/appHelper');
+jest.mock('@utils/logger/logger');
 
 describe('clients slack', () => {
   const responseSuccess = { ok: true };

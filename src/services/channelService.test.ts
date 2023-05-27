@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { ChannelModel } from '@db/models';
 import { channelService } from '@services';
 import { logger } from '@utils';
@@ -15,11 +16,11 @@ import type { BulkWriteResults, Channel, ChannelDocType } from '@types';
 type ChannelDocument = Document<{}, {}, ChannelDocType> & Omit<ChannelDocType, never>;
 
 jest.mock('@db/models/ChannelModel');
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 
 describe('services channel', () => {
-  const channel1 = { _id: 'yin', channelId: 'foo' };
-  const channel2 = { _id: 'yang', channelId: 'bar' };
+  const channel1 = { _id: '6471bdeb1eda180988fb5a19', channelId: 'foo' };
+  const channel2 = { _id: '6471bee81eda180988fb5b0e', channelId: 'bar' };
   const error = 'error';
 
   describe('calling function bulkWrite', () => {
@@ -512,7 +513,7 @@ describe('services channel', () => {
       });
 
       it('calls ChannelModel.find for second call with _id filter of last channel in page', () => {
-        expect(ChannelModel.find).toHaveBeenNthCalledWith(2, { ...filter, _id: { $gt: channel2._id } });
+        expect(ChannelModel.find).toHaveBeenNthCalledWith(2, { ...filter, _id: { $gt: new ObjectId(channel2._id) } });
       });
     });
   });

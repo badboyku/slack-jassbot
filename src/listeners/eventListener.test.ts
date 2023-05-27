@@ -4,7 +4,7 @@ import { logger } from '@utils';
 import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 
 jest.mock('@controllers/eventController');
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 
 describe('listeners event', () => {
   const payload = 'payload';

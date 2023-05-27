@@ -5,7 +5,7 @@ import type { DbConnectResult, DbDisconnectResult } from '@types';
 
 jest.mock('mongoose');
 jest.mock('@utils/config');
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 
 describe('utils slackLogger', () => {
   describe('calling function connect', () => {

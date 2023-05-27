@@ -2,7 +2,7 @@ import { commandListener } from '@listeners';
 import { logger } from '@utils';
 import type { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from '@slack/bolt';
 
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 
 describe('listeners command', () => {
   const ack = jest.fn();

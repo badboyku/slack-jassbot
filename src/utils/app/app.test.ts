@@ -7,8 +7,7 @@ import {
   shortcutListener,
   viewListener,
 } from '@listeners';
-import { app, config, logger } from '@utils';
-import { appHelper } from '@utils/helpers';
+import { app, appHelper, config, logger } from '@utils';
 import type { App, CodedError } from '@slack/bolt';
 import type { AppStartResult } from '@types';
 
@@ -19,9 +18,9 @@ jest.mock('@listeners/messageListener');
 jest.mock('@listeners/optionsListener');
 jest.mock('@listeners/shortcutListener');
 jest.mock('@listeners/viewListener');
+jest.mock('@utils/app/appHelper');
 jest.mock('@utils/config');
-jest.mock('@utils/logger');
-jest.mock('@utils/helpers/appHelper');
+jest.mock('@utils/logger/logger');
 
 describe('utils app', () => {
   const configAppDefault = { logLevel: '', logOutputFormat: '', nodeEnv: '', port: 123, isTsNode: false };

@@ -1,13 +1,12 @@
 import Bree from 'bree';
-import { config, logger } from '@utils';
-import { breeHelper } from '@utils/helpers';
+import { breeHelper, config, logger } from '@utils';
 import type { BreeOptions, Job } from 'bree';
 
 jest.mock('bree');
 jest.mock('@utils/config');
-jest.mock('@utils/logger');
+jest.mock('@utils/logger/logger');
 
-describe('utils/helpers breeHelper', () => {
+describe('utils breeHelper', () => {
   describe('calling function getBree', () => {
     describe('successfully', () => {
       let result: Bree;

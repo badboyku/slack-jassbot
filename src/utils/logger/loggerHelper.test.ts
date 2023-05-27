@@ -1,6 +1,6 @@
-import { loggerHelper } from '@utils/helpers';
+import { loggerHelper } from '@utils';
 
-describe('utils/helpers loggerHelper', () => {
+describe('utils loggerHelper', () => {
   describe('calling function getSeverityNum', () => {
     const testCases = [
       { severity: 'DEBUG', num: 0 },
