@@ -16,6 +16,8 @@ describe('services slack', () => {
   const channel2 = { id: 'bar' };
   const member1 = 'member1';
   const member2 = 'member2';
+  const cursor = '';
+  const limit = SLACK_GET_LIMIT_DEFAULT;
   const error = 'error';
 
   describe('calling function getChannelMembers', () => {
@@ -37,11 +39,7 @@ describe('services slack', () => {
       });
 
       it('calls slackClient.getConversationsMembers', () => {
-        expect(slackClient.getConversationsMembers).toHaveBeenCalledWith({
-          channel: channelId,
-          limit: SLACK_GET_LIMIT_DEFAULT,
-          cursor: '',
-        });
+        expect(slackClient.getConversationsMembers).toHaveBeenCalledWith({ channel: channelId, cursor, limit });
       });
 
       it('returns result', () => {
@@ -67,18 +65,14 @@ describe('services slack', () => {
       });
 
       it('calls slackClient.getConversationsMembers for first call with no cursor option', () => {
-        expect(slackClient.getConversationsMembers).toHaveBeenNthCalledWith(1, {
-          channel: channelId,
-          limit: SLACK_GET_LIMIT_DEFAULT,
-          cursor: '',
-        });
+        expect(slackClient.getConversationsMembers).toHaveBeenNthCalledWith(1, { channel: channelId, cursor, limit });
       });
 
       it('calls slackClient.getConversationsMembers for second call with cursor option', () => {
         expect(slackClient.getConversationsMembers).toHaveBeenNthCalledWith(2, {
           channel: channelId,
-          limit: SLACK_GET_LIMIT_DEFAULT,
           cursor: member1,
+          limit,
         });
       });
 
@@ -125,11 +119,7 @@ describe('services slack', () => {
       });
 
       it('calls slackClient.getConversationsList', () => {
-        expect(slackClient.getConversationsList).toHaveBeenCalledWith({
-          limit: SLACK_GET_LIMIT_DEFAULT,
-          cursor: '',
-          exclude_archived: false,
-        });
+        expect(slackClient.getConversationsList).toHaveBeenCalledWith({ cursor, limit });
       });
 
       it('returns result', () => {
@@ -153,12 +143,7 @@ describe('services slack', () => {
       });
 
       it('calls slackClient.getConversationsList with args', () => {
-        expect(slackClient.getConversationsList).toHaveBeenCalledWith({
-          ...args,
-          limit: SLACK_GET_LIMIT_DEFAULT,
-          cursor: '',
-          exclude_archived: false,
-        });
+        expect(slackClient.getConversationsList).toHaveBeenCalledWith({ ...args, cursor, limit });
       });
     });
 
@@ -180,19 +165,11 @@ describe('services slack', () => {
       });
 
       it('calls slackClient.getConversationsList for first call with no cursor option', () => {
-        expect(slackClient.getConversationsList).toHaveBeenNthCalledWith(1, {
-          limit: SLACK_GET_LIMIT_DEFAULT,
-          cursor: '',
-          exclude_archived: false,
-        });
+        expect(slackClient.getConversationsList).toHaveBeenNthCalledWith(1, { cursor, limit });
       });
 
       it('calls slackClient.getConversationsList for second call with cursor option', () => {
-        expect(slackClient.getConversationsList).toHaveBeenNthCalledWith(2, {
-          limit: SLACK_GET_LIMIT_DEFAULT,
-          cursor: channel1.id,
-          exclude_archived: false,
-        });
+        expect(slackClient.getConversationsList).toHaveBeenNthCalledWith(2, { cursor: channel1.id, limit });
       });
 
       it('returns result with multiple members', () => {

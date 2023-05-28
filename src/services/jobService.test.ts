@@ -24,7 +24,10 @@ describe('services job', () => {
       });
 
       it('calls slackService.getChannels', () => {
-        expect(slackService.getChannels).toHaveBeenCalledWith({ types: 'public_channel,private_channel' });
+        expect(slackService.getChannels).toHaveBeenCalledWith({
+          exclude_archived: false,
+          types: 'public_channel,private_channel',
+        });
       });
 
       it('calls slackService.getChannelMembers', () => {

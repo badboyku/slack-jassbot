@@ -31,7 +31,8 @@ const findTomorrowsBirthdays = async () => {
 };
 
 const updateChannels = async (): Promise<UpdateChannelsResult> => {
-  const { channels } = await slackService.getChannels({ types: 'public_channel,private_channel' });
+  const args = { exclude_archived: false, types: 'public_channel,private_channel' };
+  const { channels } = await slackService.getChannels(args);
 
   const channelsMembers: { [channelId: string]: string[] } = {};
   const channelMembersPromises: Promise<GetChannelMembersResult>[] = [];

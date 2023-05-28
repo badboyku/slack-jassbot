@@ -12,7 +12,7 @@ const getChannelMembers = async (channelId: string): Promise<GetChannelMembersRe
   let hasMore = false;
 
   do {
-    const options: ConversationsMembersArguments = { channel: channelId, limit: SLACK_GET_LIMIT_DEFAULT, cursor };
+    const options: ConversationsMembersArguments = { channel: channelId, cursor, limit: SLACK_GET_LIMIT_DEFAULT };
     // eslint-disable-next-line no-await-in-loop
     const { response, error: clientError } = await slackClient.getConversationsMembers(options);
 
@@ -44,12 +44,7 @@ const getChannels = async (args?: ConversationsListArguments): Promise<GetChanne
   let hasMore = false;
 
   do {
-    const options: ConversationsListArguments = {
-      ...args,
-      limit: SLACK_GET_LIMIT_DEFAULT,
-      cursor,
-      exclude_archived: false,
-    };
+    const options: ConversationsListArguments = { ...args, cursor, limit: SLACK_GET_LIMIT_DEFAULT };
     // eslint-disable-next-line no-await-in-loop
     const { response, error: clientError } = await slackClient.getConversationsList(options);
 
