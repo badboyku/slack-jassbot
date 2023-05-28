@@ -5,8 +5,6 @@ import type { ChannelDocType, GetChannelMembersResult, UpdateChannelsResult } fr
 
 /* istanbul ignore next TODO: add unit tests */
 const findTomorrowsBirthdays = async () => {
-  // const options = { batchSize: 5000, limit: 10000 };
-
   // Get all users
   const birthdayLookup = dateTime.getDateTime().plus({ days: 1 }).toFormat('LL-dd');
   const birthdayFilter = { birthdayLookup: crypto.createHmac(birthdayLookup) };
@@ -25,9 +23,29 @@ const findTomorrowsBirthdays = async () => {
   logger.info('members', { numMembers: members.length });
 
   // Get all channels for userIds
-  const channelFilter = { members: { $in: members } };
+  const channelFilter = { isMember: true, members: { $in: members } };
   const channels = await channelService.findAll(channelFilter);
   logger.info('channels', { numChannels: channels.length });
+
+  // Get channels with bday members
+  const bdayChannels: { [channelId: string]: string[] } = {};
+  channels.forEach((channel) => {
+    const { channelId = '', members: channelMembers = [] } = channel || {};
+
+    if (channelId.length) {
+      const bdayMembers: string[] = [];
+      channelMembers.forEach((member) => {
+        if (members.includes(member)) {
+          bdayMembers.push(member);
+        }
+      });
+
+      if (bdayMembers.length > 0) {
+        bdayChannels[channelId] = bdayMembers;
+      }
+    }
+  });
+  logger.info('bdayChannels', { bdayChannels });
 };
 
 const updateChannels = async (): Promise<UpdateChannelsResult> => {
@@ -38,10 +56,13 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
   const channelMembersPromises: Promise<GetChannelMembersResult>[] = [];
   channels.forEach((channel) => {
     const { id: channelId = '', num_members: numMembers = 0 } = channel;
-    channelsMembers[channelId] = [];
 
-    if (channelId.length && numMembers > 0) {
-      channelMembersPromises.push(slackService.getChannelMembers(channelId));
+    if (channelId.length) {
+      channelsMembers[channelId] = [];
+
+      if (numMembers > 0) {
+        channelMembersPromises.push(slackService.getChannelMembers(channelId));
+      }
     }
   });
 
@@ -65,7 +86,7 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
   channelMembersResult.forEach((result) => {
     const { channelId, members } = processChannelMembersResult(result);
 
-    if (channelId) {
+    if (channelId.length) {
       channelsMembers[channelId] = members;
     }
   });
