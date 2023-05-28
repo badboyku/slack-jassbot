@@ -114,8 +114,6 @@ const findOneAndUpdateByUserId = (userId: string, data: UpdateQuery<UserData>): 
 };
 
 const findOneOrCreateByUserId = (userId: string): Promise<User> => {
-  logger.debug('userService: findOneOrCreateByUserId called', { userId });
-
   return findOne({ userId }).then((result) => result || create({ userId }).then((newResult) => newResult));
 };
 

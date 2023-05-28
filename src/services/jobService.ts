@@ -5,47 +5,43 @@ import type { ChannelDocType, GetChannelMembersResult, UpdateChannelsResult } fr
 
 /* istanbul ignore next TODO: add unit tests */
 const findTomorrowsBirthdays = async () => {
-  // Get all users
-  const birthdayLookup = dateTime.getDateTime().plus({ days: 1 }).toFormat('LL-dd');
-  const birthdayFilter = { birthdayLookup: crypto.createHmac(birthdayLookup) };
-  const users = await userService.findAll(birthdayFilter);
-  logger.info('users', { numUsers: users.length });
+  const tomorrowsBirthday = dateTime.getDateTime().plus({ days: 1 }).toFormat('LL-dd');
+  const birthdayUserIds: string[] = [];
+  const birthdayChannels: { [channelId: string]: string[] } = {};
 
-  // Get all users userIds
-  const members: string[] = [];
+  const users = await userService.findAll({ birthdayLookup: crypto.createHmac(tomorrowsBirthday) });
   users.forEach((user) => {
     const { userId = '' } = user || {};
 
     if (userId.length) {
-      members.push(userId);
+      birthdayUserIds.push(userId);
     }
   });
-  logger.info('members', { numMembers: members.length });
 
-  // Get all channels for userIds
-  const channelFilter = { isMember: true, members: { $in: members } };
-  const channels = await channelService.findAll(channelFilter);
-  logger.info('channels', { numChannels: channels.length });
-
-  // Get channels with bday members
-  const bdayChannels: { [channelId: string]: string[] } = {};
+  const channels = await channelService.findAll({ isMember: true, members: { $in: birthdayUserIds } });
   channels.forEach((channel) => {
-    const { channelId = '', members: channelMembers = [] } = channel || {};
+    const { channelId = '', members = [] } = channel || {};
 
     if (channelId.length) {
-      const bdayMembers: string[] = [];
-      channelMembers.forEach((member) => {
-        if (members.includes(member)) {
-          bdayMembers.push(member);
+      const userIds: string[] = [];
+      members.forEach((member) => {
+        if (birthdayUserIds.includes(member)) {
+          userIds.push(member);
         }
       });
 
-      if (bdayMembers.length > 0) {
-        bdayChannels[channelId] = bdayMembers;
+      if (userIds.length > 0) {
+        birthdayChannels[channelId] = userIds;
       }
     }
   });
-  logger.info('bdayChannels', { bdayChannels });
+
+  logger.debug('findTomorrowsBirthdays', {
+    tomorrowsBirthday,
+    numUsers: users.length,
+    numChannels: channels.length,
+    birthdayChannels,
+  });
 };
 
 const updateChannels = async (): Promise<UpdateChannelsResult> => {

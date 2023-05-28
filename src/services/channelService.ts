@@ -114,8 +114,6 @@ const findOneAndUpdateByChannelId = (channelId: string, data: UpdateQuery<Channe
 };
 
 const findOneOrCreateByChannelId = (channelId: string): Promise<Channel> => {
-  logger.debug('channelService: findOneOrCreateByChannelId called', { channelId });
-
   return findOne({ channelId }).then((result) => result || create({ channelId }).then((newResult) => newResult));
 };
 
