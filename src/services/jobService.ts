@@ -40,7 +40,6 @@ const findTomorrowsBirthdays = async () => {
     tomorrowsBirthday,
     numUsers: users.length,
     numChannels: channels.length,
-    birthdayChannels,
   });
 };
 
