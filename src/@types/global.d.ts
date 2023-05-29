@@ -1,5 +1,6 @@
-import type { DateTime } from 'luxon';
+import { Model } from 'mongoose';
 import type { Document, SortOrder, Types } from 'mongoose';
+import type { DateTime } from 'luxon';
 import type { AllMiddlewareArgs, SlackEventMiddlewareArgs, ViewStateValue } from '@slack/bolt';
 import type { ConversationsListResponse, ConversationsMembersResponse } from '@slack/web-api';
 import type { Channel as SlackChannel } from '@slack/web-api/dist/response/ConversationsListResponse';
@@ -20,41 +21,43 @@ export type AppMentionArgs = SlackEventMiddlewareArgs<'app_mention'> & AllMiddle
 export type MemberJoinedChannelArgs = SlackEventMiddlewareArgs<'member_joined_channel'> & AllMiddlewareArgs;
 export type MemberLeftChannelArgs = SlackEventMiddlewareArgs<'member_left_channel'> & AllMiddlewareArgs;
 
-/** Db Types */
-export type DocDates = { createdAt: Date; updatedAt: Date };
-export type DocId = { _id: Types.ObjectId };
-
 // Channel
 export type ChannelData = {
+  _id?: Types.ObjectId;
   channelId?: string;
   name?: string;
   isMember?: boolean;
   isPrivate?: boolean;
   numMembers?: number;
   members?: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 export type ChannelMethods = {};
-export type ChannelDocType = ChannelData & ChannelMethods & DocDates & DocId;
-export type Channel = (ChannelDocType & Document<{}, {}, ChannelDocType>) | null;
+export type ChannelModelType = Model<ChannelData, {}, ChannelMethods>;
+export type ChannelDocType = ChannelData & ChannelMethods;
+export type ChannelDocument = Document<Types.ObjectId, {}, ChannelDocType>;
+export type Channel = (ChannelDocType & ChannelDocument) | null;
 
 // User
 export type UserData = {
+  _id?: Types.ObjectId;
   userId?: string;
   birthday?: string;
   birthdayLookup?: string;
-  birthdayRaw?: string; // TODO: REMOVE THIS!!!
-  birthdayRawLookup?: string; // TODO: REMOVE THIS!!!
   workAnniversary?: string;
   workAnniversaryLookup?: string;
-  workAnniversaryRaw?: string; // TODO: REMOVE THIS!!!
-  workAnniversaryRawLookup?: string; // TODO: REMOVE THIS!!!
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 export type UserMethods = {
   getBirthdayDate: () => DateTime | undefined;
   getWorkAnniversaryDate: () => DateTime | undefined;
 };
-export type UserDocType = UserData & UserMethods & DocDates & DocId;
-export type User = (UserDocType & Document<{}, {}, UserDocType>) | null;
+export type UserModelType = Model<UserData, {}, UserMethods>;
+export type UserDocType = UserData & UserMethods;
+export type UserDocument = Document<Types.ObjectId, {}, UserDocType>;
+export type User = (UserDocType & UserDocument) | null;
 
 /** Services Types */
 export type BulkWriteResults =

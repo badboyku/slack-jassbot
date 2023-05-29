@@ -1,10 +1,12 @@
 /* istanbul ignore file */
-import mongoose, { Schema } from 'mongoose';
-import type { Model } from 'mongoose';
-import type { ChannelDocType, ChannelMethods } from '@types';
+import { model, Schema } from 'mongoose';
+import type { ChannelData, ChannelMethods, ChannelModelType } from '@types';
 
-const schema: Schema = new Schema<ChannelDocType, Model<ChannelDocType, {}, ChannelMethods>, ChannelMethods>(
+const { Boolean, Date, Number, ObjectId, String } = Schema.Types;
+
+const schema: Schema = new Schema<ChannelData, ChannelModelType, ChannelMethods>(
   {
+    _id: { type: ObjectId, index: true, unique: true },
     channelId: { type: String, index: true, unique: true },
     name: { type: String, default: '' },
     isMember: { type: Boolean, index: true, required: true, default: true },
@@ -17,4 +19,4 @@ const schema: Schema = new Schema<ChannelDocType, Model<ChannelDocType, {}, Chan
   { collection: 'channels', timestamps: true },
 );
 
-export default mongoose.model<ChannelDocType, Model<ChannelDocType, {}, ChannelMethods>>('Channel', schema);
+export default model<ChannelData, ChannelModelType>('Channel', schema);

@@ -4,7 +4,7 @@ import { UserModel } from '@db/models';
 import { channelService } from '@services';
 import { config, db, logger } from '@utils';
 import type { AnyBulkWriteOperation } from 'mongodb';
-import type { ChannelDocType } from '@types';
+import type { ChannelData } from '@types';
 
 const getSampleUserIds = async (size = 1000): Promise<string[]> => {
   const userIds = [];
@@ -56,7 +56,7 @@ const getMembers = (userIds: string[] = []): string[] => {
 
   const userIds = await getSampleUserIds();
 
-  const ops: AnyBulkWriteOperation<ChannelDocType>[] = [];
+  const ops: AnyBulkWriteOperation<ChannelData>[] = [];
   for (let i = 0; i < numChannels; i += 1) {
     const members = getMembers(userIds);
 

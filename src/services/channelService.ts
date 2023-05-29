@@ -10,9 +10,9 @@ import {
 } from '@utils/constants';
 import type { AnyBulkWriteOperation } from 'mongodb';
 import type { FilterQuery, Types, UpdateQuery } from 'mongoose';
-import type { BulkWriteResults, Channel, ChannelData, ChannelDocType, FindOptions } from '@types';
+import type { BulkWriteResults, Channel, ChannelData, FindOptions } from '@types';
 
-const bulkWrite = (ops: AnyBulkWriteOperation<ChannelDocType>[]): Promise<BulkWriteResults> | undefined => {
+const bulkWrite = (ops: AnyBulkWriteOperation<ChannelData>[]): Promise<BulkWriteResults> | undefined => {
   logger.debug('channelService: bulkWrite called', { numOps: ops.length });
 
   return ops.length > 0

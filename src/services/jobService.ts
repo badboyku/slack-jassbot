@@ -1,7 +1,7 @@
 import { channelService, slackService, userService } from '@services';
 import { crypto, dateTime, logger } from '@utils';
 import type { AnyBulkWriteOperation } from 'mongodb';
-import type { ChannelDocType, GetChannelMembersResult, UpdateChannelsResult } from '@types';
+import type { ChannelData, GetChannelMembersResult, UpdateChannelsResult, UserData } from '@types';
 
 /* istanbul ignore next TODO: add unit tests */
 const findTomorrowsBirthdays = async () => {
@@ -11,7 +11,7 @@ const findTomorrowsBirthdays = async () => {
 
   const users = await userService.findAll({ birthdayLookup: crypto.createHmac(tomorrowsBirthday) });
   users.forEach((user) => {
-    const { userId = '' } = user || {};
+    const { userId = '' } = user as UserData;
 
     if (userId.length) {
       birthdayUserIds.push(userId);
@@ -20,7 +20,7 @@ const findTomorrowsBirthdays = async () => {
 
   const channels = await channelService.findAll({ isMember: true, members: { $in: birthdayUserIds } });
   channels.forEach((channel) => {
-    const { channelId = '', members = [] } = channel || {};
+    const { channelId = '', members = [] } = channel as ChannelData;
 
     if (channelId.length) {
       const userIds: string[] = [];
@@ -41,6 +41,8 @@ const findTomorrowsBirthdays = async () => {
     numUsers: users.length,
     numChannels: channels.length,
   });
+
+  // TODO: For each channel, write bday message scheduled at midnight PST
 };
 
 const updateChannels = async (): Promise<UpdateChannelsResult> => {
@@ -86,12 +88,15 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
     }
   });
 
-  const ops: AnyBulkWriteOperation<ChannelDocType>[] = [];
+  const ops: AnyBulkWriteOperation<ChannelData>[] = [];
   channels.forEach((channel) => {
-    const { id: channelId, name, is_member: isMember, is_private: isPrivate, num_members: numMembers } = channel;
-    const filter = { channelId };
-    const update = { $set: { name, isMember, isPrivate, numMembers, members: channelsMembers[channelId as string] } };
-    ops.push({ updateOne: { filter, update, upsert: true } });
+    const { id: channelId = '', name, is_member: isMember, is_private: isPrivate, num_members: numMembers } = channel;
+
+    if (channelId.length) {
+      const filter = { channelId };
+      const update = { $set: { name, isMember, isPrivate, numMembers, members: channelsMembers[channelId as string] } };
+      ops.push({ updateOne: { filter, update, upsert: true } });
+    }
   });
 
   const results = await channelService.bulkWrite(ops);

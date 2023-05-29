@@ -19,7 +19,7 @@ describe('services event', () => {
 
     describe('successfully', () => {
       beforeEach(async () => {
-        jest.spyOn(userService, 'findOneOrCreateByUserId').mockResolvedValueOnce(user as User);
+        jest.spyOn(userService, 'findOneOrCreateByUserId').mockResolvedValueOnce(user as unknown as User);
 
         result = await eventService.appHomeOpened(userId);
       });
@@ -46,7 +46,7 @@ describe('services event', () => {
 
       beforeEach(async () => {
         config.slack = configSlackDefault;
-        jest.spyOn(channelService, 'findOneAndUpdateByChannelId').mockResolvedValueOnce(channel as Channel);
+        jest.spyOn(channelService, 'findOneAndUpdateByChannelId').mockResolvedValueOnce(channel as unknown as Channel);
 
         result = await eventService.memberJoinedChannel(userId, channelId, channelType);
       });
@@ -69,7 +69,7 @@ describe('services event', () => {
 
       beforeEach(async () => {
         config.slack = { ...configSlackDefault, botUserId: userId };
-        jest.spyOn(channelService, 'findOneAndUpdateByChannelId').mockResolvedValueOnce(channel as Channel);
+        jest.spyOn(channelService, 'findOneAndUpdateByChannelId').mockResolvedValueOnce(channel as unknown as Channel);
 
         result = await eventService.memberJoinedChannel(userId, channelId, channelType);
       });
@@ -89,7 +89,7 @@ describe('services event', () => {
 
       beforeEach(async () => {
         config.slack = configSlackDefault;
-        jest.spyOn(channelService, 'findOneAndUpdateByChannelId').mockResolvedValueOnce(channel as Channel);
+        jest.spyOn(channelService, 'findOneAndUpdateByChannelId').mockResolvedValueOnce(channel as unknown as Channel);
 
         result = await eventService.memberJoinedChannel(userId, channelId, channelTypeG);
       });

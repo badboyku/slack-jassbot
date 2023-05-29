@@ -1,21 +1,19 @@
 /* istanbul ignore file */
-import mongoose, { Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { crypto, dateTime } from '@utils';
-import type { Model } from 'mongoose';
 import type { DateTime } from 'luxon';
-import type { UserDocType, UserMethods } from '@types';
+import type { UserData, UserMethods, UserModelType } from '@types';
 
-const schema: Schema = new Schema<UserDocType, Model<UserDocType, {}, UserMethods>, UserMethods>(
+const { Date, ObjectId, String } = Schema.Types;
+
+const schema = new Schema<UserData, UserModelType, UserMethods>(
   {
+    _id: { type: ObjectId, index: true, unique: true },
     userId: { type: String, index: true, unique: true },
     birthday: { type: String, default: '' },
     birthdayLookup: { type: String, index: true, default: '' },
-    birthdayRaw: { type: String, default: '' }, // TODO: REMOVE THIS!!!
-    birthdayRawLookup: { type: String, index: true, default: '' }, // TODO: REMOVE THIS!!!
     workAnniversary: { type: String, default: '' },
     workAnniversaryLookup: { type: String, index: true, default: '' },
-    workAnniversaryRaw: { type: String, default: '' }, // TODO: REMOVE THIS!!!
-    workAnniversaryRawLookup: { type: String, index: true, default: '' }, // TODO: REMOVE THIS!!!
     createdAt: { type: Date },
     updatedAt: { type: Date },
   },
@@ -28,4 +26,4 @@ schema.method('getWorkAnniversaryDate', function getWorkAnniversaryDate(): DateT
   return dateTime.getDateTimeFromIso(crypto.decrypt(this.workAnniversary));
 });
 
-export default mongoose.model<UserDocType, Model<UserDocType, {}, UserMethods>>('User', schema);
+export default model<UserData, UserModelType>('User', schema);

@@ -10,10 +10,10 @@ import {
   DB_SORT_DEFAULT,
 } from '@utils/constants';
 import type { AnyBulkWriteOperation, BulkWriteResult } from 'mongodb';
-import type { Document, Query } from 'mongoose';
-import type { BulkWriteResults, User, UserDocType } from '@types';
+import type { Document, Query, Types } from 'mongoose';
+import type { BulkWriteResults, User, UserData, UserDocType } from '@types';
 
-type UserDocument = Document<{}, {}, UserDocType> & Omit<UserDocType, never>;
+type UserDocument = Document<{}, {}, UserDocType> & Omit<UserDocType, never> & { _id: Types.ObjectId };
 
 jest.mock('@db/models/UserModel');
 jest.mock('@utils/logger/logger');
@@ -24,7 +24,7 @@ describe('services user', () => {
   const error = 'error';
 
   describe('calling function bulkWrite', () => {
-    const ops: AnyBulkWriteOperation<UserDocType>[] = [{ updateOne: { filter: {}, update: {} } }];
+    const ops: AnyBulkWriteOperation<UserData>[] = [{ updateOne: { filter: {}, update: {} } }];
     let results: BulkWriteResults;
 
     describe('successfully', () => {

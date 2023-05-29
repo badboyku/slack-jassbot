@@ -4,7 +4,7 @@ import { userService } from '@services';
 import { crypto, dateTime, db, logger } from '@utils';
 import type { DateTime } from 'luxon';
 import type { AnyBulkWriteOperation } from 'mongodb';
-import type { UserDocType } from '@types';
+import type { UserData } from '@types';
 
 (async () => {
   const numUsersArg = Number(process.argv[2]) || undefined;
@@ -20,7 +20,7 @@ import type { UserDocType } from '@types';
 
   let birthdayDate: DateTime | undefined;
   let workAnniversaryDate: DateTime | undefined;
-  const ops: AnyBulkWriteOperation<UserDocType>[] = [];
+  const ops: AnyBulkWriteOperation<UserData>[] = [];
 
   for (let i = 0; i < numUsers; i += 1) {
     if (i % 10 !== 0) {
@@ -40,12 +40,8 @@ import type { UserDocType } from '@types';
       $set: {
         birthday: crypto.encrypt(birthday),
         birthdayLookup: crypto.createHmac(birthdayLookup),
-        birthdayRaw: birthday, // TODO: Remove this!!!
-        birthdayRawLookup: birthdayLookup, // TODO: Remove this!!!
         workAnniversary: crypto.encrypt(workAnniversary),
         workAnniversaryLookup: crypto.createHmac(workAnniversaryLookup),
-        workAnniversaryRaw: workAnniversary, // TODO: Remove this!!!
-        workAnniversaryRawLookup: workAnniversaryLookup, // TODO: Remove this!!!
         __v: 0,
       },
     };

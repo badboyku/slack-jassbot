@@ -16,12 +16,8 @@ const saveUserDates = async (userId: string, values: ViewStateValues): Promise<S
   const data = {
     birthday: crypto.encrypt(birthday),
     birthdayLookup: crypto.createHmac(birthdayLookup),
-    birthdayRaw: birthday, // TODO: Remove this!!!
-    birthdayRawLookup: birthdayLookup, // TODO: Remove this!!!
     workAnniversary: crypto.encrypt(workAnniversary),
     workAnniversaryLookup: crypto.createHmac(workAnniversaryLookup),
-    workAnniversaryRaw: workAnniversary, // TODO: Remove this!!!
-    workAnniversaryRawLookup: workAnniversaryLookup, // TODO: Remove this!!!
   };
   const user = await userService.findOneAndUpdateByUserId(userId, data);
 

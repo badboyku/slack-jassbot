@@ -36,12 +36,8 @@ describe('services view', () => {
       const data = {
         birthday: birthdayEncrypted,
         birthdayLookup,
-        birthdayRaw: birthday, // TODO: Remove this!!!
-        birthdayRawLookup: birthdayLookup, // TODO: Remove this!!!
         workAnniversary: workAnniversaryEncrypted,
         workAnniversaryLookup,
-        workAnniversaryRaw: workAnniversary, // TODO: Remove this!!!
-        workAnniversaryRawLookup: workAnniversaryLookup, // TODO: Remove this!!!
       };
 
       beforeEach(async () => {
@@ -129,12 +125,8 @@ describe('services view', () => {
       const data = {
         birthday: birthdayEncrypted,
         birthdayLookup,
-        birthdayRaw: '', // TODO: Remove this!!!
-        birthdayRawLookup: '', // TODO: Remove this!!!
         workAnniversary: workAnniversaryEncrypted,
         workAnniversaryLookup,
-        workAnniversaryRaw: '', // TODO: Remove this!!!
-        workAnniversaryRawLookup: '', // TODO: Remove this!!!
       };
 
       beforeEach(async () => {

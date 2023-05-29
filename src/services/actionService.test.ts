@@ -12,7 +12,7 @@ describe('services action', () => {
 
     describe('successfully', () => {
       beforeEach(async () => {
-        jest.spyOn(userService, 'findOneOrCreateByUserId').mockResolvedValueOnce(user as User);
+        jest.spyOn(userService, 'findOneOrCreateByUserId').mockResolvedValueOnce(user as unknown as User);
 
         result = await actionService.manageUserDates(userId);
       });
