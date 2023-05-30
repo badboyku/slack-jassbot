@@ -2,7 +2,7 @@ import { manageUserDates } from '@views';
 import type { HomeView } from '@slack/web-api';
 import type { User } from '@types';
 
-const getView = (user: User): HomeView => {
+const getView = (user: User | null): HomeView => {
   const birthday = user?.getBirthdayDate()?.toFormat('`DDD`') || '-----';
   const workAnniversary = user?.getWorkAnniversaryDate()?.toFormat('`DDD`') || '-----';
   const greeting = !user

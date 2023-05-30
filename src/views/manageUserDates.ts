@@ -23,7 +23,7 @@ const getModal = (user: User, callbackId?: string): ModalView => {
         element: {
           type: 'datepicker',
           action_id: 'datepicker',
-          initial_date: user?.getBirthdayDate()?.toISODate() || undefined,
+          initial_date: user.getBirthdayDate()?.toISODate() || undefined,
           placeholder: { type: 'plain_text', text: 'Select a date', emoji: true },
         },
         optional: true,
@@ -35,7 +35,7 @@ const getModal = (user: User, callbackId?: string): ModalView => {
         element: {
           type: 'datepicker',
           action_id: 'datepicker',
-          initial_date: user?.getWorkAnniversaryDate()?.toISODate() || undefined,
+          initial_date: user.getWorkAnniversaryDate()?.toISODate() || undefined,
           placeholder: { type: 'plain_text', text: 'Select a date', emoji: true },
         },
         optional: true,

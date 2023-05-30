@@ -164,25 +164,6 @@ describe('views manageUserDates', () => {
       });
     });
 
-    describe('with user=null', () => {
-      beforeEach(() => {
-        user = null;
-        modal = manageUserDates.getModal(user);
-        block1 = modal.blocks[0] as InputBlock;
-        block1element = block1.element as Datepicker;
-        block2 = modal.blocks[1] as InputBlock;
-        block2element = block2.element as Datepicker;
-      });
-
-      it('returns default for 1st block element initial_date', () => {
-        expect(block1element.initial_date).toEqual(undefined);
-      });
-
-      it('returns default for 2nd block element initial_date', () => {
-        expect(block2element.initial_date).toEqual(undefined);
-      });
-    });
-
     describe('with user having no birthday date', () => {
       beforeEach(() => {
         modal = manageUserDates.getModal(user);

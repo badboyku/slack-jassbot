@@ -10,10 +10,8 @@ import {
   DB_SORT_DEFAULT,
 } from '@utils/constants';
 import type { AnyBulkWriteOperation, BulkWriteResult } from 'mongodb';
-import type { Document, Query, Types } from 'mongoose';
-import type { BulkWriteResults, User, UserData, UserDocType } from '@types';
-
-type UserDocument = Document<{}, {}, UserDocType> & Omit<UserDocType, never> & { _id: Types.ObjectId };
+import type { Query } from 'mongoose';
+import type { BulkWriteResults, User, UserData } from '@types';
 
 jest.mock('@db/models/UserModel');
 jest.mock('@utils/logger/logger');
@@ -92,11 +90,11 @@ describe('services user', () => {
 
   describe('calling function create', () => {
     const data = { userId: 'foo' };
-    let result: User;
+    let result: User | null;
 
     describe('successfully', () => {
       beforeEach(async () => {
-        jest.spyOn(UserModel, 'create').mockResolvedValueOnce(user1 as unknown as UserDocument[]);
+        jest.spyOn(UserModel, 'create').mockResolvedValueOnce(user1 as unknown as User[]);
 
         result = await userService.create(data);
       });
@@ -149,7 +147,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.find(filter);
       });
@@ -191,7 +189,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.find(filter, options);
       });
@@ -221,7 +219,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.find(filter, options);
       });
@@ -243,7 +241,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.find(filter, options);
       });
@@ -265,7 +263,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.find(filter, options);
       });
@@ -287,7 +285,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.find(filter, options);
       });
@@ -309,7 +307,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.find(filter, options);
       });
@@ -360,7 +358,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.findAll(filter);
       });
@@ -398,7 +396,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.findAll(filter, options);
       });
@@ -428,7 +426,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.findAll(filter, options);
       });
@@ -450,7 +448,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.findAll(filter, options);
       });
@@ -472,7 +470,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.findAll(filter, options);
       });
@@ -499,7 +497,7 @@ describe('services user', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, UserDocType>);
+        jest.spyOn(UserModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await userService.findAll(filter, options);
       });
@@ -520,7 +518,7 @@ describe('services user', () => {
 
   describe('calling function findOne', () => {
     const filter = { userId: 'foo' };
-    let result: User;
+    let result: User | null;
 
     describe('successfully', () => {
       beforeEach(async () => {
@@ -568,7 +566,7 @@ describe('services user', () => {
     const filter = { userId };
     const data = { foo: 'bar' };
     const options = { new: true, setDefaultsOnInsert: true, upsert: true };
-    let result: User;
+    let result: User | null;
 
     describe('successfully', () => {
       beforeEach(async () => {
@@ -613,7 +611,7 @@ describe('services user', () => {
 
   describe('calling function findOneOrCreateByUserId', () => {
     const userId = 'foo';
-    let result: User;
+    let result: User | null;
 
     describe('successfully finds one', () => {
       beforeEach(async () => {
@@ -638,7 +636,7 @@ describe('services user', () => {
     describe('successfully creates one', () => {
       beforeEach(async () => {
         jest.spyOn(UserModel, 'findOne').mockResolvedValueOnce(null);
-        jest.spyOn(UserModel, 'create').mockResolvedValueOnce(user1 as unknown as UserDocument[]);
+        jest.spyOn(UserModel, 'create').mockResolvedValueOnce(user1 as unknown as User[]);
 
         result = await userService.findOneOrCreateByUserId(userId);
       });

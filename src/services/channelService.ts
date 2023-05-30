@@ -30,7 +30,7 @@ const bulkWrite = (ops: AnyBulkWriteOperation<ChannelData>[]): Promise<BulkWrite
     : undefined;
 };
 
-const create = async (data: ChannelData): Promise<Channel> => {
+const create = async (data: ChannelData): Promise<Channel | null> => {
   logger.debug('channelService: create called', { data });
 
   return ChannelModel.create(data)
@@ -87,7 +87,7 @@ const findAll = async (filter: FilterQuery<ChannelData>, options?: FindOptions):
   return allChannels;
 };
 
-const findOne = (filter: FilterQuery<ChannelData>): Promise<Channel> => {
+const findOne = (filter: FilterQuery<ChannelData>): Promise<Channel | null> => {
   logger.debug('channelService: findOne called', { filter });
 
   return ChannelModel.findOne(filter)
@@ -99,7 +99,7 @@ const findOne = (filter: FilterQuery<ChannelData>): Promise<Channel> => {
     });
 };
 
-const findOneAndUpdateByChannelId = (channelId: string, data: UpdateQuery<ChannelData>): Promise<Channel> => {
+const findOneAndUpdateByChannelId = (channelId: string, data: UpdateQuery<ChannelData>): Promise<Channel | null> => {
   logger.debug('channelService: findOneAndUpdateByChannelId called', { channelId, data });
   const filter = { channelId };
   const options = { new: true, setDefaultsOnInsert: true, upsert: true };
@@ -113,7 +113,7 @@ const findOneAndUpdateByChannelId = (channelId: string, data: UpdateQuery<Channe
     });
 };
 
-const findOneOrCreateByChannelId = (channelId: string): Promise<Channel> => {
+const findOneOrCreateByChannelId = (channelId: string): Promise<Channel | null> => {
   return findOne({ channelId }).then((result) => result || create({ channelId }).then((newResult) => newResult));
 };
 

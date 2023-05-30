@@ -10,10 +10,8 @@ import {
   DB_SORT_DEFAULT,
 } from '@utils/constants';
 import type { AnyBulkWriteOperation, BulkWriteResult } from 'mongodb';
-import type { Document, Query, Types } from 'mongoose';
-import type { BulkWriteResults, Channel, ChannelData, ChannelDocType } from '@types';
-
-type ChannelDocument = Document<{}, {}, ChannelDocType> & Omit<ChannelDocType, never> & { _id: Types.ObjectId };
+import type { Query } from 'mongoose';
+import type { BulkWriteResults, Channel, ChannelData } from '@types';
 
 jest.mock('@db/models/ChannelModel');
 jest.mock('@utils/logger/logger');
@@ -92,11 +90,11 @@ describe('services channel', () => {
 
   describe('calling function create', () => {
     const data = { channelId: 'foo' };
-    let result: Channel;
+    let result: Channel | null;
 
     describe('successfully', () => {
       beforeEach(async () => {
-        jest.spyOn(ChannelModel, 'create').mockResolvedValueOnce(channel1 as unknown as ChannelDocument[]);
+        jest.spyOn(ChannelModel, 'create').mockResolvedValueOnce(channel1 as unknown as Channel[]);
 
         result = await channelService.create(data);
       });
@@ -149,7 +147,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.find(filter);
       });
@@ -191,7 +189,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.find(filter, options);
       });
@@ -221,7 +219,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.find(filter, options);
       });
@@ -243,7 +241,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.find(filter, options);
       });
@@ -265,7 +263,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.find(filter, options);
       });
@@ -287,7 +285,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.find(filter, options);
       });
@@ -309,7 +307,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.find(filter, options);
       });
@@ -360,7 +358,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.findAll(filter);
       });
@@ -398,7 +396,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.findAll(filter, options);
       });
@@ -428,7 +426,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.findAll(filter, options);
       });
@@ -450,7 +448,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.findAll(filter, options);
       });
@@ -472,7 +470,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.findAll(filter, options);
       });
@@ -499,7 +497,7 @@ describe('services channel', () => {
         cursor = jest.fn().mockReturnValueOnce({ next });
         limit = jest.fn().mockReturnValueOnce({ cursor });
         sort = jest.fn().mockReturnValueOnce({ limit });
-        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, ChannelData>);
+        jest.spyOn(ChannelModel, 'find').mockReturnValueOnce({ sort } as unknown as Query<never, never>);
 
         result = await channelService.findAll(filter, options);
       });
@@ -520,7 +518,7 @@ describe('services channel', () => {
 
   describe('calling function findOne', () => {
     const filter = { channelId: 'foo' };
-    let result: Channel;
+    let result: Channel | null;
 
     describe('successfully', () => {
       beforeEach(async () => {
@@ -568,7 +566,7 @@ describe('services channel', () => {
     const filter = { channelId };
     const data = { foo: 'bar' };
     const options = { new: true, setDefaultsOnInsert: true, upsert: true };
-    let result: Channel;
+    let result: Channel | null;
 
     describe('successfully', () => {
       beforeEach(async () => {
@@ -613,7 +611,7 @@ describe('services channel', () => {
 
   describe('calling function findOneOrCreateByChannelId', () => {
     const channelId = 'foo';
-    let result: Channel;
+    let result: Channel | null;
 
     describe('successfully finds one', () => {
       beforeEach(async () => {
@@ -638,7 +636,7 @@ describe('services channel', () => {
     describe('successfully creates one', () => {
       beforeEach(async () => {
         jest.spyOn(ChannelModel, 'findOne').mockResolvedValueOnce(null);
-        jest.spyOn(ChannelModel, 'create').mockResolvedValueOnce(channel1 as unknown as ChannelDocument[]);
+        jest.spyOn(ChannelModel, 'create').mockResolvedValueOnce(channel1 as unknown as Channel[]);
 
         result = await channelService.findOneOrCreateByChannelId(channelId);
       });

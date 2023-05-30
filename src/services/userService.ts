@@ -30,7 +30,7 @@ const bulkWrite = (ops: AnyBulkWriteOperation<UserData>[]): Promise<BulkWriteRes
     : undefined;
 };
 
-const create = (data: UserData): Promise<User> => {
+const create = (data: UserData): Promise<User | null> => {
   logger.debug('userService: create called', { data });
 
   return UserModel.create(data)
@@ -87,7 +87,7 @@ const findAll = async (filter: FilterQuery<UserData>, options?: FindOptions): Pr
   return allUsers;
 };
 
-const findOne = (filter: FilterQuery<UserData>): Promise<User> => {
+const findOne = (filter: FilterQuery<UserData>): Promise<User | null> => {
   logger.debug('userService: findOne called', { filter });
 
   return UserModel.findOne(filter)
@@ -99,7 +99,7 @@ const findOne = (filter: FilterQuery<UserData>): Promise<User> => {
     });
 };
 
-const findOneAndUpdateByUserId = (userId: string, data: UpdateQuery<UserData>): Promise<User> => {
+const findOneAndUpdateByUserId = (userId: string, data: UpdateQuery<UserData>): Promise<User | null> => {
   logger.debug('userService: findOneAndUpdateByUserId called', { userId, data });
   const filter = { userId };
   const options = { new: true, setDefaultsOnInsert: true, upsert: true };
@@ -113,7 +113,7 @@ const findOneAndUpdateByUserId = (userId: string, data: UpdateQuery<UserData>): 
     });
 };
 
-const findOneOrCreateByUserId = (userId: string): Promise<User> => {
+const findOneOrCreateByUserId = (userId: string): Promise<User | null> => {
   return findOne({ userId }).then((result) => result || create({ userId }).then((newResult) => newResult));
 };
 

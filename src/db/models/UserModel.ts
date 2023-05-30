@@ -1,12 +1,13 @@
 /* istanbul ignore file */
-import { model, Schema } from 'mongoose';
+import { model, Model, Schema } from 'mongoose';
 import { crypto, dateTime } from '@utils';
 import type { DateTime } from 'luxon';
-import type { UserData, UserMethods, UserModelType } from '@types';
+import type { UserDocType, UserHydratedDocument, UserMethods } from '@types';
 
 const { Date, ObjectId, String } = Schema.Types;
 
-const schema = new Schema<UserData, UserModelType, UserMethods>(
+type UserModel = Model<UserDocType, {}, UserMethods>;
+const schema = new Schema<UserDocType, UserModel, UserMethods, {}, {}, {}, {}, UserHydratedDocument>(
   {
     _id: { type: ObjectId, index: true, unique: true },
     userId: { type: String, index: true, unique: true },
@@ -26,4 +27,4 @@ schema.method('getWorkAnniversaryDate', function getWorkAnniversaryDate(): DateT
   return dateTime.getDateTimeFromIso(crypto.decrypt(this.workAnniversary));
 });
 
-export default model<UserData, UserModelType>('User', schema);
+export default model<UserDocType, UserModel>('User', schema);

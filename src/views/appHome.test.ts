@@ -29,7 +29,7 @@ describe('views appHome', () => {
       { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
       { type: 'actions', block_id: 'appHomeActions', elements: [button] },
     ];
-    let user: User;
+    let user: User | null;
     let view: HomeView;
 
     describe('successfully with user', () => {

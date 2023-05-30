@@ -1,6 +1,5 @@
-import { Model } from 'mongoose';
-import type { Document, SortOrder, Types } from 'mongoose';
 import type { DateTime } from 'luxon';
+import type { Document, HydratedDocument, SortOrder, Types } from 'mongoose';
 import type { AllMiddlewareArgs, SlackEventMiddlewareArgs, ViewStateValue } from '@slack/bolt';
 import type { ConversationsListResponse, ConversationsMembersResponse } from '@slack/web-api';
 import type { Channel as SlackChannel } from '@slack/web-api/dist/response/ConversationsListResponse';
@@ -21,43 +20,41 @@ export type AppMentionArgs = SlackEventMiddlewareArgs<'app_mention'> & AllMiddle
 export type MemberJoinedChannelArgs = SlackEventMiddlewareArgs<'member_joined_channel'> & AllMiddlewareArgs;
 export type MemberLeftChannelArgs = SlackEventMiddlewareArgs<'member_left_channel'> & AllMiddlewareArgs;
 
+/** Db Types */
+export type DocId = { _id: Types.ObjectId };
+export type DocTimestamps = { createdAt: Date; updatedAt: Date };
+
 // Channel
 export type ChannelData = {
-  _id?: Types.ObjectId;
   channelId?: string;
   name?: string;
   isMember?: boolean;
   isPrivate?: boolean;
   numMembers?: number;
   members?: string[];
-  createdAt?: Date;
-  updatedAt?: Date;
 };
 export type ChannelMethods = {};
-export type ChannelModelType = Model<ChannelData, {}, ChannelMethods>;
-export type ChannelDocType = ChannelData & ChannelMethods;
+export type ChannelDocType = ChannelData & ChannelMethods & DocId & DocTimestamps;
 export type ChannelDocument = Document<Types.ObjectId, {}, ChannelDocType>;
-export type Channel = (ChannelDocType & ChannelDocument) | null;
+export type ChannelHydratedDocument = HydratedDocument<ChannelDocType>;
+export type Channel = ChannelDocType & ChannelDocument & ChannelHydratedDocument;
 
 // User
 export type UserData = {
-  _id?: Types.ObjectId;
   userId?: string;
   birthday?: string;
   birthdayLookup?: string;
   workAnniversary?: string;
   workAnniversaryLookup?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
 };
 export type UserMethods = {
   getBirthdayDate: () => DateTime | undefined;
   getWorkAnniversaryDate: () => DateTime | undefined;
 };
-export type UserModelType = Model<UserData, {}, UserMethods>;
-export type UserDocType = UserData & UserMethods;
+export type UserDocType = UserData & UserMethods & DocId & DocTimestamps;
 export type UserDocument = Document<Types.ObjectId, {}, UserDocType>;
-export type User = (UserDocType & UserDocument) | null;
+export type UserHydratedDocument = HydratedDocument<UserDocType>;
+export type User = UserDocType & UserDocument & UserHydratedDocument;
 
 /** Services Types */
 export type BulkWriteResults =
@@ -80,11 +77,11 @@ export type Sort =
 export type FindOptions = { batchSize?: number; limit?: number; sort?: Sort };
 
 // action
-export type ManageUserDatesResult = { user: User };
+export type ManageUserDatesResult = { user: User | null };
 
 // event
-export type AppHomeOpenedResult = { user: User };
-export type MemberJoinedChannelResult = { channel: Channel };
+export type AppHomeOpenedResult = { user: User | null };
+export type MemberJoinedChannelResult = { channel: Channel | null };
 
 // job
 export type UpdateChannelsResult = { results: BulkWriteResults | undefined };
@@ -95,7 +92,7 @@ export type GetChannelsResult = { channels: SlackChannel[]; error?: SlackClientE
 
 // view
 export type ViewStateValues = { [blockId: string]: { [actionId: string]: ViewStateValue } };
-export type SaveUserDatesResult = { user: User; hasSaveError: boolean };
+export type SaveUserDatesResult = { user: User | null; hasSaveError: boolean };
 
 /** Utils Types */
 // app
