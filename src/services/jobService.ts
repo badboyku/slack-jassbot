@@ -90,11 +90,17 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
 
   const ops: AnyBulkWriteOperation<ChannelData>[] = [];
   channels.forEach((channel) => {
-    const { id: channelId = '', name, is_member: isMember, is_private: isPrivate, num_members: numMembers } = channel;
+    const {
+      id: channelId = '',
+      is_member: isMember = false,
+      is_private: isPrivate = false,
+      name = '',
+      num_members: numMembers = 0,
+    } = channel;
 
     if (channelId.length) {
       const filter = { channelId };
-      const update = { $set: { name, isMember, isPrivate, numMembers, members: channelsMembers[channelId as string] } };
+      const update = { $set: { isMember, isPrivate, members: channelsMembers[channelId as string], name, numMembers } };
       ops.push({ updateOne: { filter, update, upsert: true } });
     }
   });

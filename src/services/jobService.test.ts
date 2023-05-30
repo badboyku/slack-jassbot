@@ -5,11 +5,12 @@ describe('services job', () => {
   describe('calling function updateChannels', () => {
     const channelId = 'channelId';
     const member = 'member';
+    const name = 'name';
     const results = { ok: 1, insertedCount: 1, upsertedCount: 0, matchedCount: 1, modifiedCount: 0, deletedCount: 0 };
     let result: UpdateChannelsResult;
 
     describe('successfully', () => {
-      const channel = { id: channelId, is_member: false, is_private: true, num_members: 1 };
+      const channel = { id: channelId, is_member: false, is_private: true, name, num_members: 1 };
 
       beforeEach(async () => {
         jest.spyOn(slackService, 'getChannels').mockResolvedValueOnce({ channels: [channel] });
@@ -43,8 +44,9 @@ describe('services job', () => {
                 $set: {
                   isMember: channel.is_member,
                   isPrivate: channel.is_private,
-                  numMembers: channel.num_members,
                   members: [member],
+                  name: channel.name,
+                  numMembers: channel.num_members,
                 },
               },
               upsert: true,
