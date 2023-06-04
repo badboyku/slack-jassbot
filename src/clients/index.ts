@@ -1,4 +1,4 @@
 /* istanbul ignore file */
-import slackClient from './slackClient';
+import slackClient from '@clients/slackClient';
 
 export { slackClient };

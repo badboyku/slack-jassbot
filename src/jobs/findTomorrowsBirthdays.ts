@@ -1,8 +1,9 @@
 /* istanbul ignore file */
 import process from 'node:process';
 import { parentPort } from 'node:worker_threads';
+import { dbJassbot } from '@db/sources';
 import { jobService } from '@services';
-import { db, logger } from '@utils';
+import { logger } from '@utils';
 
 /**
  * This job is to find all tomorrow's birthdays.
@@ -10,7 +11,7 @@ import { db, logger } from '@utils';
 (async () => {
   logger.info('jobs: findTomorrowsBirthdays started');
 
-  const { isConnected: isDbConnected } = await db.connect();
+  const { isConnected: isDbConnected } = await dbJassbot.connect();
   if (!isDbConnected) {
     logger.info('jobs: findTomorrowsBirthdays exiting', { error: 'Database failed to connect' });
 
@@ -20,7 +21,7 @@ import { db, logger } from '@utils';
   await jobService.findTomorrowsBirthdays();
   logger.info('jobs: findTomorrowsBirthdays completed');
 
-  await db.disconnect();
+  await dbJassbot.disconnect();
 
   if (parentPort) {
     parentPort.postMessage('done');

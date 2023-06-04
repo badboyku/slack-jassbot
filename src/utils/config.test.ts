@@ -1,4 +1,3 @@
-/* eslint-disable global-require, @typescript-eslint/no-var-requires */
 import process from 'node:process';
 import type { Config } from '@types';
 
@@ -17,7 +16,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.APP_LOG_LEVEL = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -42,7 +41,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.APP_LOG_OUTPUT_FORMAT = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -67,7 +66,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.NODE_ENV = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -92,7 +91,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.APP_PORT = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -117,7 +116,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.TS_NODE = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -142,7 +141,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.BREE_DISABLE = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -167,7 +166,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.BREE_JOBS_UPDATE_CHANNELS_CRON = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -192,7 +191,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.CRYPTO_KEY = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -206,18 +205,18 @@ describe('utils config', () => {
     });
   });
 
-  describe('calling var db.uri', () => {
+  describe('calling var db.jassbot.uri', () => {
     const testCases = [
       { val: 'foo', expected: 'foo' },
       { val: '', expected: '' },
     ];
     testCases.forEach(({ val, expected }) => {
-      describe(`when process.env.DB_URI ${val ? 'set' : 'not set'}`, () => {
+      describe(`when process.env.DB_JASSBOT_URI ${val ? 'set' : 'not set'}`, () => {
         beforeEach(() => {
           jest.resetModules();
-          process.env.DB_URI = val;
+          process.env.DB_JASSBOT_URI = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -225,7 +224,7 @@ describe('utils config', () => {
         });
 
         it(`returns ${val ? 'value' : 'default'}`, () => {
-          expect(config.db.uri).toEqual(expected);
+          expect(config.db.jassbot.uri).toEqual(expected);
         });
       });
     });
@@ -242,7 +241,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.SLACK_API_HOST = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -267,7 +266,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.SLACK_APP_TOKEN = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -292,7 +291,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.SLACK_BOT_TOKEN = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -317,7 +316,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.SLACK_BOT_USER_ID = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {
@@ -342,7 +341,7 @@ describe('utils config', () => {
           jest.resetModules();
           process.env.SLACK_LOG_LEVEL = val;
 
-          config = require('./config').default;
+          config = jest.requireActual('./config').default;
         });
 
         afterAll(() => {

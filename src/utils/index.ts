@@ -6,7 +6,6 @@ import breeHelper from '@utils/bree/breeHelper';
 import config from '@utils/config';
 import crypto from '@utils/crypto';
 import dateTime from '@utils/dateTime';
-import db from '@utils/db';
 import gracefulHelper from '@utils/bree/gracefulHelper';
 import logger from '@utils/logger/logger';
 import loggerHelper from '@utils/logger/loggerHelper';
@@ -20,7 +19,6 @@ export {
   config,
   crypto,
   dateTime,
-  db,
   gracefulHelper,
   logger,
   loggerHelper,

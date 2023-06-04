@@ -1,8 +1,9 @@
 /* istanbul ignore file */
 import process from 'node:process';
 import { parentPort } from 'node:worker_threads';
+import { dbJassbot } from '@db/sources';
 import { jobService } from '@services';
-import { db, logger } from '@utils';
+import { logger } from '@utils';
 
 /**
  * This job is to get all the channels from slack api
@@ -15,7 +16,7 @@ import { db, logger } from '@utils';
 (async () => {
   logger.info('jobs: updateChannels started');
 
-  const { isConnected: isDbConnected } = await db.connect();
+  const { isConnected: isDbConnected } = await dbJassbot.connect();
   if (!isDbConnected) {
     logger.info('jobs: updateChannels exiting', { error: 'Database failed to connect' });
 
@@ -25,7 +26,7 @@ import { db, logger } from '@utils';
   const { results } = await jobService.updateChannels();
   logger.info('jobs: updateChannels completed', { results });
 
-  await db.disconnect();
+  await dbJassbot.disconnect();
 
   if (parentPort) {
     parentPort.postMessage('done');

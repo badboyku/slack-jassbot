@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import { config, db, logger } from '@utils';
+import { dbJassbot } from '@db/sources';
+import { config, logger } from '@utils';
 import type { Mongoose } from 'mongoose';
 import type { DbConnectResult, DbDisconnectResult } from '@types';
 
@@ -7,26 +8,30 @@ jest.mock('mongoose');
 jest.mock('@utils/config');
 jest.mock('@utils/logger/logger');
 
-describe('utils slackLogger', () => {
+describe('dbJassbot Source', () => {
   describe('calling function connect', () => {
     const uri = 'uri';
     let result: DbConnectResult;
 
     describe('successfully', () => {
       beforeEach(async () => {
-        config.db = { uri };
+        config.db = { jassbot: { uri } };
         jest.spyOn(mongoose, 'set').mockReturnValueOnce({} as Mongoose);
-        jest.spyOn(mongoose, 'connect').mockResolvedValueOnce({} as Mongoose);
+        jest.spyOn(mongoose, 'connect').mockResolvedValueOnce({ connection: { readyState: 1 } } as Mongoose);
 
-        result = await db.connect();
+        result = await dbJassbot.connect();
       });
 
       afterEach(() => {
         jest.restoreAllMocks();
       });
 
+      it('calls mongoose.set', () => {
+        expect(mongoose.set).toHaveBeenCalledWith('strictQuery', false);
+      });
+
       it('calls mongoose.connect', () => {
-        expect(mongoose.connect).toHaveBeenCalled();
+        expect(mongoose.connect).toHaveBeenCalledWith(uri, { autoIndex: false });
       });
 
       it('returns isConnected is true', () => {
@@ -43,7 +48,7 @@ describe('utils slackLogger', () => {
           // Do nothing.
         });
 
-        result = await db.connect();
+        result = await dbJassbot.connect();
       });
 
       afterEach(() => {
@@ -51,7 +56,7 @@ describe('utils slackLogger', () => {
       });
 
       it('calls logger.warn', () => {
-        expect(logger.warn).toHaveBeenCalledWith('db: connect failed', { error });
+        expect(logger.warn).toHaveBeenCalledWith('dbJassbot: connect failed', { error });
       });
 
       it('returns isConnected is false', () => {
@@ -67,7 +72,7 @@ describe('utils slackLogger', () => {
       beforeEach(async () => {
         jest.spyOn(mongoose, 'disconnect').mockResolvedValueOnce();
 
-        result = await db.disconnect();
+        result = await dbJassbot.disconnect();
       });
 
       afterEach(() => {
@@ -89,7 +94,7 @@ describe('utils slackLogger', () => {
       beforeEach(async () => {
         jest.spyOn(mongoose, 'disconnect').mockRejectedValueOnce(error);
 
-        result = await db.disconnect();
+        result = await dbJassbot.disconnect();
       });
 
       afterEach(() => {
@@ -97,7 +102,7 @@ describe('utils slackLogger', () => {
       });
 
       it('calls logger.warn', () => {
-        expect(logger.warn).toHaveBeenCalledWith('db: disconnect failed', { error });
+        expect(logger.warn).toHaveBeenCalledWith('dbJassbot: disconnect failed', { error });
       });
 
       it('returns isDisconnected is false', () => {

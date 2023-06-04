@@ -13,7 +13,7 @@ import type { AnyBulkWriteOperation, BulkWriteResult } from 'mongodb';
 import type { Query } from 'mongoose';
 import type { BulkWriteResults, User, UserData } from '@types';
 
-jest.mock('@db/models/UserModel');
+jest.mock('@db/models/userModel');
 jest.mock('@utils/logger/logger');
 
 describe('services user', () => {
@@ -90,7 +90,7 @@ describe('services user', () => {
 
   describe('calling function create', () => {
     const data = { userId: 'foo' };
-    let result: User | null;
+    let result: User | User[] | null;
 
     describe('successfully', () => {
       beforeEach(async () => {

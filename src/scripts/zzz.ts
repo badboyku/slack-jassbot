@@ -1,11 +1,12 @@
 /* istanbul ignore file */
+import { dbJassbot } from '@db/sources';
 import { jobService } from '@services';
-import { db, logger } from '@utils';
+import { logger } from '@utils';
 
 (async () => {
   logger.info('scripts: test called');
 
-  const { isConnected: isDbConnected } = await db.connect();
+  const { isConnected: isDbConnected } = await dbJassbot.connect();
   if (!isDbConnected) {
     logger.info('scripts: test exiting', { error: 'Database failed to connect' });
 
@@ -15,7 +16,7 @@ import { db, logger } from '@utils';
   await jobService.findTomorrowsBirthdays();
   logger.info('scripts: test completed');
 
-  await db.disconnect();
+  await dbJassbot.disconnect();
 
   process.exit(0);
 })();

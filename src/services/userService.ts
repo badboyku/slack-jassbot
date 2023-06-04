@@ -30,7 +30,7 @@ const bulkWrite = (ops: AnyBulkWriteOperation<UserData>[]): Promise<BulkWriteRes
     : undefined;
 };
 
-const create = (data: UserData): Promise<User | null> => {
+const create = (data: UserData | UserData[]): Promise<User | User[] | null> => {
   logger.debug('userService: create called', { data });
 
   return UserModel.create(data)
@@ -114,7 +114,7 @@ const findOneAndUpdateByUserId = (userId: string, data: UpdateQuery<UserData>): 
 };
 
 const findOneOrCreateByUserId = (userId: string): Promise<User | null> => {
-  return findOne({ userId }).then((result) => result || create({ userId }).then((newResult) => newResult));
+  return findOne({ userId }).then((result) => result || create({ userId }).then((newResult) => newResult as User));
 };
 
 export default { bulkWrite, create, find, findAll, findOne, findOneAndUpdateByUserId, findOneOrCreateByUserId };

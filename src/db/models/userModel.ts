@@ -9,11 +9,11 @@ const { String } = Schema.Types;
 type UserModel = Model<UserDocType, {}, UserMethods>;
 const schema = new Schema<UserDocType, UserModel, UserMethods, {}, {}, {}, {}, UserHydratedDocument>(
   {
-    userId: { type: String, index: true, unique: true },
-    birthday: { type: String, default: '' },
-    birthdayLookup: { type: String, index: true, default: '' },
-    workAnniversary: { type: String, default: '' },
-    workAnniversaryLookup: { type: String, index: true, default: '' },
+    userId: { type: String, index: true, required: true, unique: true },
+    birthday: { type: String, required: false, default: '' },
+    birthdayLookup: { type: String, index: true, required: false, default: '' },
+    workAnniversary: { type: String, required: false, default: '' },
+    workAnniversaryLookup: { type: String, index: true, required: false, default: '' },
   },
   { collection: 'users', timestamps: true },
 );

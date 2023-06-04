@@ -1,7 +1,8 @@
 /* istanbul ignore file */
 import { faker } from '@faker-js/faker';
+import { dbJassbot } from '@db/sources';
 import { userService } from '@services';
-import { crypto, dateTime, db, logger } from '@utils';
+import { crypto, dateTime, logger } from '@utils';
 import type { DateTime } from 'luxon';
 import type { AnyBulkWriteOperation } from 'mongodb';
 import type { UserData } from '@types';
@@ -11,7 +12,7 @@ import type { UserData } from '@types';
   const numUsers = Math.min(numUsersArg || 1000, 5000);
   logger.info('scripts: addUsers called', { numUsersArg, numUsers });
 
-  const { isConnected: isDbConnected } = await db.connect();
+  const { isConnected: isDbConnected } = await dbJassbot.connect();
   if (!isDbConnected) {
     logger.info('scripts: addUsers exiting', { error: 'Database failed to connect' });
 
@@ -52,7 +53,7 @@ import type { UserData } from '@types';
   const results = await userService.bulkWrite(ops);
   logger.info('scripts: addUsers completed', { results });
 
-  await db.disconnect();
+  await dbJassbot.disconnect();
 
   process.exit(0);
 })();

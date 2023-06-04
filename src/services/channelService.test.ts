@@ -13,7 +13,7 @@ import type { AnyBulkWriteOperation, BulkWriteResult } from 'mongodb';
 import type { Query } from 'mongoose';
 import type { BulkWriteResults, Channel, ChannelData } from '@types';
 
-jest.mock('@db/models/ChannelModel');
+jest.mock('@db/models/channelModel');
 jest.mock('@utils/logger/logger');
 
 describe('services channel', () => {
@@ -90,7 +90,7 @@ describe('services channel', () => {
 
   describe('calling function create', () => {
     const data = { channelId: 'foo' };
-    let result: Channel | null;
+    let result: Channel | Channel[] | null;
 
     describe('successfully', () => {
       beforeEach(async () => {

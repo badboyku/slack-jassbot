@@ -30,7 +30,7 @@ const bulkWrite = (ops: AnyBulkWriteOperation<ChannelData>[]): Promise<BulkWrite
     : undefined;
 };
 
-const create = async (data: ChannelData): Promise<Channel | null> => {
+const create = async (data: ChannelData | ChannelData[]): Promise<Channel | Channel[] | null> => {
   logger.debug('channelService: create called', { data });
 
   return ChannelModel.create(data)
@@ -114,7 +114,9 @@ const findOneAndUpdateByChannelId = (channelId: string, data: UpdateQuery<Channe
 };
 
 const findOneOrCreateByChannelId = (channelId: string): Promise<Channel | null> => {
-  return findOne({ channelId }).then((result) => result || create({ channelId }).then((newResult) => newResult));
+  return findOne({ channelId }).then(
+    (result) => result || create({ channelId }).then((newResult) => newResult as Channel),
+  );
 };
 
 export default { bulkWrite, create, find, findAll, findOne, findOneAndUpdateByChannelId, findOneOrCreateByChannelId };

@@ -20,7 +20,7 @@ const config: Config = {
     key: process.env.CRYPTO_KEY || '',
   },
   db: {
-    uri: process.env.DB_URI || '',
+    jassbot: { uri: process.env.DB_JASSBOT_URI || '' },
   },
   slack: {
     apiHost: process.env.SLACK_API_HOST || '',

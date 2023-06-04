@@ -1,8 +1,9 @@
 /* istanbul ignore file */
 import { faker } from '@faker-js/faker';
 import { UserModel } from '@db/models';
+import { dbJassbot } from '@db/sources';
 import { channelService } from '@services';
-import { config, db, logger } from '@utils';
+import { config, logger } from '@utils';
 import type { AnyBulkWriteOperation } from 'mongodb';
 import type { ChannelData } from '@types';
 
@@ -47,7 +48,7 @@ const getMembers = (userIds: string[] = []): string[] => {
   const numChannels = Math.min(numChannelsArg || 1000, 5000);
   logger.info('scripts: addChannels called', { numChannelsArg, numChannels });
 
-  const { isConnected: isDbConnected } = await db.connect();
+  const { isConnected: isDbConnected } = await dbJassbot.connect();
   if (!isDbConnected) {
     logger.info('scripts: addChannels exiting', { error: 'Database failed to connect' });
 
@@ -83,7 +84,7 @@ const getMembers = (userIds: string[] = []): string[] => {
   const results = await channelService.bulkWrite(ops);
   logger.info('scripts: addChannels completed', { results });
 
-  await db.disconnect();
+  await dbJassbot.disconnect();
 
   process.exit(0);
 })();

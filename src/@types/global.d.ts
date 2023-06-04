@@ -26,7 +26,7 @@ export type DocTimestamps = { createdAt: Date; updatedAt: Date };
 
 // Channel
 export type ChannelData = {
-  channelId?: string;
+  channelId: string;
   name?: string;
   isMember?: boolean;
   isPrivate?: boolean;
@@ -41,7 +41,7 @@ export type Channel = ChannelDocType & ChannelDocument & ChannelHydratedDocument
 
 // User
 export type UserData = {
-  userId?: string;
+  userId: string;
   birthday?: string;
   birthdayLookup?: string;
   workAnniversary?: string;
@@ -103,7 +103,7 @@ export type Config = {
   app: { logLevel: string; logOutputFormat: string; nodeEnv: string; port: number; isTsNode: boolean };
   bree: { isDisabled: boolean; jobs: { updateChannelsCron: string } };
   crypto: { key: string };
-  db: { uri: string };
+  db: { jassbot: { uri: string } };
   slack: { apiHost: string; appToken: string; botToken: string; botUserId: string; logLevel: string };
 };
 
