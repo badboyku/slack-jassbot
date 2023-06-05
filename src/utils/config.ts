@@ -14,6 +14,7 @@ const config: Config = {
     isDisabled: process.env.BREE_DISABLE?.toLowerCase() === 'true' || false,
     jobs: {
       updateChannelsCron: process.env.BREE_JOBS_UPDATE_CHANNELS_CRON || '',
+      updateUsersCron: process.env.BREE_JOBS_UPDATE_USERS_CRON || '',
     },
   },
   crypto: {

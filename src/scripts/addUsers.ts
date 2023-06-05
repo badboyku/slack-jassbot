@@ -22,7 +22,6 @@ import type { UserData } from '@types';
   let birthdayDate: DateTime | undefined;
   let workAnniversaryDate: DateTime | undefined;
   const ops: AnyBulkWriteOperation<UserData>[] = [];
-
   for (let i = 0; i < numUsers; i += 1) {
     if (i % 10 !== 0) {
       birthdayDate = dateTime.getDateTimeFromJSDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' }));
@@ -31,23 +30,27 @@ import type { UserData } from '@types';
       birthdayDate = undefined;
       workAnniversaryDate = undefined;
     }
-    const birthday = birthdayDate?.toISODate() || '';
-    const birthdayLookup = birthdayDate?.toFormat('LL-dd') || '';
-    const workAnniversary = workAnniversaryDate?.toISODate() || '';
-    const workAnniversaryLookup = workAnniversaryDate?.toFormat('LL-dd') || '';
 
-    const filter = { userId: `TEST${faker.string.alphanumeric({ length: 7, casing: 'upper' })}` };
-    const update = {
-      $set: {
-        birthday: crypto.encrypt(birthday),
-        birthdayLookup: crypto.createHmac(birthdayLookup),
-        workAnniversary: crypto.encrypt(workAnniversary),
-        workAnniversaryLookup: crypto.createHmac(workAnniversaryLookup),
-        __v: 0,
+    ops.push({
+      updateOne: {
+        filter: { userId: `TEST${faker.string.alphanumeric({ length: 7, casing: 'upper' })}` },
+        update: {
+          $set: {
+            name: faker.internet.userName(),
+            realName: faker.person.fullName(),
+            isBot: faker.datatype.boolean({ probability: 0.01 }),
+            isDeleted: faker.datatype.boolean({ probability: 0.05 }),
+            tz: faker.location.timeZone(),
+            birthday: crypto.encrypt(birthdayDate?.toISODate() || ''),
+            birthdayLookup: crypto.createHmac(birthdayDate?.toFormat('LL-dd') || ''),
+            workAnniversary: crypto.encrypt(workAnniversaryDate?.toISODate() || ''),
+            workAnniversaryLookup: crypto.createHmac(workAnniversaryDate?.toFormat('LL-dd') || ''),
+            __v: 0,
+          },
+        },
+        upsert: true,
       },
-    };
-
-    ops.push({ updateOne: { filter, update, upsert: true } });
+    });
   }
 
   const results = await userService.bulkWrite(ops);

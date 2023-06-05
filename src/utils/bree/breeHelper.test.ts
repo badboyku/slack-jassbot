@@ -1,6 +1,6 @@
 import Bree from 'bree';
 import { breeHelper, config, logger } from '@utils';
-import type { BreeOptions, Job } from 'bree';
+import type { BreeOptions } from 'bree';
 
 jest.mock('bree');
 jest.mock('@utils/config');
@@ -23,7 +23,7 @@ describe('utils breeHelper', () => {
 
   describe('calling function getBreeOptions', () => {
     const configAppDefault = { logLevel: '', logOutputFormat: '', nodeEnv: '', port: 123, isTsNode: false };
-    const configBreeDefault = { jobs: { updateChannelsCron: '' }, isDisabled: false };
+    const configBreeDefault = { jobs: { updateChannelsCron: '', updateUsersCron: '' }, isDisabled: false };
 
     beforeEach(() => {
       jest.spyOn(logger, 'warn').mockImplementationOnce(() => {
@@ -108,25 +108,22 @@ describe('utils breeHelper', () => {
       });
     });
 
-    describe('with job updateChannelsCron', () => {
-      const jobName = 'updateChannels';
-      const jobCron = 'updateChannelsCron';
+    describe('with jobs', () => {
+      const jobs = { updateChannelsCron: 'updateChannelsCron', updateUsersCron: 'updateUsersCron' };
+      const expected = [
+        { cron: 'updateChannelsCron', name: 'updateChannels' },
+        { cron: 'updateUsersCron', name: 'updateUsers' },
+      ];
       let options: BreeOptions;
 
       beforeEach(() => {
-        config.bree = { ...configBreeDefault, jobs: { updateChannelsCron: jobCron } };
+        config.bree = { ...configBreeDefault, jobs };
 
         options = breeHelper.getBreeOptions();
       });
 
-      it('returns options with updateChannels job', () => {
-        const actualJob = options.jobs?.find((job) => {
-          const { name } = job as Job;
-
-          return name === jobName;
-        });
-
-        expect(actualJob).toEqual({ name: jobName, cron: jobCron });
+      it('returns options with jobs', () => {
+        expect(options.jobs).toEqual(expected);
       });
     });
 

@@ -3,21 +3,16 @@ import { crypto, dateTime } from '@utils';
 import type { SaveUserDatesResult, ViewStateValues } from '@types';
 
 const saveUserDates = async (userId: string, values: ViewStateValues): Promise<SaveUserDatesResult> => {
-  const birthdayValue = values?.birthday?.datepicker?.selected_date?.toString() || '';
-  const birthdayDate = dateTime.getDateTimeFromIso(birthdayValue);
-  const birthday = birthdayDate?.toISODate() || '';
-  const birthdayLookup = birthdayDate?.toFormat('LL-dd') || '';
-
-  const workAnniversaryValue = values?.workAnniversary?.datepicker?.selected_date?.toString() || '';
-  const workAnniversaryDate = dateTime.getDateTimeFromIso(workAnniversaryValue);
-  const workAnniversary = workAnniversaryDate?.toISODate() || '';
-  const workAnniversaryLookup = workAnniversaryDate?.toFormat('LL-dd') || '';
+  const birthdayDate = dateTime.getDateTimeFromIso(values?.birthday?.datepicker?.selected_date?.toString() || '');
+  const workAnniversaryDate = dateTime.getDateTimeFromIso(
+    values?.workAnniversary?.datepicker?.selected_date?.toString() || '',
+  );
 
   const data = {
-    birthday: crypto.encrypt(birthday),
-    birthdayLookup: crypto.createHmac(birthdayLookup),
-    workAnniversary: crypto.encrypt(workAnniversary),
-    workAnniversaryLookup: crypto.createHmac(workAnniversaryLookup),
+    birthday: crypto.encrypt(birthdayDate?.toISODate() || ''),
+    birthdayLookup: crypto.createHmac(birthdayDate?.toFormat('LL-dd') || ''),
+    workAnniversary: crypto.encrypt(workAnniversaryDate?.toISODate() || ''),
+    workAnniversaryLookup: crypto.createHmac(workAnniversaryDate?.toFormat('LL-dd') || ''),
   };
   const user = await userService.findOneAndUpdateByUserId(userId, data);
 

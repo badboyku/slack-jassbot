@@ -9,10 +9,11 @@ const schema = new Schema<ChannelDocType, ChannelModel, ChannelMethods, {}, {}, 
   {
     channelId: { type: String, index: true, required: true, unique: true },
     name: { type: String, required: false, default: '' },
+    isArchived: { type: Boolean, index: true, required: false, default: false },
     isMember: { type: Boolean, index: true, required: false, default: false },
     isPrivate: { type: Boolean, required: false, default: false },
     numMembers: { type: Number, index: true, required: false, default: 0 },
-    members: { type: [String], index: true, required: false, default: [] },
+    memberIds: { type: [String], index: true, required: false, default: [] },
   },
   { collection: 'channels', timestamps: true },
 );

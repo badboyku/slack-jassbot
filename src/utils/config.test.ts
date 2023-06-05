@@ -180,6 +180,31 @@ describe('utils config', () => {
     });
   });
 
+  describe('calling var bree.jobs.updateUsersCron', () => {
+    const testCases = [
+      { val: 'foo', expected: 'foo' },
+      { val: '', expected: '' },
+    ];
+    testCases.forEach(({ val, expected }) => {
+      describe(`when process.env.BREE_JOBS_UPDATE_USERS_CRON ${val ? 'set' : 'not set'}`, () => {
+        beforeEach(() => {
+          jest.resetModules();
+          process.env.BREE_JOBS_UPDATE_USERS_CRON = val;
+
+          config = jest.requireActual('./config').default;
+        });
+
+        afterAll(() => {
+          process.env = ENV_BACKUP;
+        });
+
+        it(`returns ${val ? 'value' : 'default'}`, () => {
+          expect(config.bree.jobs.updateUsersCron).toEqual(expected);
+        });
+      });
+    });
+  });
+
   describe('calling var crypto.key', () => {
     const testCases = [
       { val: 'foo', expected: 'foo' },

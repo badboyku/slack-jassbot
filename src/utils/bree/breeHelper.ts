@@ -8,6 +8,9 @@ const getBreeOptions = (): BreeOptions => {
   if (config.bree.jobs.updateChannelsCron) {
     jobs.push({ name: 'updateChannels', cron: config.bree.jobs.updateChannelsCron } as Job);
   }
+  if (config.bree.jobs.updateUsersCron) {
+    jobs.push({ name: 'updateUsers', cron: config.bree.jobs.updateUsersCron } as Job);
+  }
 
   return {
     logger: false,

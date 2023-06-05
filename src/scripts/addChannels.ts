@@ -20,7 +20,7 @@ const getSampleUserIds = async (size = 1000): Promise<string[]> => {
   return userIds;
 };
 
-const getMembers = (userIds: string[] = []): string[] => {
+const getMemberIds = (userIds: string[] = []): string[] => {
   const numMembers = faker.number.int({ min: 0, max: Math.floor(userIds.length / 2) });
   if (numMembers === 0) {
     return [];
@@ -55,30 +55,34 @@ const getMembers = (userIds: string[] = []): string[] => {
     process.exit(1);
   }
 
-  const userIds = await getSampleUserIds();
+  const sampleUserIds = await getSampleUserIds();
 
   const ops: AnyBulkWriteOperation<ChannelData>[] = [];
   for (let i = 0; i < numChannels; i += 1) {
-    const members = getMembers(userIds);
+    const memberIds = getMemberIds(sampleUserIds);
 
-    const isMember = faker.datatype.boolean();
+    const isMember = faker.datatype.boolean({ probability: 0.25 });
     if (isMember) {
-      members.push(config.slack.botUserId);
+      memberIds.push(config.slack.botUserId);
     }
 
-    const filter = { channelId: `TEST${faker.string.alphanumeric({ length: 7, casing: 'upper' })}` };
-    const update = {
-      $set: {
-        name: faker.word.words({ count: { min: 1, max: 8 } }).replaceAll(' ', '-'),
-        isMember,
-        isPrivate: faker.datatype.boolean(),
-        numMembers: members.length,
-        members,
-        __v: 0,
+    ops.push({
+      updateOne: {
+        filter: { channelId: `TEST${faker.string.alphanumeric({ length: 7, casing: 'upper' })}` },
+        update: {
+          $set: {
+            name: faker.word.words({ count: { min: 1, max: 8 } }).replaceAll(' ', '-'),
+            isArchived: !isMember && faker.datatype.boolean({ probability: 0.02 }),
+            isMember,
+            isPrivate: faker.datatype.boolean({ probability: 0.4 }),
+            numMembers: memberIds.length,
+            memberIds,
+            __v: 0,
+          },
+        },
+        upsert: true,
       },
-    };
-
-    ops.push({ updateOne: { filter, update, upsert: true } });
+    });
   }
 
   const results = await channelService.bulkWrite(ops);

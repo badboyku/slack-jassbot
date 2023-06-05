@@ -15,3 +15,6 @@ export const LOG_LEVELS_NUM = { DEBUG: 0, INFO: 1, WARN: 2, ERROR: 3 };
 
 // Slack
 export const SLACK_GET_LIMIT_DEFAULT = 1000;
+
+// User
+export const USER_TZ_DEFAULT = 'America/Los_Angeles';

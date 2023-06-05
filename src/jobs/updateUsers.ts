@@ -6,21 +6,21 @@ import { jobService } from '@services';
 import { logger } from '@utils';
 
 /**
- * This job is to get all the channels from slack api
- * and update channel's fields in the db.
+ * This job is to get all the users from slack api
+ * and update user's fields in the db.
  */
 (async () => {
-  logger.info('jobs: updateChannels started');
+  logger.info('jobs: updateUsers started');
 
   const { isConnected: isDbConnected } = await dbJassbot.connect();
   if (!isDbConnected) {
-    logger.info('jobs: updateChannels exiting', { error: 'Database failed to connect' });
+    logger.info('jobs: updateUsers exiting', { error: 'Database failed to connect' });
 
     process.exit(1);
   }
 
-  const { results } = await jobService.updateChannels();
-  logger.info('jobs: updateChannels completed', { results });
+  const { results } = await jobService.updateUsers();
+  logger.info('jobs: updateUsers completed', { results });
 
   await dbJassbot.disconnect();
 

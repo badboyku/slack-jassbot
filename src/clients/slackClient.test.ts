@@ -2,7 +2,12 @@ import { slackClient } from '@clients';
 import { SlackClientError } from '@errors';
 import { appHelper, logger } from '@utils';
 import type { App, CodedError } from '@slack/bolt';
-import type { SlackClientGetConversationListResult, SlackClientGetConversationsMembersResult } from '@types';
+import type {
+  SlackClientGetConversationsListResult,
+  SlackClientGetConversationsMembersResult,
+  SlackClientGetUsersConversationsResult,
+  SlackClientGetUsersListResult,
+} from '@types';
 
 jest.mock('@utils/app/appHelper');
 jest.mock('@utils/logger/logger');
@@ -21,7 +26,7 @@ describe('clients slack', () => {
 
   describe('calling function getConversationsList', () => {
     const options = {};
-    let result: SlackClientGetConversationListResult;
+    let result: SlackClientGetConversationsListResult;
 
     describe('successfully', () => {
       const appMock = { error: errorWithCallback, client: { conversations: { list: jest.fn() } } };
@@ -145,6 +150,136 @@ describe('clients slack', () => {
           error,
           messages,
         });
+      });
+
+      it('returns error', () => {
+        expect(result).toEqual({ error: clientError });
+      });
+    });
+  });
+
+  describe('calling function getUsersConversations', () => {
+    const options = {};
+    let result: SlackClientGetUsersConversationsResult;
+
+    describe('successfully', () => {
+      const appMock = { error: errorWithCallback, client: { users: { conversations: jest.fn() } } };
+
+      beforeEach(async () => {
+        appMock.client.users.conversations.mockResolvedValue(responseSuccess);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(logger, 'warn').mockImplementation(() => {
+          // Do nothing.
+        });
+
+        result = await slackClient.getUsersConversations(options);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls appHelper.getApp', () => {
+        expect(appHelper.getApp).toHaveBeenCalled();
+      });
+
+      it('calls logger.warn with ErrorHandler', () => {
+        expect(logger.warn).toHaveBeenCalledWith('app: error has occurred', { error: someError });
+      });
+
+      it('calls app.client.users.conversations', () => {
+        expect(appMock.client.users.conversations).toHaveBeenCalledWith(options);
+      });
+
+      it('returns response', () => {
+        expect(result).toEqual({ response: responseSuccess });
+      });
+    });
+
+    describe('with error', () => {
+      const appMock = { error: jest.fn(), client: { users: { conversations: jest.fn() } } };
+
+      beforeEach(async () => {
+        appMock.client.users.conversations.mockRejectedValueOnce(err);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(logger, 'warn').mockImplementation(() => {
+          // Do nothing.
+        });
+
+        result = await slackClient.getUsersConversations(options);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls logger.warn', () => {
+        expect(logger.warn).toHaveBeenCalledWith('slackClient: getUserConversations error', { code, error, messages });
+      });
+
+      it('returns error', () => {
+        expect(result).toEqual({ error: clientError });
+      });
+    });
+  });
+
+  describe('calling function getUsersList', () => {
+    const options = {};
+    let result: SlackClientGetUsersListResult;
+
+    describe('successfully', () => {
+      const appMock = { error: errorWithCallback, client: { users: { list: jest.fn() } } };
+
+      beforeEach(async () => {
+        appMock.client.users.list.mockResolvedValue(responseSuccess);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(logger, 'warn').mockImplementation(() => {
+          // Do nothing.
+        });
+
+        result = await slackClient.getUsersList(options);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls appHelper.getApp', () => {
+        expect(appHelper.getApp).toHaveBeenCalled();
+      });
+
+      it('calls logger.warn with ErrorHandler', () => {
+        expect(logger.warn).toHaveBeenCalledWith('app: error has occurred', { error: someError });
+      });
+
+      it('calls app.client.users.list', () => {
+        expect(appMock.client.users.list).toHaveBeenCalledWith(options);
+      });
+
+      it('returns response', () => {
+        expect(result).toEqual({ response: responseSuccess });
+      });
+    });
+
+    describe('with error', () => {
+      const appMock = { error: jest.fn(), client: { users: { list: jest.fn() } } };
+
+      beforeEach(async () => {
+        appMock.client.users.list.mockRejectedValueOnce(err);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(logger, 'warn').mockImplementation(() => {
+          // Do nothing.
+        });
+
+        result = await slackClient.getUsersList(options);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls logger.warn', () => {
+        expect(logger.warn).toHaveBeenCalledWith('slackClient: getUsersList error', { code, error, messages });
       });
 
       it('returns error', () => {

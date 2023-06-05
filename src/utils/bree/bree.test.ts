@@ -9,7 +9,7 @@ jest.mock('@utils/config');
 jest.mock('@utils/logger/logger');
 
 describe('utils bree', () => {
-  const configBreeDefault = { jobs: { updateChannelsCron: '' }, isDisabled: false };
+  const configBreeDefault = { jobs: { updateChannelsCron: '', updateUsersCron: '' }, isDisabled: false };
   const options = { foo: 'bar' };
 
   describe('calling function start', () => {

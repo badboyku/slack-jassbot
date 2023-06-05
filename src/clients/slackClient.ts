@@ -2,8 +2,19 @@ import { SlackClientError } from '@errors';
 import { appHelper, logger } from '@utils';
 import type { CodedError } from '@slack/bolt';
 import type { ErrorHandler } from '@slack/bolt/dist/App';
-import type { ConversationsListArguments, ConversationsMembersArguments, WebAPICallResult } from '@slack/web-api';
-import type { SlackClientGetConversationListResult, SlackClientGetConversationsMembersResult } from '@types';
+import type {
+  ConversationsListArguments,
+  ConversationsMembersArguments,
+  UsersConversationsArguments,
+  UsersListArguments,
+  WebAPICallResult,
+} from '@slack/web-api';
+import type {
+  SlackClientGetConversationsListResult,
+  SlackClientGetConversationsMembersResult,
+  SlackClientGetUsersConversationsResult,
+  SlackClientGetUsersListResult,
+} from '@types';
 
 const getApp = () => {
   const handleError = (error: CodedError) => {
@@ -29,7 +40,7 @@ const handleError = (method: string) => (err: { code: string; data: WebAPICallRe
   return { error: new SlackClientError(`${code}: ${error}`, response) };
 };
 
-const getConversationsList = (options?: ConversationsListArguments): Promise<SlackClientGetConversationListResult> => {
+const getConversationsList = (options?: ConversationsListArguments): Promise<SlackClientGetConversationsListResult> => {
   return getApp().client.conversations.list(options).then(handleResponse).catch(handleError('getConversationsList'));
 };
 
@@ -42,4 +53,14 @@ const getConversationsMembers = (
     .catch(handleError('getConversationsMembers'));
 };
 
-export default { getConversationsList, getConversationsMembers };
+const getUsersConversations = (
+  options?: UsersConversationsArguments,
+): Promise<SlackClientGetUsersConversationsResult> => {
+  return getApp().client.users.conversations(options).then(handleResponse).catch(handleError('getUserConversations'));
+};
+
+const getUsersList = (options?: UsersListArguments): Promise<SlackClientGetUsersListResult> => {
+  return getApp().client.users.list(options).then(handleResponse).catch(handleError('getUsersList'));
+};
+
+export default { getConversationsList, getConversationsMembers, getUsersConversations, getUsersList };
