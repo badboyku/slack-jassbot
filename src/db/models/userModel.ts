@@ -9,7 +9,7 @@ const { Boolean, String } = Schema.Types;
 type UserModel = Model<UserDocType, {}, UserMethods>;
 const schema = new Schema<UserDocType, UserModel, UserMethods, {}, {}, {}, {}, UserHydratedDocument>(
   {
-    userId: { type: String, index: true, required: true, unique: true },
+    userId: { type: String, unique: true, required: true },
     teamId: { type: String, index: true, required: false, default: '' },
     name: { type: String, required: false, default: '' },
     realName: { type: String, required: false, default: '' },
@@ -27,10 +27,10 @@ const schema = new Schema<UserDocType, UserModel, UserMethods, {}, {}, {}, {}, U
     isPrimaryOwner: { type: Boolean, required: false, default: false },
     isRestricted: { type: Boolean, required: false, default: false },
     isUltraRestricted: { type: Boolean, required: false, default: false },
-    birthday: { type: String, required: false, default: '' },
-    birthdayLookup: { type: String, index: true, required: false, default: '' },
-    workAnniversary: { type: String, required: false, default: '' },
-    workAnniversaryLookup: { type: String, index: true, required: false, default: '' },
+    birthday: { type: String, required: false, default: () => crypto.encrypt('') },
+    birthdayLookup: { type: String, index: true, required: false, default: () => crypto.encrypt('') },
+    workAnniversary: { type: String, required: false, default: () => crypto.encrypt('') },
+    workAnniversaryLookup: { type: String, index: true, required: false, default: () => crypto.encrypt('') },
     channelIds: { type: [String], index: true, required: false, default: [] },
   },
   { collection: 'users', timestamps: true },

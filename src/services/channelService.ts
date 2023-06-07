@@ -8,8 +8,8 @@ import {
   DB_LIMIT_MAX,
   DB_SORT_DEFAULT,
 } from '@utils/constants';
-import type { AnyBulkWriteOperation } from 'mongodb';
-import type { FilterQuery, Types, UpdateQuery } from 'mongoose';
+import type { AnyBulkWriteOperation, DeleteResult } from 'mongodb';
+import type { FilterQuery, QueryOptions, Types, UpdateQuery } from 'mongoose';
 import type { BulkWriteResults, Channel, ChannelData, FindOptions } from '@types';
 
 const bulkWrite = (ops: AnyBulkWriteOperation<ChannelData>[]): Promise<BulkWriteResults> | undefined => {
@@ -37,6 +37,18 @@ const create = async (data: ChannelData | ChannelData[]): Promise<Channel | Chan
     .then((result) => result)
     .catch((error) => {
       logger.warn('channelService: create failed', { error });
+
+      return null;
+    });
+};
+
+const deleteMany = (filter: FilterQuery<ChannelData>, options?: QueryOptions): Promise<DeleteResult | null> => {
+  logger.debug('channelService: deleteMany called', { filter, options });
+
+  return ChannelModel.deleteMany(filter, options)
+    .then((result) => result)
+    .catch((error) => {
+      logger.warn('channelService: deleteMany failed', { error });
 
       return null;
     });
@@ -119,4 +131,13 @@ const findOneOrCreateByChannelId = (channelId: string): Promise<Channel | null> 
   );
 };
 
-export default { bulkWrite, create, find, findAll, findOne, findOneAndUpdateByChannelId, findOneOrCreateByChannelId };
+export default {
+  bulkWrite,
+  create,
+  deleteMany,
+  find,
+  findAll,
+  findOne,
+  findOneAndUpdateByChannelId,
+  findOneOrCreateByChannelId,
+};

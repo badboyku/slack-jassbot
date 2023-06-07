@@ -8,8 +8,8 @@ import {
   DB_LIMIT_MAX,
   DB_SORT_DEFAULT,
 } from '@utils/constants';
-import type { AnyBulkWriteOperation } from 'mongodb';
-import type { FilterQuery, Types, UpdateQuery } from 'mongoose';
+import type { AnyBulkWriteOperation, DeleteResult } from 'mongodb';
+import type { FilterQuery, QueryOptions, Types, UpdateQuery } from 'mongoose';
 import type { BulkWriteResults, FindOptions, User, UserData } from '@types';
 
 const bulkWrite = (ops: AnyBulkWriteOperation<UserData>[]): Promise<BulkWriteResults> | undefined => {
@@ -37,6 +37,18 @@ const create = (data: UserData | UserData[]): Promise<User | User[] | null> => {
     .then((result) => result)
     .catch((error) => {
       logger.warn('userService: create failed', { error });
+
+      return null;
+    });
+};
+
+const deleteMany = (filter: FilterQuery<UserData>, options?: QueryOptions): Promise<DeleteResult | null> => {
+  logger.debug('userService: deleteMany called', { filter, options });
+
+  return UserModel.deleteMany(filter, options)
+    .then((result) => result)
+    .catch((error) => {
+      logger.warn('userService: deleteMany failed', { error });
 
       return null;
     });
@@ -117,4 +129,13 @@ const findOneOrCreateByUserId = (userId: string): Promise<User | null> => {
   return findOne({ userId }).then((result) => result || create({ userId }).then((newResult) => newResult as User));
 };
 
-export default { bulkWrite, create, find, findAll, findOne, findOneAndUpdateByUserId, findOneOrCreateByUserId };
+export default {
+  bulkWrite,
+  create,
+  deleteMany,
+  find,
+  findAll,
+  findOne,
+  findOneAndUpdateByUserId,
+  findOneOrCreateByUserId,
+};
