@@ -4,6 +4,7 @@ import type { AppOptions } from '@slack/bolt';
 
 jest.mock('@slack/bolt');
 jest.mock('@utils/config');
+jest.mock('@utils/logger/logger');
 jest.mock('@utils/slackLogger');
 
 describe('utils appHelper', () => {

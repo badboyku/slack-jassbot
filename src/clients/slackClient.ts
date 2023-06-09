@@ -1,7 +1,5 @@
 import { SlackClientError } from '@errors';
 import { appHelper, logger } from '@utils';
-import type { CodedError } from '@slack/bolt';
-import type { ErrorHandler } from '@slack/bolt/dist/App';
 import type {
   ConversationsListArguments,
   ConversationsMembersArguments,
@@ -16,18 +14,13 @@ import type {
   SlackClientGetUsersListResult,
 } from '@types';
 
-const getApp = () => {
-  const handleError = (error: CodedError) => {
-    logger.warn('app: error has occurred', { error });
-  };
-
-  const app = appHelper.getApp();
-  app.error(handleError as ErrorHandler);
-
-  return app;
+const delay = (ms?: number) => {
+  return new Promise((resolve, _reject) => {
+    setTimeout(resolve, ms || 1000);
+  });
 };
 
-const handleResponse = (response: WebAPICallResult) => {
+const handleResponse = (_method: string) => (response: WebAPICallResult) => {
   return { response };
 };
 
@@ -40,27 +33,72 @@ const handleError = (method: string) => (err: { code: string; data: WebAPICallRe
   return { error: new SlackClientError(`${code}: ${error}`, response) };
 };
 
+/**
+ * Tier 2 (20 per minute)
+ * @param options
+ */
 const getConversationsList = (options?: ConversationsListArguments): Promise<SlackClientGetConversationsListResult> => {
-  return getApp().client.conversations.list(options).then(handleResponse).catch(handleError('getConversationsList'));
+  logger.debug('slackClient: getConversationsList called', { options });
+
+  return delay().then(() =>
+    appHelper
+      .getApp()
+      .client.conversations.list(options)
+      .then(handleResponse('getConversationsList'))
+      .catch(handleError('getConversationsList')),
+  );
 };
 
+/**
+ * Tier 4 (100 per minute)
+ * @param options
+ */
 const getConversationsMembers = (
   options?: ConversationsMembersArguments,
 ): Promise<SlackClientGetConversationsMembersResult> => {
-  return getApp()
-    .client.conversations.members(options)
-    .then(handleResponse)
-    .catch(handleError('getConversationsMembers'));
+  logger.debug('slackClient: getConversationsMembers called', { options });
+
+  return delay().then(() =>
+    appHelper
+      .getApp()
+      .client.conversations.members(options)
+      .then(handleResponse('getConversationsMembers'))
+      .catch(handleError('getConversationsMembers')),
+  );
 };
 
+/**
+ * Tier 3 (50 per minute)
+ * @param options
+ */
 const getUsersConversations = (
   options?: UsersConversationsArguments,
 ): Promise<SlackClientGetUsersConversationsResult> => {
-  return getApp().client.users.conversations(options).then(handleResponse).catch(handleError('getUserConversations'));
+  logger.debug('slackClient: getUsersConversations called', { options });
+
+  return delay().then(() =>
+    appHelper
+      .getApp()
+      .client.users.conversations(options)
+      .then(handleResponse('getUserConversations'))
+      .catch(handleError('getUserConversations')),
+  );
 };
 
+/**
+ * Tier 2 (20 per minute)
+ * @param options
+ */
 const getUsersList = (options?: UsersListArguments): Promise<SlackClientGetUsersListResult> => {
-  return getApp().client.users.list(options).then(handleResponse).catch(handleError('getUsersList'));
+  logger.debug('slackClient: getUsersList called', { options });
+
+  return delay().then(() =>
+    appHelper
+      .getApp()
+      .client.users.list(options)
+      .then(handleResponse('getUsersList'))
+      .catch(handleError('getUsersList')),
+  );
 };
 
 export default { getConversationsList, getConversationsMembers, getUsersConversations, getUsersList };

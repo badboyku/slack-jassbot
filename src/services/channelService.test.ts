@@ -9,7 +9,7 @@ import {
   DB_LIMIT_MAX,
   DB_SORT_DEFAULT,
 } from '@utils/constants';
-import type { AnyBulkWriteOperation, BulkWriteResult } from 'mongodb';
+import type { AnyBulkWriteOperation, BulkWriteResult, DeleteResult } from 'mongodb';
 import type { Query } from 'mongoose';
 import type { BulkWriteResults, Channel, ChannelData } from '@types';
 
@@ -125,6 +125,69 @@ describe('services channel', () => {
 
       it('calls logger.warn', () => {
         expect(logger.warn).toHaveBeenCalledWith('channelService: create failed', { error });
+      });
+
+      it('returns null', () => {
+        expect(result).toEqual(null);
+      });
+    });
+  });
+
+  describe('calling function deleteMany', () => {
+    const filter = { buildingId: 123 };
+    const options = { timestamps: false };
+    const deleteManyResult = { acknowledged: true, deletedCount: 100 };
+    let result: DeleteResult | null;
+
+    describe('successfully', () => {
+      beforeEach(async () => {
+        jest.spyOn(ChannelModel, 'deleteMany').mockResolvedValueOnce(deleteManyResult);
+
+        result = await channelService.deleteMany(filter);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls ChannelModel.deleteMany', () => {
+        expect(ChannelModel.deleteMany).toHaveBeenCalledWith(filter, undefined);
+      });
+
+      it('returns result', () => {
+        expect(result).toEqual(deleteManyResult);
+      });
+    });
+
+    describe('with options', () => {
+      beforeEach(async () => {
+        jest.spyOn(ChannelModel, 'deleteMany').mockResolvedValueOnce(deleteManyResult);
+
+        result = await channelService.deleteMany(filter, options);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls ChannelModel.deleteMany with options', () => {
+        expect(ChannelModel.deleteMany).toHaveBeenCalledWith(filter, options);
+      });
+    });
+
+    describe('with error on ChannelModel.deleteMany', () => {
+      beforeEach(async () => {
+        jest.spyOn(ChannelModel, 'deleteMany').mockRejectedValueOnce(error);
+
+        result = await channelService.deleteMany(filter);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls logger.warn', () => {
+        expect(logger.warn).toHaveBeenCalledWith('channelService: deleteMany failed', { error });
       });
 
       it('returns null', () => {

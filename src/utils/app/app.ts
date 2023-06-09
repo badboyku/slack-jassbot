@@ -8,17 +8,10 @@ import {
   viewListener,
 } from '@listeners';
 import { appHelper, config, logger } from '@utils';
-import type { CodedError } from '@slack/bolt';
-import type { ErrorHandler } from '@slack/bolt/dist/App';
 import type { AppStartResult } from '@types';
 
 const start = async (): Promise<AppStartResult> => {
-  const handleError = (error: CodedError) => {
-    logger.warn('app: error has occurred', { error });
-  };
-
   const app = appHelper.getApp();
-  app.error(handleError as ErrorHandler);
 
   // Add listeners.
   app.action(/w*/, actionListener);

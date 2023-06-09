@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import { model, Model, Schema } from 'mongoose';
 import { crypto, dateTime } from '@utils';
+import { USER_TZ_DEFAULT } from '@utils/constants';
 import type { DateTime } from 'luxon';
 import type { UserDocType, UserHydratedDocument, UserMethods } from '@types';
 
@@ -17,7 +18,7 @@ const schema = new Schema<UserDocType, UserModel, UserMethods, {}, {}, {}, {}, U
     firstName: { type: String, required: false, default: '' },
     lastName: { type: String, required: false, default: '' },
     email: { type: String, required: false, default: '' },
-    tz: { type: String, required: false, default: '' },
+    tz: { type: String, required: false, default: USER_TZ_DEFAULT },
     isAdmin: { type: Boolean, required: false, default: false },
     isAppUser: { type: Boolean, required: false, default: false },
     isBot: { type: Boolean, index: true, required: false, default: false },

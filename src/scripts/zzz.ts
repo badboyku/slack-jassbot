@@ -1,20 +1,21 @@
 /* istanbul ignore file */
 import { dbJassbot } from '@db/sources';
-import { jobService } from '@services';
+import { slackService } from '@services';
 import { logger } from '@utils';
 
 (async () => {
-  logger.info('scripts: test called');
+  logger.info('scripts: zzz called');
 
   const { isConnected: isDbConnected } = await dbJassbot.connect();
   if (!isDbConnected) {
-    logger.info('scripts: test exiting', { error: 'Database failed to connect' });
+    logger.info('scripts: zzz exiting', { error: 'Database failed to connect' });
 
     process.exit(1);
   }
 
-  await jobService.findTomorrowsBirthdays();
-  logger.info('scripts: test completed');
+  const args = { exclude_archived: false, types: 'public_channel,private_channel' };
+  const { channels, error } = await slackService.getChannels(args);
+  logger.info('scripts: zzz completed', { numChannels: channels.length, error });
 
   await dbJassbot.disconnect();
 

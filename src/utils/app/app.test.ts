@@ -66,10 +66,6 @@ describe('utils app', () => {
         expect(appHelper.getApp).toHaveBeenCalled();
       });
 
-      it('calls logger.warn with ErrorHandler', () => {
-        expect(logger.warn).toHaveBeenCalledWith('app: error has occurred', { error: err });
-      });
-
       it('calls app.action with actionListener', () => {
         expect(appMock.action).toHaveBeenCalledWith(/w*/, actionListener);
       });

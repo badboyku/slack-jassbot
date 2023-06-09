@@ -9,7 +9,7 @@ import {
   DB_LIMIT_MAX,
   DB_SORT_DEFAULT,
 } from '@utils/constants';
-import type { AnyBulkWriteOperation, BulkWriteResult } from 'mongodb';
+import type { AnyBulkWriteOperation, BulkWriteResult, DeleteResult } from 'mongodb';
 import type { Query } from 'mongoose';
 import type { BulkWriteResults, User, UserData } from '@types';
 
@@ -125,6 +125,69 @@ describe('services user', () => {
 
       it('calls logger.warn', () => {
         expect(logger.warn).toHaveBeenCalledWith('userService: create failed', { error });
+      });
+
+      it('returns null', () => {
+        expect(result).toEqual(null);
+      });
+    });
+  });
+
+  describe('calling function deleteMany', () => {
+    const filter = { buildingId: 123 };
+    const options = { timestamps: false };
+    const deleteManyResult = { acknowledged: true, deletedCount: 100 };
+    let result: DeleteResult | null;
+
+    describe('successfully', () => {
+      beforeEach(async () => {
+        jest.spyOn(UserModel, 'deleteMany').mockResolvedValueOnce(deleteManyResult);
+
+        result = await userService.deleteMany(filter);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls UserModel.deleteMany', () => {
+        expect(UserModel.deleteMany).toHaveBeenCalledWith(filter, undefined);
+      });
+
+      it('returns result', () => {
+        expect(result).toEqual(deleteManyResult);
+      });
+    });
+
+    describe('with options', () => {
+      beforeEach(async () => {
+        jest.spyOn(UserModel, 'deleteMany').mockResolvedValueOnce(deleteManyResult);
+
+        result = await userService.deleteMany(filter, options);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls UserModel.deleteMany with options', () => {
+        expect(UserModel.deleteMany).toHaveBeenCalledWith(filter, options);
+      });
+    });
+
+    describe('with error on UserModel.deleteMany', () => {
+      beforeEach(async () => {
+        jest.spyOn(UserModel, 'deleteMany').mockRejectedValueOnce(error);
+
+        result = await userService.deleteMany(filter);
+      });
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it('calls logger.warn', () => {
+        expect(logger.warn).toHaveBeenCalledWith('userService: deleteMany failed', { error });
       });
 
       it('returns null', () => {
