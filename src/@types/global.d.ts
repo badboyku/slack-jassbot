@@ -148,4 +148,7 @@ export type Logger = {
   error: (message: string, context?: LogContext) => void;
 };
 
+// scriptHelper
+export type GetFakedataPrefixResult = { fakedataPrefix?: string; error?: string };
+
 declare global {}

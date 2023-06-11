@@ -1,6 +1,8 @@
-const getFakedataPrefix = (): { fakedataPrefix?: string; error?: string } => {
+import type { GetFakedataPrefixResult } from '@types';
+
+const getFakedataPrefix = (): GetFakedataPrefixResult => {
   const fakedataPrefix = process.env.FAKEDATA_PREFIX || undefined;
-  let error;
+  let error: string | undefined;
 
   if (!fakedataPrefix) {
     error = 'Missing env variable: FAKEDATA_PREFIX';

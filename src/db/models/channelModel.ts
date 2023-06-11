@@ -15,7 +15,7 @@ const schema = new Schema<ChannelDocType, ChannelModel, ChannelMethods, {}, {}, 
     numMembers: { type: Number, index: true, required: false, default: 0 },
     memberIds: { type: [String], index: true, required: false, default: [] },
   },
-  { collection: 'channels', timestamps: true },
+  { collection: 'channel', timestamps: true },
 );
 
 export default model<ChannelDocType, ChannelModel>('Channel', schema);

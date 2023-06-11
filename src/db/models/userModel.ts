@@ -34,7 +34,7 @@ const schema = new Schema<UserDocType, UserModel, UserMethods, {}, {}, {}, {}, U
     workAnniversaryLookup: { type: String, index: true, required: false, default: () => crypto.encrypt('') },
     channelIds: { type: [String], index: true, required: false, default: [] },
   },
-  { collection: 'users', timestamps: true },
+  { collection: 'user', timestamps: true },
 );
 schema.method('getBirthdayDate', function getBirthdayDate(): DateTime | undefined {
   return dateTime.getDateTimeFromIso(crypto.decrypt(this.birthday));

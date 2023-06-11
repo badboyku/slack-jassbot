@@ -20,10 +20,6 @@ const delay = (ms?: number) => {
   });
 };
 
-const handleResponse = (_method: string) => (response: WebAPICallResult) => {
-  return { response };
-};
-
 const handleError = (method: string) => (err: { code: string; data: WebAPICallResult }) => {
   const { code, data: response } = err;
   const { error, response_metadata: responseMetadata } = response || /* istanbul ignore next */ {};
@@ -44,7 +40,14 @@ const getConversationsList = (options?: ConversationsListArguments): Promise<Sla
     appHelper
       .getApp()
       .client.conversations.list(options)
-      .then(handleResponse('getConversationsList'))
+      .then((response) => {
+        logger.debug('slackClient: getConversationsList success', {
+          numChannels: response.channels?.length,
+          responseMetadata: { nextCursor: response.response_metadata?.next_cursor },
+        });
+
+        return { response };
+      })
       .catch(handleError('getConversationsList')),
   );
 };
@@ -62,7 +65,14 @@ const getConversationsMembers = (
     appHelper
       .getApp()
       .client.conversations.members(options)
-      .then(handleResponse('getConversationsMembers'))
+      .then((response) => {
+        logger.debug('slackClient: getConversationsMembers success', {
+          numMembers: response.members?.length,
+          responseMetadata: { nextCursor: response.response_metadata?.next_cursor },
+        });
+
+        return { response };
+      })
       .catch(handleError('getConversationsMembers')),
   );
 };
@@ -80,7 +90,14 @@ const getUsersConversations = (
     appHelper
       .getApp()
       .client.users.conversations(options)
-      .then(handleResponse('getUserConversations'))
+      .then((response) => {
+        logger.debug('slackClient: getUsersConversations success', {
+          numChannels: response.channels?.length,
+          responseMetadata: { nextCursor: response.response_metadata?.next_cursor },
+        });
+
+        return { response };
+      })
       .catch(handleError('getUserConversations')),
   );
 };
@@ -96,7 +113,14 @@ const getUsersList = (options?: UsersListArguments): Promise<SlackClientGetUsers
     appHelper
       .getApp()
       .client.users.list(options)
-      .then(handleResponse('getUsersList'))
+      .then((response) => {
+        logger.debug('slackClient: getUsersList success', {
+          numMembers: response.members?.length,
+          responseMetadata: { nextCursor: response.response_metadata?.next_cursor },
+        });
+
+        return { response };
+      })
       .catch(handleError('getUsersList')),
   );
 };

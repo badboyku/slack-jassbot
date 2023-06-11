@@ -1,15 +1,7 @@
 import { channelService, slackService, userService } from '@services';
 import { crypto, dateTime, logger } from '@utils';
 import type { AnyBulkWriteOperation } from 'mongodb';
-import type { Channel as SlackChannel } from '@slack/web-api/dist/response/ConversationsListResponse';
-import type {
-  ChannelData,
-  GetChannelMemberIdsResult,
-  GetUsersConversationsResult,
-  UpdateChannelsResult,
-  UpdateUsersResult,
-  UserData,
-} from '@types';
+import type { ChannelData, UpdateChannelsResult, UpdateUsersResult, UserData } from '@types';
 
 /* istanbul ignore next TODO: add unit tests */
 const findTomorrowsBirthdays = async () => {
@@ -62,43 +54,19 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
   const { channels } = await slackService.getChannels(args);
 
   const channelsMemberIds: { [channelId: string]: string[] } = {};
-  const channelMembersPromises: Promise<GetChannelMemberIdsResult>[] = [];
-  channels.forEach((channel) => {
+  for (const channel of channels) {
     const { id: channelId, num_members: numMembers = 0 } = channel;
 
     if (channelId?.length) {
       channelsMemberIds[channelId] = [];
 
       if (numMembers > 0) {
-        channelMembersPromises.push(slackService.getChannelMembers(channelId));
+        // eslint-disable-next-line no-await-in-loop
+        const { memberIds } = await slackService.getChannelMembers(channelId);
+        channelsMemberIds[channelId] = memberIds;
       }
     }
-  });
-
-  const processChannelMembersResult = (result: PromiseSettledResult<GetChannelMemberIdsResult>) => {
-    let channelId = '';
-    let memberIds: string[] = [];
-
-    const { status } = result;
-    if (status === 'fulfilled') {
-      const { value } = result;
-      const { channelId: channelIdValue, memberIds: memberIdsValue } = value;
-
-      channelId = channelIdValue;
-      memberIds = memberIdsValue;
-    }
-
-    return { channelId, memberIds };
-  };
-
-  const channelMembersResult = await Promise.allSettled(channelMembersPromises);
-  channelMembersResult.forEach((result) => {
-    const { channelId, memberIds } = processChannelMembersResult(result);
-
-    if (channelId?.length) {
-      channelsMemberIds[channelId] = memberIds;
-    }
-  });
+  }
 
   const ops: AnyBulkWriteOperation<ChannelData>[] = [];
   channels.forEach((channel) => {
@@ -138,51 +106,29 @@ const updateUsers = async (): Promise<UpdateUsersResult> => {
   const { users } = await slackService.getUsers({ include_locale: true });
 
   const usersChannelIds: { [userId: string]: string[] } = {};
-  const userChannelsPromises: Promise<GetUsersConversationsResult>[] = [];
-  users.forEach((user) => {
-    const { id: userId } = user;
+  for (const user of users) {
+    const { id: userId, deleted: isDeleted } = user;
 
     if (userId?.length) {
       usersChannelIds[userId] = [];
 
-      const args = { exclude_archived: true, types: 'public_channel,private_channel', user: userId };
-      userChannelsPromises.push(slackService.getUsersConversations(args));
+      if (!isDeleted) {
+        const args = { exclude_archived: true, types: 'public_channel,private_channel', user: userId };
+        // eslint-disable-next-line no-await-in-loop
+        const { channels } = await slackService.getUsersConversations(args);
+
+        const channelIds: string[] = [];
+        channels.forEach((channel) => {
+          const { id } = channel;
+          if (id?.length) {
+            channelIds.push(id);
+          }
+        });
+
+        usersChannelIds[userId] = channelIds;
+      }
     }
-  });
-
-  const processUserChannelsResult = (result: PromiseSettledResult<GetUsersConversationsResult>) => {
-    let userId = '';
-    let channels: SlackChannel[] = [];
-
-    const { status } = result;
-    if (status === 'fulfilled') {
-      const { value } = result;
-      const { userId: userIdValue, channels: channelsValue } = value;
-
-      userId = userIdValue;
-      channels = channelsValue;
-    }
-
-    return { userId, channels };
-  };
-
-  const userChannelsResult = await Promise.allSettled(userChannelsPromises);
-  userChannelsResult.forEach((result) => {
-    const { userId, channels } = processUserChannelsResult(result);
-    const channelIds: string[] = [];
-
-    if (userId?.length) {
-      channels.forEach((channel) => {
-        const { id } = channel;
-
-        if (id?.length) {
-          channelIds.push(id);
-        }
-      });
-
-      usersChannelIds[userId] = channelIds;
-    }
-  });
+  }
 
   const ops: AnyBulkWriteOperation<UserData>[] = [];
   users.forEach((user) => {
