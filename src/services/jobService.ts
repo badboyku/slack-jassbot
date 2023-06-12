@@ -1,42 +1,36 @@
 import { channelService, slackService, userService } from '@services';
 import { crypto, dateTime, logger } from '@utils';
 import type { AnyBulkWriteOperation } from 'mongodb';
-import type { ChannelData, UpdateChannelsResult, UpdateUsersResult, UserData } from '@types';
+import type { ChannelData, UpdateChannelsResult, UpdateUsersResult, User, UserData } from '@types';
 
 /* istanbul ignore next TODO: add unit tests */
 const findTomorrowsBirthdays = async () => {
   const tomorrowsBirthday = dateTime.getDateTime().plus({ days: 1 }).toFormat('LL-dd');
-  const birthdayUserIds: string[] = [];
-  const birthdayChannels: { [channelId: string]: string[] } = {};
+  const users = await userService.findAll({ birthdayLookup: crypto.createHmac(tomorrowsBirthday), isDeleted: false });
 
-  const users = await userService.findAll({ birthdayLookup: crypto.createHmac(tomorrowsBirthday) });
+  const bdayUserIds: string[] = [];
+  const userLookup: { [userId: string]: User } = {};
   users.forEach((user) => {
     const { userId } = user;
-
-    if (userId?.length) {
-      birthdayUserIds.push(userId);
-    }
+    bdayUserIds.push(userId);
+    userLookup[userId] = user;
   });
 
-  const channels = await channelService.findAll({
-    isArchived: false,
-    isMember: true,
-    members: { $in: birthdayUserIds },
-  });
+  const channels = await channelService.findAll({ isArchived: false, isMember: true, members: { $in: bdayUserIds } });
+
+  const bdayChannels: { [channelId: string]: User[] } = {};
   channels.forEach((channel) => {
     const { channelId, memberIds = [] } = channel;
 
-    if (channelId?.length) {
-      const ids: string[] = [];
-      memberIds.forEach((memberId) => {
-        if (birthdayUserIds.includes(memberId)) {
-          ids.push(memberId);
-        }
-      });
-
-      if (ids.length > 0) {
-        birthdayChannels[channelId] = ids;
+    const bdayUsers: User[] = [];
+    memberIds.forEach((memberId) => {
+      if (bdayUserIds.includes(memberId)) {
+        bdayUsers.push(userLookup[memberId]);
       }
+    });
+
+    if (bdayUsers.length > 0) {
+      bdayChannels[channelId] = bdayUsers;
     }
   });
 
@@ -44,6 +38,7 @@ const findTomorrowsBirthdays = async () => {
     tomorrowsBirthday,
     numUsers: users.length,
     numChannels: channels.length,
+    numBdayChannels: Object.keys(bdayChannels).length,
   });
 
   // TODO: For each channel, write bday message scheduled at midnight PST
