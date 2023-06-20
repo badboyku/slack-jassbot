@@ -1,9 +1,9 @@
 /* istanbul ignore file */
-import {faker} from '@faker-js/faker';
-import {dbNewJassbot} from '@db/sources';
-import {userService} from '@services';
-import {crypto, dateTime, logger, scriptHelper} from '@utils';
-import type {UserModel} from '@types';
+import { faker } from '@faker-js/faker';
+import { dbNewJassbot } from '@db/sources';
+import { userService } from '@services';
+import { crypto, dateTime, logger, scriptHelper } from '@utils';
+import type { UserModel } from '@types';
 
 const getUserData = (fakedataPrefix?: string) => {
   const firstName = faker.person.firstName();

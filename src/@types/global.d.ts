@@ -1,5 +1,5 @@
-import type {DateTime} from 'luxon';
-import type {Document, HydratedDocument, SortOrder, Types} from 'mongoose';
+import type { DateTime } from 'luxon';
+import type { Document, HydratedDocument, SortOrder, Types } from 'mongoose';
 import type {
   BSON,
   BulkWriteResult,
@@ -11,16 +11,16 @@ import type {
   MongoError,
   MongoServerError,
 } from 'mongodb';
-import type {AllMiddlewareArgs, SlackEventMiddlewareArgs, ViewStateValue} from '@slack/bolt';
+import type { AllMiddlewareArgs, SlackEventMiddlewareArgs, ViewStateValue } from '@slack/bolt';
 import type {
   ConversationsListResponse,
   ConversationsMembersResponse,
   UsersConversationsResponse,
   UsersListResponse,
 } from '@slack/web-api';
-import type {Channel as SlackChannel} from '@slack/web-api/dist/response/ConversationsListResponse';
-import type {Member as SlackMember} from '@slack/web-api/dist/response/UsersListResponse';
-import type {SlackClientError} from '@errors';
+import type { Channel as SlackChannel } from '@slack/web-api/dist/response/ConversationsListResponse';
+import type { Member as SlackMember } from '@slack/web-api/dist/response/UsersListResponse';
+import type { SlackClientError } from '@errors';
 
 /** Clients Types */
 // slack

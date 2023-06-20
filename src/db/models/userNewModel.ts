@@ -1,7 +1,7 @@
-import {crypto, dateTime} from '@utils';
-import {USER_TZ_DEFAULT} from '@utils/constants';
-import type {DateTime} from 'luxon';
-import type {UserData, UserModel, UserWithId} from '@types';
+import { crypto, dateTime } from '@utils';
+import { USER_TZ_DEFAULT } from '@utils/constants';
+import type { DateTime } from 'luxon';
+import type { UserData, UserModel, UserWithId } from '@types';
 
 const collectionName = 'user';
 const defaults: UserData = {

@@ -1,7 +1,7 @@
-import {manageUserDates} from '@views';
-import type {Button, Datepicker, InputBlock, ModalView} from '@slack/types';
-import type {ChatPostMessageArguments} from '@slack/web-api';
-import type {UserOld} from '@types';
+import { manageUserDates } from '@views';
+import type { Button, Datepicker, InputBlock, ModalView } from '@slack/types';
+import type { ChatPostMessageArguments } from '@slack/web-api';
+import type { UserOld } from '@types';
 
 describe('views manageUserDates', () => {
   describe('calling function getButton', () => {

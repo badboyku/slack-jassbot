@@ -1,5 +1,5 @@
-import {actionService, userService} from '@services';
-import type {ManageUserDatesResult, UserOld} from '@types';
+import { actionService, userService } from '@services';
+import type { ManageUserDatesResult, UserOld } from '@types';
 
 jest.mock('@services/userService');
 

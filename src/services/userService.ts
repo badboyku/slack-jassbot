@@ -1,3 +1,14 @@
+import { ObjectId } from 'mongodb';
+import { UserModel, UserNewModel } from '@db/models';
+import { dbNewJassbot } from '@db/sources';
+import { logger, mongodb } from '@utils';
+import {
+  DB_BATCH_SIZE_DEFAULT,
+  DB_BATCH_SIZE_MAX,
+  DB_LIMIT_DEFAULT,
+  DB_LIMIT_MAX,
+  DB_SORT_DEFAULT_OLD,
+} from '@utils/constants';
 import type {
   AnyBulkWriteOperation,
   BulkWriteOptions,
@@ -7,18 +18,7 @@ import type {
   FindOptions,
   InsertOneOptions,
 } from 'mongodb';
-import {ObjectId} from 'mongodb';
-import {UserModel, UserNewModel} from '@db/models';
-import {dbNewJassbot} from '@db/sources';
-import {logger, mongodb} from '@utils';
-import {
-  DB_BATCH_SIZE_DEFAULT,
-  DB_BATCH_SIZE_MAX,
-  DB_LIMIT_DEFAULT,
-  DB_LIMIT_MAX,
-  DB_SORT_DEFAULT_OLD,
-} from '@utils/constants';
-import type {FilterQuery, Types} from 'mongoose';
+import type { FilterQuery, Types } from 'mongoose';
 import type {
   BulkWrite,
   DeleteMany,

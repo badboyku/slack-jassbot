@@ -1,7 +1,7 @@
-import {channelService, slackService, userService} from '@services';
-import {crypto, dateTime, logger} from '@utils';
-import type {AnyBulkWriteOperation} from 'mongodb';
-import type {ChannelData, UpdateChannelsResult, UpdateUsersResult, UserOld} from '@types';
+import { channelService, slackService, userService } from '@services';
+import { crypto, dateTime, logger } from '@utils';
+import type { AnyBulkWriteOperation } from 'mongodb';
+import type { ChannelData, UpdateChannelsResult, UpdateUsersResult, UserOld } from '@types';
 
 /* istanbul ignore next TODO: add unit tests */
 const findTomorrowsBirthdays = async () => {

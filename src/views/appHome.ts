@@ -1,6 +1,6 @@
-import {manageUserDates} from '@views';
-import type {HomeView} from '@slack/web-api';
-import type {UserModel} from '@types';
+import { manageUserDates } from '@views';
+import type { HomeView } from '@slack/web-api';
+import type { UserModel } from '@types';
 
 const getView = (user?: UserModel): HomeView => {
   const birthday = user?.getBirthdayDate()?.toFormat('`DDD`') || '-----';

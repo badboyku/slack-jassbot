@@ -1,3 +1,6 @@
+import { ObjectId, ReturnDocument } from 'mongodb';
+import { logger } from '@utils';
+import { DB_LIMIT_DEFAULT, DB_LIMIT_MAX, DB_SORT_DEFAULT } from '@utils/constants';
 import type {
   AnyBulkWriteOperation,
   BulkWriteOptions,
@@ -21,10 +24,7 @@ import type {
   SortDirection,
   UpdateFilter,
 } from 'mongodb';
-import {ObjectId, ReturnDocument} from 'mongodb';
-import {logger} from '@utils';
-import {DB_LIMIT_DEFAULT, DB_LIMIT_MAX, DB_SORT_DEFAULT} from '@utils/constants';
-import type {BulkWrite, DeleteMany, FindOne, FindOneAndUpdate, FindParams, InsertOne} from '@types';
+import type { BulkWrite, DeleteMany, FindOne, FindOneAndUpdate, FindParams, InsertOne } from '@types';
 
 const bulkWrite = (
   collection: Collection,

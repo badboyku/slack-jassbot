@@ -1,6 +1,6 @@
 import process from 'node:process';
-import {LOG_FORMATS, LOG_LEVELS} from '@utils/constants';
-import type {Config} from '@types';
+import { LOG_FORMATS, LOG_LEVELS } from '@utils/constants';
+import type { Config } from '@types';
 
 const config: Config = {
   app: {

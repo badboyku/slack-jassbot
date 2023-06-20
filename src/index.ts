@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import {dbNewJassbot} from '@db/sources';
-import {app, bree, logger} from '@utils';
+import { dbNewJassbot } from '@db/sources';
+import { app, bree, logger } from '@utils';
 
 (async () => {
   logger.info('Starting Application');

@@ -1,8 +1,7 @@
-import type {AnyBulkWriteOperation, BulkWriteResult, DeleteResult} from 'mongodb';
-import {ObjectId} from 'mongodb';
-import {ChannelModel} from '@db/models';
-import {channelService} from '@services';
-import {logger} from '@utils';
+import { ObjectId } from 'mongodb';
+import { ChannelModel } from '@db/models';
+import { channelService } from '@services';
+import { logger } from '@utils';
 import {
   DB_BATCH_SIZE_DEFAULT,
   DB_BATCH_SIZE_MAX,
@@ -10,8 +9,9 @@ import {
   DB_LIMIT_MAX,
   DB_SORT_DEFAULT_OLD,
 } from '@utils/constants';
-import type {Query} from 'mongoose';
-import type {BulkWriteResults, Channel, ChannelData} from '@types';
+import type { AnyBulkWriteOperation, BulkWriteResult, DeleteResult } from 'mongodb';
+import type { Query } from 'mongoose';
+import type { BulkWriteResults, Channel, ChannelData } from '@types';
 
 jest.mock('@db/models/channelModel');
 jest.mock('@utils/logger/logger');

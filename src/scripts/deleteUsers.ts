@@ -1,7 +1,7 @@
 /* istanbul ignore file */
-import {dbNewJassbot} from '@db/sources';
-import {userService} from '@services';
-import {logger, scriptHelper} from '@utils';
+import { dbNewJassbot } from '@db/sources';
+import { userService } from '@services';
+import { logger, scriptHelper } from '@utils';
 
 (async () => {
   logger.info('scripts: deleteUsers called');

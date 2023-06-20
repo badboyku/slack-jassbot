@@ -1,7 +1,7 @@
-import {ObjectId} from 'mongodb';
-import {UserModel} from '@db/models';
-import {userService} from '@services';
-import {logger} from '@utils';
+import { ObjectId } from 'mongodb';
+import { UserModel } from '@db/models';
+import { userService } from '@services';
+import { logger } from '@utils';
 import {
   DB_BATCH_SIZE_DEFAULT,
   DB_BATCH_SIZE_MAX,
@@ -9,8 +9,8 @@ import {
   DB_LIMIT_MAX,
   DB_SORT_DEFAULT_OLD,
 } from '@utils/constants';
-import type {Query} from 'mongoose';
-import type {UserOld} from '@types';
+import type { Query } from 'mongoose';
+import type { UserOld } from '@types';
 
 jest.mock('@db/models/userModel');
 jest.mock('@utils/logger/logger');

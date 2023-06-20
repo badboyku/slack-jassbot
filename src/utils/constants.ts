@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import type {Sort} from '@types';
-import type {Sort as MongoDbSort} from 'mongodb';
+import type { Sort } from '@types';
+import type { Sort as MongoDbSort } from 'mongodb';
 
 // Database
 export const DB_BATCH_SIZE_DEFAULT = 1000;

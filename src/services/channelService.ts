@@ -1,7 +1,6 @@
-import type {AnyBulkWriteOperation, DeleteResult} from 'mongodb';
-import {ObjectId} from 'mongodb';
-import {ChannelModel} from '@db/models';
-import {logger} from '@utils';
+import { ObjectId } from 'mongodb';
+import { ChannelModel } from '@db/models';
+import { logger } from '@utils';
 import {
   DB_BATCH_SIZE_DEFAULT,
   DB_BATCH_SIZE_MAX,
@@ -9,8 +8,9 @@ import {
   DB_LIMIT_MAX,
   DB_SORT_DEFAULT_OLD,
 } from '@utils/constants';
-import type {FilterQuery, QueryOptions, Types, UpdateQuery} from 'mongoose';
-import type {BulkWriteResults, Channel, ChannelData, FindOptionsOld} from '@types';
+import type { AnyBulkWriteOperation, DeleteResult } from 'mongodb';
+import type { FilterQuery, QueryOptions, Types, UpdateQuery } from 'mongoose';
+import type { BulkWriteResults, Channel, ChannelData, FindOptionsOld } from '@types';
 
 const bulkWrite = (ops: AnyBulkWriteOperation<ChannelData>[]): Promise<BulkWriteResults> | undefined => {
   logger.debug('channelService: bulkWrite called', { numOps: ops.length });

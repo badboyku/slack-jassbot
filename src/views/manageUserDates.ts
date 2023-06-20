@@ -1,6 +1,6 @@
-import type {Button, ModalView} from '@slack/types';
-import type {ChatPostMessageArguments} from '@slack/web-api';
-import type {UserModel} from '@types';
+import type { Button, ModalView } from '@slack/types';
+import type { ChatPostMessageArguments } from '@slack/web-api';
+import type { UserModel } from '@types';
 
 const getButton = (actionId?: string): Button => {
   return {

@@ -1,6 +1,6 @@
-import {channelService, userService} from '@services';
-import {config} from '@utils';
-import type {AppHomeOpenedResult, MemberJoinedChannelResult} from '@types';
+import { channelService, userService } from '@services';
+import { config } from '@utils';
+import type { AppHomeOpenedResult, MemberJoinedChannelResult } from '@types';
 
 const appHomeOpened = async (userId: string): Promise<AppHomeOpenedResult> => {
   const user = await userService.findOneAndUpdateByUserId(userId);

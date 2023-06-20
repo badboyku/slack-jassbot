@@ -1,6 +1,6 @@
-import {channelService, eventService, userService} from '@services';
-import {config} from '@utils';
-import type {AppHomeOpenedResult, Channel, MemberJoinedChannelResult, UserOld} from '@types';
+import { channelService, eventService, userService } from '@services';
+import { config } from '@utils';
+import type { AppHomeOpenedResult, Channel, MemberJoinedChannelResult, UserOld } from '@types';
 
 jest.mock('@services/channelService');
 jest.mock('@services/userService');

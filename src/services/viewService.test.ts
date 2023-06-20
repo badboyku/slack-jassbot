@@ -1,7 +1,7 @@
-import {userService, viewService} from '@services';
-import {crypto, dateTime} from '@utils';
-import type {DateTime} from 'luxon';
-import type {SaveUserDatesResult, UserOld, ViewStateValues} from '@types';
+import { userService, viewService } from '@services';
+import { crypto, dateTime } from '@utils';
+import type { DateTime } from 'luxon';
+import type { SaveUserDatesResult, UserOld, ViewStateValues } from '@types';
 
 jest.mock('@services/userService');
 jest.mock('@utils/crypto');

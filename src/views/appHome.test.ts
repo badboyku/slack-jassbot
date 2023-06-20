@@ -1,6 +1,6 @@
-import {appHome, manageUserDates} from '@views';
-import type {Button, HomeView} from '@slack/types';
-import type {UserOld} from '@types';
+import { appHome, manageUserDates } from '@views';
+import type { Button, HomeView } from '@slack/types';
+import type { UserOld } from '@types';
 
 jest.mock('@views/manageUserDates');
 

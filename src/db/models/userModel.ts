@@ -1,9 +1,9 @@
 /* istanbul ignore file */
-import {model, Model, Schema} from 'mongoose';
-import {crypto, dateTime} from '@utils';
-import {USER_TZ_DEFAULT} from '@utils/constants';
-import type {DateTime} from 'luxon';
-import type {UserDocType, UserHydratedDocument, UserMethods} from '@types';
+import { model, Model, Schema } from 'mongoose';
+import { crypto, dateTime } from '@utils';
+import { USER_TZ_DEFAULT } from '@utils/constants';
+import type { DateTime } from 'luxon';
+import type { UserDocType, UserHydratedDocument, UserMethods } from '@types';
 
 const { Boolean, String } = Schema.Types;
 

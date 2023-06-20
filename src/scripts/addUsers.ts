@@ -1,11 +1,11 @@
 /* istanbul ignore file */
-import {faker} from '@faker-js/faker';
-import {dbNewJassbot} from '@db/sources';
-import {userService} from '@services';
-import {crypto, dateTime, logger, scriptHelper} from '@utils';
-import type {DateTime} from 'luxon';
-import type {WriteError} from 'mongodb';
-import type {BulkWrite} from '@types';
+import { faker } from '@faker-js/faker';
+import { dbNewJassbot } from '@db/sources';
+import { userService } from '@services';
+import { crypto, dateTime, logger, scriptHelper } from '@utils';
+import type { DateTime } from 'luxon';
+import type { WriteError } from 'mongodb';
+import type { BulkWrite } from '@types';
 
 const getUserData = (i: number) => {
   const now = new Date();

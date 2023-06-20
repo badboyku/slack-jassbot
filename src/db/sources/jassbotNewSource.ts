@@ -1,9 +1,9 @@
-import type {Collection, Db} from 'mongodb';
-import {MongoClient, ServerApiVersion} from 'mongodb';
-import {UserNewModel} from '@db/models';
-import {config, logger} from '@utils';
-import type {Document} from 'bson';
-import type {DbCloseResult, DbConnectResult, UserModelDoc} from '@types';
+import { MongoClient, ServerApiVersion } from 'mongodb';
+import { UserNewModel } from '@db/models';
+import { config, logger } from '@utils';
+import type { Collection, Db } from 'mongodb';
+import type { Document } from 'bson';
+import type { DbCloseResult, DbConnectResult, UserModelDoc } from '@types';
 
 const dbName = 'jassbot';
 
