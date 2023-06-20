@@ -1,6 +1,6 @@
-import { channelService, eventService, userService } from '@services';
-import { config } from '@utils';
-import type { AppHomeOpenedResult, Channel, MemberJoinedChannelResult, User } from '@types';
+import {channelService, eventService, userService} from '@services';
+import {config} from '@utils';
+import type {AppHomeOpenedResult, Channel, MemberJoinedChannelResult, UserOld} from '@types';
 
 jest.mock('@services/channelService');
 jest.mock('@services/userService');
@@ -19,7 +19,7 @@ describe('services event', () => {
 
     describe('successfully', () => {
       beforeEach(async () => {
-        jest.spyOn(userService, 'findOneOrCreateByUserId').mockResolvedValueOnce(user as unknown as User);
+        jest.spyOn(userService, 'findOneOrCreateByUserId').mockResolvedValueOnce(user as unknown as UserOld);
 
         result = await eventService.appHomeOpened(userId);
       });

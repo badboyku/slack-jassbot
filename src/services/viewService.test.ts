@@ -1,7 +1,7 @@
-import { userService, viewService } from '@services';
-import { crypto, dateTime } from '@utils';
-import type { DateTime } from 'luxon';
-import type { SaveUserDatesResult, User, ViewStateValues } from '@types';
+import {userService, viewService} from '@services';
+import {crypto, dateTime} from '@utils';
+import type {DateTime} from 'luxon';
+import type {SaveUserDatesResult, UserOld, ViewStateValues} from '@types';
 
 jest.mock('@services/userService');
 jest.mock('@utils/crypto');
@@ -55,7 +55,7 @@ describe('services view', () => {
           .mockReturnValueOnce(birthdayEncrypted)
           .mockReturnValueOnce(workAnniversaryEncrypted);
         jest.spyOn(crypto, 'createHmac').mockReturnValueOnce(birthdayLookup).mockReturnValueOnce(workAnniversaryLookup);
-        jest.spyOn(userService, 'findOneAndUpdateByUserId').mockResolvedValueOnce(user as User);
+        jest.spyOn(userService, 'findOneAndUpdateByUserId').mockResolvedValueOnce(user as UserOld);
 
         result = await viewService.saveUserDates(userId, values as unknown as ViewStateValues);
       });
@@ -138,7 +138,7 @@ describe('services view', () => {
           .mockReturnValueOnce(birthdayEncrypted)
           .mockReturnValueOnce(workAnniversaryEncrypted);
         jest.spyOn(crypto, 'createHmac').mockReturnValueOnce(birthdayLookup).mockReturnValueOnce(workAnniversaryLookup);
-        jest.spyOn(userService, 'findOneAndUpdateByUserId').mockResolvedValueOnce(user as User);
+        jest.spyOn(userService, 'findOneAndUpdateByUserId').mockResolvedValueOnce(user as UserOld);
 
         result = await viewService.saveUserDates(userId, values as unknown as ViewStateValues);
       });

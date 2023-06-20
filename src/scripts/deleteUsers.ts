@@ -1,12 +1,12 @@
 /* istanbul ignore file */
-import { dbJassbot } from '@db/sources';
-import { userService } from '@services';
-import { logger, scriptHelper } from '@utils';
+import {dbNewJassbot} from '@db/sources';
+import {userService} from '@services';
+import {logger, scriptHelper} from '@utils';
 
 (async () => {
   logger.info('scripts: deleteUsers called');
 
-  const { isConnected: isDbConnected } = await dbJassbot.connect();
+  const { isConnected: isDbConnected } = await dbNewJassbot.connect();
   if (!isDbConnected) {
     logger.info('scripts: deleteUsers exiting', { error: 'Database failed to connect' });
 
@@ -21,10 +21,10 @@ import { logger, scriptHelper } from '@utils';
   }
 
   const filter = { userId: { $regex: `^${fakedataPrefix}` } };
-  const results = await userService.deleteMany(filter);
-  logger.info('scripts: deleteUsers completed', { results });
+  const { result, error } = await userService.deleteMany(filter);
+  logger.info('scripts: deleteUsers completed', { result, error });
 
-  await dbJassbot.disconnect();
+  await dbNewJassbot.close();
 
   process.exit(0);
 })();

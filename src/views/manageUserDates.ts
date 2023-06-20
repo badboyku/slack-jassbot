@@ -1,6 +1,6 @@
-import type { Button, ModalView } from '@slack/types';
-import type { ChatPostMessageArguments } from '@slack/web-api';
-import type { User } from '@types';
+import type {Button, ModalView} from '@slack/types';
+import type {ChatPostMessageArguments} from '@slack/web-api';
+import type {UserModel} from '@types';
 
 const getButton = (actionId?: string): Button => {
   return {
@@ -10,7 +10,7 @@ const getButton = (actionId?: string): Button => {
   };
 };
 
-const getModal = (user: User, callbackId?: string): ModalView => {
+const getModal = (user?: UserModel, callbackId?: string): ModalView => {
   return {
     type: 'modal',
     callback_id: callbackId || 'saveUserDates',
@@ -23,7 +23,7 @@ const getModal = (user: User, callbackId?: string): ModalView => {
         element: {
           type: 'datepicker',
           action_id: 'datepicker',
-          initial_date: user.getBirthdayDate()?.toISODate() || undefined,
+          initial_date: user?.getBirthdayDate()?.toISODate() || undefined,
           placeholder: { type: 'plain_text', text: 'Select a date', emoji: true },
         },
         optional: true,
@@ -35,7 +35,7 @@ const getModal = (user: User, callbackId?: string): ModalView => {
         element: {
           type: 'datepicker',
           action_id: 'datepicker',
-          initial_date: user.getWorkAnniversaryDate()?.toISODate() || undefined,
+          initial_date: user?.getWorkAnniversaryDate()?.toISODate() || undefined,
           placeholder: { type: 'plain_text', text: 'Select a date', emoji: true },
         },
         optional: true,

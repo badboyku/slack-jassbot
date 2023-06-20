@@ -1,5 +1,5 @@
-import { actionService, userService } from '@services';
-import type { ManageUserDatesResult, User } from '@types';
+import {actionService, userService} from '@services';
+import type {ManageUserDatesResult, UserOld} from '@types';
 
 jest.mock('@services/userService');
 
@@ -12,7 +12,7 @@ describe('services action', () => {
 
     describe('successfully', () => {
       beforeEach(async () => {
-        jest.spyOn(userService, 'findOneOrCreateByUserId').mockResolvedValueOnce(user as unknown as User);
+        jest.spyOn(userService, 'findOneOrCreateByUserId').mockResolvedValueOnce(user as unknown as UserOld);
 
         result = await actionService.manageUserDates(userId);
       });

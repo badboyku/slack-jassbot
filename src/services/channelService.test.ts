@@ -1,17 +1,17 @@
-import { ObjectId } from 'mongodb';
-import { ChannelModel } from '@db/models';
-import { channelService } from '@services';
-import { logger } from '@utils';
+import type {AnyBulkWriteOperation, BulkWriteResult, DeleteResult} from 'mongodb';
+import {ObjectId} from 'mongodb';
+import {ChannelModel} from '@db/models';
+import {channelService} from '@services';
+import {logger} from '@utils';
 import {
   DB_BATCH_SIZE_DEFAULT,
   DB_BATCH_SIZE_MAX,
   DB_LIMIT_DEFAULT,
   DB_LIMIT_MAX,
-  DB_SORT_DEFAULT,
+  DB_SORT_DEFAULT_OLD,
 } from '@utils/constants';
-import type { AnyBulkWriteOperation, BulkWriteResult, DeleteResult } from 'mongodb';
-import type { Query } from 'mongoose';
-import type { BulkWriteResults, Channel, ChannelData } from '@types';
+import type {Query} from 'mongoose';
+import type {BulkWriteResults, Channel, ChannelData} from '@types';
 
 jest.mock('@db/models/channelModel');
 jest.mock('@utils/logger/logger');
@@ -435,7 +435,7 @@ describe('services channel', () => {
       });
 
       it('calls sort with DB_SORT_DEFAULT', () => {
-        expect(sort).toHaveBeenCalledWith(DB_SORT_DEFAULT);
+        expect(sort).toHaveBeenCalledWith(DB_SORT_DEFAULT_OLD);
       });
 
       it('calls limit with DB_LIMIT_DEFAULT', () => {
@@ -469,7 +469,7 @@ describe('services channel', () => {
       });
 
       it('calls sort with DB_SORT_DEFAULT', () => {
-        expect(sort).toHaveBeenCalledWith(DB_SORT_DEFAULT);
+        expect(sort).toHaveBeenCalledWith(DB_SORT_DEFAULT_OLD);
       });
 
       it('calls limit with DB_LIMIT_DEFAULT', () => {

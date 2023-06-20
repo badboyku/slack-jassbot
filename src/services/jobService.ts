@@ -1,7 +1,7 @@
-import { channelService, slackService, userService } from '@services';
-import { crypto, dateTime, logger } from '@utils';
-import type { AnyBulkWriteOperation } from 'mongodb';
-import type { ChannelData, UpdateChannelsResult, UpdateUsersResult, User, UserData } from '@types';
+import {channelService, slackService, userService} from '@services';
+import {crypto, dateTime, logger} from '@utils';
+import type {AnyBulkWriteOperation} from 'mongodb';
+import type {ChannelData, UpdateChannelsResult, UpdateUsersResult, UserOld} from '@types';
 
 /* istanbul ignore next TODO: add unit tests */
 const findTomorrowsBirthdays = async () => {
@@ -9,7 +9,7 @@ const findTomorrowsBirthdays = async () => {
   const users = await userService.findAll({ birthdayLookup: crypto.createHmac(tomorrowsBirthday), isDeleted: false });
 
   const bdayUserIds: string[] = [];
-  const userLookup: { [userId: string]: User } = {};
+  const userLookup: { [userId: string]: UserOld } = {};
   users.forEach((user) => {
     const { userId } = user;
     bdayUserIds.push(userId);
@@ -18,11 +18,11 @@ const findTomorrowsBirthdays = async () => {
 
   const channels = await channelService.findAll({ isArchived: false, isMember: true, members: { $in: bdayUserIds } });
 
-  const bdayChannels: { [channelId: string]: User[] } = {};
+  const bdayChannels: { [channelId: string]: UserOld[] } = {};
   channels.forEach((channel) => {
     const { channelId, memberIds = [] } = channel;
 
-    const bdayUsers: User[] = [];
+    const bdayUsers: UserOld[] = [];
     memberIds.forEach((memberId) => {
       if (bdayUserIds.includes(memberId)) {
         bdayUsers.push(userLookup[memberId]);
@@ -125,7 +125,7 @@ const updateUsers = async (): Promise<UpdateUsersResult> => {
     }
   }
 
-  const ops: AnyBulkWriteOperation<UserData>[] = [];
+  const ops: AnyBulkWriteOperation[] = [];
   users.forEach((user) => {
     const {
       id: userId,
@@ -170,6 +170,8 @@ const updateUsers = async (): Promise<UpdateUsersResult> => {
               isRestricted,
               isUltraRestricted,
               channelIds: usersChannelIds[userId],
+              // createdAt: TODO: Need to figure out how to set this if new
+              updatedAt: new Date(),
             },
           },
           upsert: true,
@@ -178,7 +180,9 @@ const updateUsers = async (): Promise<UpdateUsersResult> => {
     }
   });
 
-  return { results: await userService.bulkWrite(ops) };
+  const results = await userService.bulkWrite(ops);
+
+  return { results };
 };
 
 export default { findTomorrowsBirthdays, updateChannels, updateUsers };

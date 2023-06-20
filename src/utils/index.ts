@@ -9,6 +9,7 @@ import dateTime from '@utils/dateTime';
 import gracefulHelper from '@utils/bree/gracefulHelper';
 import logger from '@utils/logger/logger';
 import loggerHelper from '@utils/logger/loggerHelper';
+import mongodb from '@utils/mongodb';
 import scriptHelper from '@utils/scriptHelper';
 import slackLogger from '@utils/slackLogger';
 
@@ -23,6 +24,7 @@ export {
   gracefulHelper,
   logger,
   loggerHelper,
+  mongodb,
   scriptHelper,
   slackLogger,
 };

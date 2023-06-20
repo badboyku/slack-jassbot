@@ -1,6 +1,6 @@
-import { appHome, manageUserDates } from '@views';
-import type { Button, HomeView } from '@slack/types';
-import type { User } from '@types';
+import {appHome, manageUserDates} from '@views';
+import type {Button, HomeView} from '@slack/types';
+import type {UserOld} from '@types';
 
 jest.mock('@views/manageUserDates');
 
@@ -29,7 +29,7 @@ describe('views appHome', () => {
       { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
       { type: 'actions', block_id: 'appHomeActions', elements: [button] },
     ];
-    let user: User | null;
+    let user: UserOld | null;
     let view: HomeView;
 
     describe('successfully with user', () => {
@@ -43,7 +43,7 @@ describe('views appHome', () => {
         user = {
           getBirthdayDate: jest.fn().mockReturnValueOnce({ toFormat }),
           getWorkAnniversaryDate: jest.fn().mockReturnValueOnce({ toFormat }),
-        } as unknown as User;
+        } as unknown as UserOld;
         jest.spyOn(manageUserDates, 'getButton').mockReturnValueOnce(button as unknown as Button);
 
         view = appHome.getView(user);
@@ -112,7 +112,7 @@ describe('views appHome', () => {
           getWorkAnniversaryDate: jest.fn().mockReturnValueOnce({
             toFormat: jest.fn().mockReturnValueOnce(workAnniversaryStr),
           }),
-        } as unknown as User;
+        } as unknown as UserOld;
         jest.spyOn(manageUserDates, 'getButton').mockReturnValueOnce(button as unknown as Button);
 
         view = appHome.getView(user);
@@ -138,7 +138,7 @@ describe('views appHome', () => {
           getWorkAnniversaryDate: jest.fn().mockReturnValueOnce({
             toFormat: jest.fn().mockReturnValueOnce(workAnniversaryDefault),
           }),
-        } as unknown as User;
+        } as unknown as UserOld;
         jest.spyOn(manageUserDates, 'getButton').mockReturnValueOnce(button as unknown as Button);
 
         view = appHome.getView(user);

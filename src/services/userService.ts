@@ -1,63 +1,58 @@
-import { ObjectId } from 'mongodb';
-import { UserModel } from '@db/models';
-import { logger } from '@utils';
+import type {
+  AnyBulkWriteOperation,
+  BulkWriteOptions,
+  DeleteOptions,
+  Filter,
+  FindOneAndUpdateOptions,
+  FindOptions,
+  InsertOneOptions,
+} from 'mongodb';
+import {ObjectId} from 'mongodb';
+import {UserModel, UserNewModel} from '@db/models';
+import {dbNewJassbot} from '@db/sources';
+import {logger, mongodb} from '@utils';
 import {
   DB_BATCH_SIZE_DEFAULT,
   DB_BATCH_SIZE_MAX,
   DB_LIMIT_DEFAULT,
   DB_LIMIT_MAX,
-  DB_SORT_DEFAULT,
+  DB_SORT_DEFAULT_OLD,
 } from '@utils/constants';
-import type { AnyBulkWriteOperation, DeleteResult } from 'mongodb';
-import type { FilterQuery, QueryOptions, Types, UpdateQuery } from 'mongoose';
-import type { BulkWriteResults, FindOptions, User, UserData } from '@types';
+import type {FilterQuery, Types} from 'mongoose';
+import type {
+  BulkWrite,
+  DeleteMany,
+  FindOptionsOld,
+  FindParams,
+  UserData,
+  UserDataOld,
+  UserModel as UserModelType,
+  UserOld,
+  UserWithId,
+} from '@types';
 
-const bulkWrite = (ops: AnyBulkWriteOperation<UserData>[]): Promise<BulkWriteResults> | undefined => {
-  logger.debug('userService: bulkWrite called', { numOps: ops.length });
-
-  return ops.length > 0
-    ? UserModel.bulkWrite(ops)
-        .then((result) => {
-          const { ok, insertedCount, upsertedCount, matchedCount, modifiedCount, deletedCount } = result;
-
-          return { ok, insertedCount, upsertedCount, matchedCount, modifiedCount, deletedCount };
-        })
-        .catch((error) => {
-          logger.warn('userService: bulkWrite failed', { error });
-
-          return undefined;
-        })
-    : undefined;
+const bulkWrite = (operations: AnyBulkWriteOperation[], options?: BulkWriteOptions): Promise<BulkWrite> | BulkWrite => {
+  return mongodb.bulkWrite(dbNewJassbot.getUserCollection(), operations, options);
 };
 
-const create = (data: UserData | UserData[]): Promise<User | User[] | null> => {
-  logger.debug('userService: create called', { data });
+const createUser = (data: UserData, options?: InsertOneOptions): Promise<UserModelType | undefined> => {
+  const defaultsDoc = { ...UserNewModel.defaults, ...data };
+  const { userId, ...rest } = defaultsDoc;
+  const doc = { userId, ...rest };
 
-  return UserModel.create(data)
-    .then((result) => result)
-    .catch((error) => {
-      logger.warn('userService: create failed', { error });
-
-      return null;
-    });
+  return mongodb
+    .insertOne(dbNewJassbot.getUserCollection(), doc, options, UserNewModel.timestamps)
+    .then(({ doc: user, error }) => (!error && user ? UserNewModel.getModel(user as UserWithId) : undefined));
 };
 
-const deleteMany = (filter: FilterQuery<UserData>, options?: QueryOptions): Promise<DeleteResult | null> => {
-  logger.debug('userService: deleteMany called', { filter, options });
-
-  return UserModel.deleteMany(filter, options)
-    .then((result) => result)
-    .catch((error) => {
-      logger.warn('userService: deleteMany failed', { error });
-
-      return null;
-    });
+const deleteMany = (filter?: Filter<UserData>, options?: DeleteOptions): Promise<DeleteMany> => {
+  return mongodb.deleteMany(dbNewJassbot.getUserCollection(), filter, options);
 };
 
-const find = async (filter: FilterQuery<UserData>, options?: FindOptions): Promise<User[]> => {
+const findOld = async (filter: FilterQuery<UserDataOld>, options?: FindOptionsOld): Promise<UserOld[]> => {
   logger.debug('userService: find called', { filter, options });
   const { batchSize = DB_BATCH_SIZE_DEFAULT, limit = DB_LIMIT_DEFAULT, sort = undefined } = options || {};
-  const users: User[] = [];
+  const users: UserOld[] = [];
 
   try {
     const cursor = UserModel.find(filter)
@@ -76,17 +71,25 @@ const find = async (filter: FilterQuery<UserData>, options?: FindOptions): Promi
   return users;
 };
 
-const findAll = async (filter: FilterQuery<UserData>, options?: FindOptions): Promise<User[]> => {
-  const { limit = DB_LIMIT_DEFAULT, sort = DB_SORT_DEFAULT } = options || {};
+const find = async (filter: Filter<UserData>, options?: FindOptions, params?: FindParams) => {
+  logger.debug('userService: find called', { filter, options, params });
+
+  return mongodb
+    .find(dbNewJassbot.getUserCollection(), filter, options, params, UserNewModel.getModel)
+    .then((result) => result);
+};
+
+const findAll = async (filter: FilterQuery<UserDataOld>, options?: FindOptionsOld): Promise<UserOld[]> => {
+  const { limit = DB_LIMIT_DEFAULT, sort = DB_SORT_DEFAULT_OLD } = options || {};
   const findOptions = { ...options, limit, sort };
-  let allUsers: User[] = [];
+  let allUsers: UserOld[] = [];
   let afterId: Types.ObjectId | undefined;
   let hasMore = false;
 
   do {
     const findFilter = { ...filter, ...(afterId ? { _id: { $gt: new ObjectId(afterId) } } : {}) };
     // eslint-disable-next-line no-await-in-loop
-    const users = await find(findFilter, findOptions);
+    const users = await findOld(findFilter, findOptions);
 
     if (users.length > 0) {
       allUsers = [...allUsers, ...users];
@@ -99,43 +102,27 @@ const findAll = async (filter: FilterQuery<UserData>, options?: FindOptions): Pr
   return allUsers;
 };
 
-const findOne = (filter: FilterQuery<UserData>): Promise<User | null> => {
-  logger.debug('userService: findOne called', { filter });
-
-  return UserModel.findOne(filter)
-    .then((result) => result)
-    .catch((error) => {
-      logger.warn('userService: findOne failed', { error });
-
-      return null;
-    });
-};
-
-const findOneAndUpdateByUserId = (userId: string, data: UpdateQuery<UserData>): Promise<User | null> => {
-  logger.debug('userService: findOneAndUpdateByUserId called', { userId, data });
+const findOneAndUpdateByUserId = (
+  userId: string,
+  data?: UserData,
+  options?: FindOneAndUpdateOptions,
+): Promise<UserModelType | undefined> => {
   const filter = { userId };
-  const options = { new: true, setDefaultsOnInsert: true, upsert: true };
+  const update = { $set: data };
 
-  return UserModel.findOneAndUpdate(filter, data, options)
-    .then((result) => result)
-    .catch((error) => {
-      logger.warn('userService: findOneAndUpdateByUserId failed', { error });
-
-      return null;
-    });
-};
-
-const findOneOrCreateByUserId = (userId: string): Promise<User | null> => {
-  return findOne({ userId }).then((result) => result || create({ userId }).then((newResult) => newResult as User));
+  return mongodb
+    .findOneAndUpdate(dbNewJassbot.getUserCollection(), filter, update, options, UserNewModel.timestamps)
+    .then(({ doc: user, error }) => (!error && user ? UserNewModel.getModel(user as UserWithId) : undefined));
 };
 
 export default {
+  // OLD service functions using mongoose
+  findAll,
+
+  // NEW service functions using mongodb
   bulkWrite,
-  create,
+  createUser,
   deleteMany,
   find,
-  findAll,
-  findOne,
   findOneAndUpdateByUserId,
-  findOneOrCreateByUserId,
 };

@@ -1,7 +1,7 @@
-import { manageUserDates } from '@views';
-import type { Button, Datepicker, InputBlock, ModalView } from '@slack/types';
-import type { ChatPostMessageArguments } from '@slack/web-api';
-import type { User } from '@types';
+import {manageUserDates} from '@views';
+import type {Button, Datepicker, InputBlock, ModalView} from '@slack/types';
+import type {ChatPostMessageArguments} from '@slack/web-api';
+import type {UserOld} from '@types';
 
 describe('views manageUserDates', () => {
   describe('calling function getButton', () => {
@@ -39,7 +39,7 @@ describe('views manageUserDates', () => {
   });
 
   describe('calling function getModal', () => {
-    let user: User = { getBirthdayDate: jest.fn(), getWorkAnniversaryDate: jest.fn() } as unknown as User;
+    let user: UserOld = { getBirthdayDate: jest.fn(), getWorkAnniversaryDate: jest.fn() } as unknown as UserOld;
     let modal: ModalView;
     let block1: InputBlock;
     let block1element: Datepicker;
@@ -58,7 +58,7 @@ describe('views manageUserDates', () => {
         user = {
           getBirthdayDate: jest.fn().mockReturnValueOnce({ toISODate }),
           getWorkAnniversaryDate: jest.fn().mockReturnValueOnce({ toISODate }),
-        } as unknown as User;
+        } as unknown as UserOld;
 
         modal = manageUserDates.getModal(user);
         block1 = modal.blocks[0] as InputBlock;

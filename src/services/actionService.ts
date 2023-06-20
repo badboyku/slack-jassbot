@@ -1,8 +1,8 @@
-import { userService } from '@services';
-import type { ManageUserDatesResult } from '@types';
+import {userService} from '@services';
+import type {ManageUserDatesResult} from '@types';
 
 const manageUserDates = async (userId: string): Promise<ManageUserDatesResult> => {
-  const user = await userService.findOneOrCreateByUserId(userId);
+  const user = await userService.findOneAndUpdateByUserId(userId);
 
   return { user };
 };

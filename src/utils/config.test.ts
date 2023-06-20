@@ -1,9 +1,34 @@
 import process from 'node:process';
-import type { Config } from '@types';
+import type {Config} from '@types';
 
 describe('utils config', () => {
   const ENV_BACKUP = process.env;
   let config: Config;
+
+  describe('calling var app.isTsNode', () => {
+    const testCases = [
+      { val: 'TRUE', expected: true },
+      { val: '', expected: false },
+    ];
+    testCases.forEach(({ val, expected }) => {
+      describe(`when process.env.TS_NODE ${val ? 'set' : 'not set'}`, () => {
+        beforeEach(() => {
+          jest.resetModules();
+          process.env.TS_NODE = val;
+
+          config = jest.requireActual('./config').default;
+        });
+
+        afterAll(() => {
+          process.env = ENV_BACKUP;
+        });
+
+        it(`returns ${val ? 'value' : 'default'}`, () => {
+          expect(config.app.isTsNode).toEqual(expected);
+        });
+      });
+    });
+  });
 
   describe('calling var app.logLevel', () => {
     const testCases = [
@@ -50,6 +75,31 @@ describe('utils config', () => {
 
         it(`returns ${val ? 'value' : 'default'}`, () => {
           expect(config.app.logOutputFormat).toEqual(expected);
+        });
+      });
+    });
+  });
+
+  describe('calling var app.name', () => {
+    const testCases = [
+      { val: 'foo', expected: 'FOO' },
+      { val: '', expected: '' },
+    ];
+    testCases.forEach(({ val, expected }) => {
+      describe(`when process.env.npm_package_name ${val ? 'set' : 'not set'}`, () => {
+        beforeEach(() => {
+          jest.resetModules();
+          process.env.npm_package_name = val;
+
+          config = jest.requireActual('./config').default;
+        });
+
+        afterAll(() => {
+          process.env = ENV_BACKUP;
+        });
+
+        it(`returns ${val ? 'value' : 'default'}`, () => {
+          expect(config.app.name).toEqual(expected);
         });
       });
     });
@@ -105,16 +155,16 @@ describe('utils config', () => {
     });
   });
 
-  describe('calling var app.isTsNode', () => {
+  describe('calling var app.version', () => {
     const testCases = [
-      { val: 'TRUE', expected: true },
-      { val: '', expected: false },
+      { val: 'foo', expected: 'FOO' },
+      { val: '', expected: '' },
     ];
     testCases.forEach(({ val, expected }) => {
-      describe(`when process.env.TS_NODE ${val ? 'set' : 'not set'}`, () => {
+      describe(`when process.env.npm_package_version ${val ? 'set' : 'not set'}`, () => {
         beforeEach(() => {
           jest.resetModules();
-          process.env.TS_NODE = val;
+          process.env.npm_package_version = val;
 
           config = jest.requireActual('./config').default;
         });
@@ -124,7 +174,7 @@ describe('utils config', () => {
         });
 
         it(`returns ${val ? 'value' : 'default'}`, () => {
-          expect(config.app.isTsNode).toEqual(expected);
+          expect(config.app.version).toEqual(expected);
         });
       });
     });

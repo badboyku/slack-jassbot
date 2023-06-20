@@ -1,9 +1,9 @@
 /* istanbul ignore file */
-import { model, Model, Schema } from 'mongoose';
-import { crypto, dateTime } from '@utils';
-import { USER_TZ_DEFAULT } from '@utils/constants';
-import type { DateTime } from 'luxon';
-import type { UserDocType, UserHydratedDocument, UserMethods } from '@types';
+import {model, Model, Schema} from 'mongoose';
+import {crypto, dateTime} from '@utils';
+import {USER_TZ_DEFAULT} from '@utils/constants';
+import type {DateTime} from 'luxon';
+import type {UserDocType, UserHydratedDocument, UserMethods} from '@types';
 
 const { Boolean, String } = Schema.Types;
 
@@ -29,9 +29,9 @@ const schema = new Schema<UserDocType, UserModel, UserMethods, {}, {}, {}, {}, U
     isRestricted: { type: Boolean, required: false, default: false },
     isUltraRestricted: { type: Boolean, required: false, default: false },
     birthday: { type: String, required: false, default: () => crypto.encrypt('') },
-    birthdayLookup: { type: String, index: true, required: false, default: () => crypto.encrypt('') },
+    birthdayLookup: { type: String, index: true, required: false, default: () => crypto.createHmac('') },
     workAnniversary: { type: String, required: false, default: () => crypto.encrypt('') },
-    workAnniversaryLookup: { type: String, index: true, required: false, default: () => crypto.encrypt('') },
+    workAnniversaryLookup: { type: String, index: true, required: false, default: () => crypto.createHmac('') },
     channelIds: { type: [String], index: true, required: false, default: [] },
   },
   { collection: 'user', timestamps: true },
