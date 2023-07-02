@@ -1,14 +1,15 @@
 /* istanbul ignore file */
 import { faker } from '@faker-js/faker';
-import { dbNewJassbot } from '@db/sources';
-import { userService } from '@services';
-import { crypto, dateTime, logger, scriptHelper } from '@utils';
+import { ObjectId } from 'mongodb';
+import { dbJassbot } from '../db/sources';
+import { crypto, dateTime, logger, mongodb } from '../utils';
+import scriptsHelper from './scriptsHelper';
 import type { DateTime } from 'luxon';
 import type { WriteError } from 'mongodb';
 import type { BulkWrite } from '@types';
 
-const getUserData = (i: number) => {
-  const now = new Date();
+const getUserData = (key: string, i: number) => {
+  const nowDate = new Date();
   const firstName = faker.person.firstName();
   const lastName = faker.person.lastName();
   const fullName = `${firstName} ${lastName}`;
@@ -20,15 +21,18 @@ const getUserData = (i: number) => {
   }
 
   return {
+    // eslint-disable-next-line no-bitwise
+    _id: new ObjectId(~~(+nowDate / 1000)),
+    userId: `${key}${faker.string.alphanumeric({ length: 7, casing: 'upper' })}`,
     teamId: faker.string.alphanumeric({ length: 11, casing: 'upper' }),
     name: faker.internet.userName({ firstName, lastName }),
-    realName: i === 0 ? undefined : fullName,
-    displayName: i === 1 ? undefined : fullName,
+    realName: fullName,
+    displayName: fullName,
     firstName,
     lastName,
     email: faker.internet.email({ firstName, lastName }),
     tz: faker.location.timeZone(),
-    isAdmin: i === 2 ? 'foo' : faker.datatype.boolean({ probability: 0.01 }),
+    isAdmin: faker.datatype.boolean({ probability: 0.01 }),
     isAppUser: faker.datatype.boolean({ probability: 0.01 }),
     isBot: faker.datatype.boolean({ probability: 0.01 }),
     isDeleted: faker.datatype.boolean({ probability: 0.05 }),
@@ -42,8 +46,8 @@ const getUserData = (i: number) => {
     workAnniversary: crypto.encrypt(workAnniversaryDate?.toISODate() ?? ''),
     workAnniversaryLookup: crypto.createHmac(workAnniversaryDate?.toFormat('LL-dd') ?? ''),
     channelIds: [],
-    createdAt: now,
-    updatedAt: now,
+    createdAt: nowDate,
+    updatedAt: nowDate,
   };
 };
 
@@ -53,15 +57,15 @@ const getLogContext = (bulkWrite: BulkWrite) => {
   if (error) {
     const { code, writeErrors, result: errResult } = error;
     const errors: WriteError[] = writeErrors as WriteError[];
-    const { upsertedCount } = errResult;
+    const { insertedCount } = errResult;
 
-    return { result: { upsertedCount }, error: { code, numWriteErrors: errors.length } };
+    return { result: { insertedCount }, error: { code, numWriteErrors: errors.length } };
   }
 
   if (result) {
-    const { upsertedCount } = result;
+    const { insertedCount } = result;
 
-    return { result: { upsertedCount } };
+    return { result: { insertedCount } };
   }
 
   return undefined;
@@ -69,38 +73,32 @@ const getLogContext = (bulkWrite: BulkWrite) => {
 
 (async () => {
   const numUsersArg = Number(process.argv[2]) || undefined;
-  const numUsers = Math.min(numUsersArg ?? 1000, 5000);
-  logger.info('scripts: addUsers called', { numUsersArg, numUsers });
+  const numUsers = Math.min(numUsersArg ?? 100, 5000);
+  logger.info('scripts: addUsers called', { numUsers });
 
-  const { isConnected: isDbConnected } = await dbNewJassbot.connect();
-  if (!isDbConnected) {
-    logger.info('scripts: addUsers exiting', { error: 'Database failed to connect' });
+  const { key, error: keyError } = scriptsHelper.getFakedataKey();
+  if (keyError) {
+    logger.info('scripts: addUsers exiting', { error: keyError });
 
     process.exit(1);
   }
 
-  const { fakedataPrefix, error: fakedataPrefixError } = scriptHelper.getFakedataPrefix();
-  if (fakedataPrefixError) {
-    logger.info('scripts: addUsers exiting', { error: fakedataPrefixError });
+  const { isConnected } = await dbJassbot.connect();
+  if (!isConnected) {
+    logger.info('scripts: addUsers exiting', { error: 'Database failed to connect' });
 
     process.exit(1);
   }
 
   const operations = [];
   for (let i = 0; i < numUsers; i += 1) {
-    operations.push({
-      updateOne: {
-        filter: { userId: `${fakedataPrefix}${faker.string.alphanumeric({ length: 7, casing: 'upper' })}` },
-        update: { $set: getUserData(i) },
-        upsert: true,
-      },
-    });
+    operations.push({ insertOne: { document: getUserData(key, i) } });
   }
   const options = { ordered: false };
-  const bulkWrite = await userService.bulkWrite(operations, options);
+  const bulkWrite = await mongodb.bulkWrite(dbJassbot.getUserCollection(), operations, options);
   logger.info('scripts: addUsers completed', getLogContext(bulkWrite));
 
-  await dbNewJassbot.close();
+  await dbJassbot.close();
 
   process.exit(0);
 })();

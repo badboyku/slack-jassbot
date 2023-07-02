@@ -1,7 +1,8 @@
+import { dbJassbot } from '@db/sources';
 import { channelService, slackService, userService } from '@services';
-import { crypto, dateTime, logger } from '@utils';
+import { crypto, dateTime, logger, mongodb } from '@utils';
 import type { AnyBulkWriteOperation } from 'mongodb';
-import type { ChannelData, UpdateChannelsResult, UpdateUsersResult, UserOld } from '@types';
+import type { UpdateChannelsResult, UpdateUsersResult, UserModel } from '@types';
 
 /* istanbul ignore next TODO: add unit tests */
 const findTomorrowsBirthdays = async () => {
@@ -9,7 +10,7 @@ const findTomorrowsBirthdays = async () => {
   const users = await userService.findAll({ birthdayLookup: crypto.createHmac(tomorrowsBirthday), isDeleted: false });
 
   const bdayUserIds: string[] = [];
-  const userLookup: { [userId: string]: UserOld } = {};
+  const userLookup: { [userId: string]: UserModel } = {};
   users.forEach((user) => {
     const { userId } = user;
     bdayUserIds.push(userId);
@@ -18,11 +19,11 @@ const findTomorrowsBirthdays = async () => {
 
   const channels = await channelService.findAll({ isArchived: false, isMember: true, members: { $in: bdayUserIds } });
 
-  const bdayChannels: { [channelId: string]: UserOld[] } = {};
+  const bdayChannels: { [channelId: string]: UserModel[] } = {};
   channels.forEach((channel) => {
     const { channelId, memberIds = [] } = channel;
 
-    const bdayUsers: UserOld[] = [];
+    const bdayUsers: UserModel[] = [];
     memberIds.forEach((memberId) => {
       if (bdayUserIds.includes(memberId)) {
         bdayUsers.push(userLookup[memberId]);
@@ -63,7 +64,7 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
     }
   }
 
-  const ops: AnyBulkWriteOperation<ChannelData>[] = [];
+  const operations: AnyBulkWriteOperation[] = [];
   channels.forEach((channel) => {
     const {
       id: channelId,
@@ -75,7 +76,8 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
     } = channel;
 
     if (channelId?.length) {
-      ops.push({
+      const nowDate = new Date();
+      operations.push({
         updateOne: {
           filter: { channelId },
           update: {
@@ -86,7 +88,9 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
               isPrivate,
               numMembers,
               memberIds: channelsMemberIds[channelId],
+              updatedAt: nowDate,
             },
+            $setOnInsert: { createdAt: nowDate },
           },
           upsert: true,
         },
@@ -94,7 +98,10 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
     }
   });
 
-  return { results: await channelService.bulkWrite(ops) };
+  const options = { ordered: false };
+  const results = await mongodb.bulkWrite(dbJassbot.getChannelCollection(), operations, options);
+
+  return { results };
 };
 
 const updateUsers = async (): Promise<UpdateUsersResult> => {
@@ -125,7 +132,7 @@ const updateUsers = async (): Promise<UpdateUsersResult> => {
     }
   }
 
-  const ops: AnyBulkWriteOperation[] = [];
+  const operations: AnyBulkWriteOperation[] = [];
   users.forEach((user) => {
     const {
       id: userId,
@@ -147,7 +154,8 @@ const updateUsers = async (): Promise<UpdateUsersResult> => {
     const { display_name: displayName, email, first_name: firstName, last_name: lastName } = profile;
 
     if (userId?.length) {
-      ops.push({
+      const nowDate = new Date();
+      operations.push({
         updateOne: {
           filter: { userId },
           update: {
@@ -170,9 +178,9 @@ const updateUsers = async (): Promise<UpdateUsersResult> => {
               isRestricted,
               isUltraRestricted,
               channelIds: usersChannelIds[userId],
-              // createdAt: TODO: Need to figure out how to set this if new
-              updatedAt: new Date(),
+              updatedAt: nowDate,
             },
+            $setOnInsert: { createdAt: nowDate },
           },
           upsert: true,
         },
@@ -180,7 +188,8 @@ const updateUsers = async (): Promise<UpdateUsersResult> => {
     }
   });
 
-  const results = await userService.bulkWrite(ops);
+  const options = { ordered: false };
+  const results = await mongodb.bulkWrite(dbJassbot.getUserCollection(), operations, options);
 
   return { results };
 };

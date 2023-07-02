@@ -1,7 +1,6 @@
 import CryptoJS from 'crypto-js';
 import { config, crypto } from '@utils';
 
-jest.mock('crypto-js');
 jest.mock('@utils/config');
 
 describe('utils crypto', () => {
@@ -15,7 +14,7 @@ describe('utils crypto', () => {
   describe('calling function createHmac', () => {
     beforeEach(() => {
       toString = jest.fn(() => expected);
-      jest.spyOn(CryptoJS, 'HmacMD5').mockReturnValueOnce({ toString } as unknown as CryptoJS.lib.WordArray);
+      jest.spyOn(CryptoJS, 'HmacMD5').mockReturnValueOnce({ toString } as never);
 
       result = crypto.createHmac(text);
     });
@@ -40,7 +39,7 @@ describe('utils crypto', () => {
   describe('calling function decrypt', () => {
     beforeEach(() => {
       toString = jest.fn(() => expected);
-      jest.spyOn(CryptoJS.AES, 'decrypt').mockReturnValueOnce({ toString } as unknown as CryptoJS.lib.WordArray);
+      jest.spyOn(CryptoJS.AES, 'decrypt').mockReturnValueOnce({ toString } as never);
 
       result = crypto.decrypt(text);
     });
@@ -65,7 +64,7 @@ describe('utils crypto', () => {
   describe('calling function encrypt', () => {
     beforeEach(() => {
       toString = jest.fn(() => expected);
-      jest.spyOn(CryptoJS.AES, 'encrypt').mockReturnValueOnce({ toString } as unknown as CryptoJS.lib.CipherParams);
+      jest.spyOn(CryptoJS.AES, 'encrypt').mockReturnValueOnce({ toString } as never);
 
       result = crypto.encrypt(text);
     });

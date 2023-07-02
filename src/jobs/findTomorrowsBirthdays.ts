@@ -11,8 +11,8 @@ import { logger } from '@utils';
 (async () => {
   logger.info('jobs: findTomorrowsBirthdays started');
 
-  const { isConnected: isDbConnected } = await dbJassbot.connect();
-  if (!isDbConnected) {
+  const { isConnected } = await dbJassbot.connect();
+  if (!isConnected) {
     logger.info('jobs: findTomorrowsBirthdays exiting', { error: 'Database failed to connect' });
 
     process.exit(1);
@@ -21,7 +21,7 @@ import { logger } from '@utils';
   await jobService.findTomorrowsBirthdays();
   logger.info('jobs: findTomorrowsBirthdays completed');
 
-  await dbJassbot.disconnect();
+  await dbJassbot.close();
 
   if (parentPort) {
     parentPort.postMessage('done');

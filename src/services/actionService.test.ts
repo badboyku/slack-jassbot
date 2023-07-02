@@ -1,5 +1,5 @@
 import { actionService, userService } from '@services';
-import type { ManageUserDatesResult, UserOld } from '@types';
+import type { ManageUserDatesResult } from '@types';
 
 jest.mock('@services/userService');
 
@@ -12,7 +12,7 @@ describe('services action', () => {
 
     describe('successfully', () => {
       beforeEach(async () => {
-        jest.spyOn(userService, 'findOneOrCreateByUserId').mockResolvedValueOnce(user as unknown as UserOld);
+        jest.spyOn(userService, 'findOneAndUpdateByUserId').mockResolvedValueOnce(user as never);
 
         result = await actionService.manageUserDates(userId);
       });
@@ -21,8 +21,8 @@ describe('services action', () => {
         jest.restoreAllMocks();
       });
 
-      it('calls userService.findOneOrCreateByUserId', () => {
-        expect(userService.findOneOrCreateByUserId).toHaveBeenCalledWith(userId);
+      it('calls userService.findOneAndUpdateByUserId', () => {
+        expect(userService.findOneAndUpdateByUserId).toHaveBeenCalledWith(userId);
       });
 
       it('returns result', () => {

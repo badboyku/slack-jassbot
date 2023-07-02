@@ -2,9 +2,6 @@ import { actionController } from '@controllers';
 import { actionService } from '@services';
 import { logger } from '@utils';
 import { manageUserDates } from '@views';
-import type { AllMiddlewareArgs, SlackActionMiddlewareArgs } from '@slack/bolt';
-import type { ModalView } from '@slack/types';
-import type { ManageUserDatesResult } from '@types';
 
 jest.mock('@services/actionService');
 jest.mock('@utils/logger/logger');
@@ -26,10 +23,10 @@ describe('controllers action', () => {
       beforeEach(async () => {
         client = { views: { open: jest.fn() } };
         const args = { action: { block_id: blockId }, body: { trigger_id: triggerId, user: slackUser }, client };
-        jest.spyOn(actionService, 'manageUserDates').mockResolvedValueOnce({ user } as ManageUserDatesResult);
-        jest.spyOn(manageUserDates, 'getModal').mockReturnValueOnce(modal as ModalView);
+        jest.spyOn(actionService, 'manageUserDates').mockResolvedValueOnce({ user } as never);
+        jest.spyOn(manageUserDates, 'getModal').mockReturnValueOnce(modal as never);
 
-        await actionController.manageUserDates(args as unknown as SlackActionMiddlewareArgs & AllMiddlewareArgs);
+        await actionController.manageUserDates(args as never);
       });
 
       afterEach(() => {
@@ -56,10 +53,10 @@ describe('controllers action', () => {
           body: { trigger_id: triggerId, user: slackUser },
           client: { views: { open: jest.fn() } },
         };
-        jest.spyOn(actionService, 'manageUserDates').mockResolvedValueOnce({ user } as ManageUserDatesResult);
-        jest.spyOn(manageUserDates, 'getModal').mockReturnValueOnce(modal as ModalView);
+        jest.spyOn(actionService, 'manageUserDates').mockResolvedValueOnce({ user } as never);
+        jest.spyOn(manageUserDates, 'getModal').mockReturnValueOnce(modal as never);
 
-        await actionController.manageUserDates(args as unknown as SlackActionMiddlewareArgs & AllMiddlewareArgs);
+        await actionController.manageUserDates(args as never);
       });
 
       afterEach(() => {
@@ -84,10 +81,10 @@ describe('controllers action', () => {
             },
           },
         };
-        jest.spyOn(actionService, 'manageUserDates').mockResolvedValueOnce({ user } as ManageUserDatesResult);
-        jest.spyOn(manageUserDates, 'getModal').mockReturnValueOnce(modal as ModalView);
+        jest.spyOn(actionService, 'manageUserDates').mockResolvedValueOnce({ user } as never);
+        jest.spyOn(manageUserDates, 'getModal').mockReturnValueOnce(modal as never);
 
-        await actionController.manageUserDates(args as unknown as SlackActionMiddlewareArgs & AllMiddlewareArgs);
+        await actionController.manageUserDates(args as never);
       });
 
       afterEach(() => {

@@ -1,7 +1,4 @@
-import Graceful from '@ladjs/graceful';
 import { bree, breeHelper, config, gracefulHelper, logger } from '@utils';
-import type { GracefulOptions } from '@ladjs/graceful';
-import type Bree from 'bree';
 
 jest.mock('@utils/bree/breeHelper');
 jest.mock('@utils/bree/gracefulHelper');
@@ -9,7 +6,7 @@ jest.mock('@utils/config');
 jest.mock('@utils/logger/logger');
 
 describe('utils bree', () => {
-  const configBreeDefault = { jobs: { updateChannelsCron: '', updateUsersCron: '' }, isDisabled: false };
+  const configBreeDefault = { isDisabled: false, jobs: { updateChannelsCron: '', updateUsersCron: '' } };
   const options = { foo: 'bar' };
 
   describe('calling function start', () => {
@@ -22,9 +19,9 @@ describe('utils bree', () => {
 
       beforeEach(async () => {
         config.bree = configBreeDefault;
-        jest.spyOn(breeHelper, 'getBree').mockReturnValueOnce(breeMock as unknown as Bree);
-        jest.spyOn(gracefulHelper, 'getGracefulOptions').mockReturnValueOnce(options as unknown as GracefulOptions);
-        jest.spyOn(gracefulHelper, 'getGraceful').mockReturnValueOnce(gracefulMock as unknown as Graceful);
+        jest.spyOn(breeHelper, 'getBree').mockReturnValueOnce(breeMock as never);
+        jest.spyOn(gracefulHelper, 'getGracefulOptions').mockReturnValueOnce(options as never);
+        jest.spyOn(gracefulHelper, 'getGraceful').mockReturnValueOnce(gracefulMock as never);
         jest.spyOn(logger, 'info').mockImplementationOnce(() => {
           // Do nothing.
         });
@@ -77,7 +74,7 @@ describe('utils bree', () => {
 
       beforeEach(async () => {
         config.bree = { ...configBreeDefault, isDisabled: true };
-        jest.spyOn(breeHelper, 'getBree').mockReturnValueOnce(breeMock as unknown as Bree);
+        jest.spyOn(breeHelper, 'getBree').mockReturnValueOnce(breeMock as never);
 
         await bree.start();
       });

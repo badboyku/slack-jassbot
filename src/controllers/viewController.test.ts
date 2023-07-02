@@ -2,9 +2,6 @@ import { viewController } from '@controllers';
 import { viewService } from '@services';
 import { logger } from '@utils';
 import { appHome, manageUserDates } from '@views';
-import type { AllMiddlewareArgs, SlackViewMiddlewareArgs } from '@slack/bolt';
-import type { HomeView } from '@slack/web-api';
-import type { SaveUserDatesResult } from '@types';
 
 jest.mock('@services/viewService');
 jest.mock('@utils/logger/logger');
@@ -28,10 +25,10 @@ describe('controllers view', () => {
       beforeEach(async () => {
         client = { chat: { postMessage: jest.fn() } };
         const args = { view: { state: { values } }, body: { user: slackUser }, client };
-        jest.spyOn(viewService, 'saveUserDates').mockResolvedValueOnce({ user, hasSaveError } as SaveUserDatesResult);
+        jest.spyOn(viewService, 'saveUserDates').mockResolvedValueOnce({ user, hasSaveError } as never);
         jest.spyOn(manageUserDates, 'getSaveResult').mockReturnValueOnce(saveResultOptions);
 
-        await viewController.saveUserDates(args as unknown as SlackViewMiddlewareArgs & AllMiddlewareArgs);
+        await viewController.saveUserDates(args as never);
       });
 
       afterEach(() => {
@@ -64,10 +61,10 @@ describe('controllers view', () => {
             },
           },
         };
-        jest.spyOn(viewService, 'saveUserDates').mockResolvedValueOnce({ user, hasSaveError } as SaveUserDatesResult);
+        jest.spyOn(viewService, 'saveUserDates').mockResolvedValueOnce({ user, hasSaveError } as never);
         jest.spyOn(manageUserDates, 'getSaveResult').mockReturnValueOnce(saveResultOptions);
 
-        await viewController.saveUserDates(args as unknown as SlackViewMiddlewareArgs & AllMiddlewareArgs);
+        await viewController.saveUserDates(args as never);
       });
 
       afterEach(() => {
@@ -88,14 +85,11 @@ describe('controllers view', () => {
         beforeEach(async () => {
           client = { chat: { postMessage: jest.fn() }, views: { publish: jest.fn() } };
           const args = { view: { state: { values } }, body: { user: slackUser }, client };
-          jest.spyOn(viewService, 'saveUserDates').mockResolvedValueOnce({ user, hasSaveError } as SaveUserDatesResult);
+          jest.spyOn(viewService, 'saveUserDates').mockResolvedValueOnce({ user, hasSaveError } as never);
           jest.spyOn(manageUserDates, 'getSaveResult').mockReturnValueOnce(saveResultOptions);
-          jest.spyOn(appHome, 'getView').mockReturnValueOnce(homeView as HomeView);
+          jest.spyOn(appHome, 'getView').mockReturnValueOnce(homeView as never);
 
-          await viewController.saveUserDates(
-            args as unknown as SlackViewMiddlewareArgs & AllMiddlewareArgs,
-            refreshAppHome,
-          );
+          await viewController.saveUserDates(args as never, refreshAppHome);
         });
 
         afterEach(() => {
@@ -125,14 +119,11 @@ describe('controllers view', () => {
               },
             },
           };
-          jest.spyOn(viewService, 'saveUserDates').mockResolvedValueOnce({ user, hasSaveError } as SaveUserDatesResult);
+          jest.spyOn(viewService, 'saveUserDates').mockResolvedValueOnce({ user, hasSaveError } as never);
           jest.spyOn(manageUserDates, 'getSaveResult').mockReturnValueOnce(saveResultOptions);
-          jest.spyOn(appHome, 'getView').mockReturnValueOnce(homeView as HomeView);
+          jest.spyOn(appHome, 'getView').mockReturnValueOnce(homeView as never);
 
-          await viewController.saveUserDates(
-            args as unknown as SlackViewMiddlewareArgs & AllMiddlewareArgs,
-            refreshAppHome,
-          );
+          await viewController.saveUserDates(args as never, refreshAppHome);
         });
 
         afterEach(() => {

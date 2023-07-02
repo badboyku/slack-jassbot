@@ -1,8 +1,6 @@
 import { DateTime } from 'luxon';
 import { dateTime } from '@utils';
 
-jest.mock('luxon');
-
 describe('utils dateTime', () => {
   const text = 'text';
   const datetime = 'datetime';
@@ -11,7 +9,7 @@ describe('utils dateTime', () => {
   describe('calling function getDateTime', () => {
     describe('successfully', () => {
       beforeEach(() => {
-        jest.spyOn(DateTime, 'now').mockReturnValueOnce(datetime as unknown as DateTime);
+        jest.spyOn(DateTime, 'now').mockReturnValueOnce(datetime as never);
 
         result = dateTime.getDateTime();
       });
@@ -33,7 +31,7 @@ describe('utils dateTime', () => {
   describe('calling function getDateTimeFromIso', () => {
     describe('successfully', () => {
       beforeEach(() => {
-        jest.spyOn(DateTime, 'fromISO').mockReturnValueOnce(datetime as unknown as DateTime);
+        jest.spyOn(DateTime, 'fromISO').mockReturnValueOnce(datetime as never);
 
         result = dateTime.getDateTimeFromIso(text);
       });
@@ -84,7 +82,7 @@ describe('utils dateTime', () => {
       const options = { zone: 'zone' };
 
       beforeEach(() => {
-        jest.spyOn(DateTime, 'fromJSDate').mockReturnValueOnce(datetime as unknown as DateTime);
+        jest.spyOn(DateTime, 'fromJSDate').mockReturnValueOnce(datetime as never);
 
         result = dateTime.getDateTimeFromJSDate(date, options);
       });

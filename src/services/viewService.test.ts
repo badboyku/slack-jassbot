@@ -1,7 +1,6 @@
 import { userService, viewService } from '@services';
 import { crypto, dateTime } from '@utils';
-import type { DateTime } from 'luxon';
-import type { SaveUserDatesResult, UserOld, ViewStateValues } from '@types';
+import type { SaveUserDatesResult } from '@types';
 
 jest.mock('@services/userService');
 jest.mock('@utils/crypto');
@@ -48,16 +47,16 @@ describe('services view', () => {
         };
         jest
           .spyOn(dateTime, 'getDateTimeFromIso')
-          .mockReturnValueOnce(birthdayDate as unknown as DateTime)
-          .mockReturnValueOnce(workAnniversaryDate as unknown as DateTime);
+          .mockReturnValueOnce(birthdayDate as never)
+          .mockReturnValueOnce(workAnniversaryDate as never);
         jest
           .spyOn(crypto, 'encrypt')
           .mockReturnValueOnce(birthdayEncrypted)
           .mockReturnValueOnce(workAnniversaryEncrypted);
         jest.spyOn(crypto, 'createHmac').mockReturnValueOnce(birthdayLookup).mockReturnValueOnce(workAnniversaryLookup);
-        jest.spyOn(userService, 'findOneAndUpdateByUserId').mockResolvedValueOnce(user as UserOld);
+        jest.spyOn(userService, 'findOneAndUpdateByUserId').mockResolvedValueOnce(user as never);
 
-        result = await viewService.saveUserDates(userId, values as unknown as ViewStateValues);
+        result = await viewService.saveUserDates(userId, values as never);
       });
 
       afterEach(() => {
@@ -138,9 +137,9 @@ describe('services view', () => {
           .mockReturnValueOnce(birthdayEncrypted)
           .mockReturnValueOnce(workAnniversaryEncrypted);
         jest.spyOn(crypto, 'createHmac').mockReturnValueOnce(birthdayLookup).mockReturnValueOnce(workAnniversaryLookup);
-        jest.spyOn(userService, 'findOneAndUpdateByUserId').mockResolvedValueOnce(user as UserOld);
+        jest.spyOn(userService, 'findOneAndUpdateByUserId').mockResolvedValueOnce(user as never);
 
-        result = await viewService.saveUserDates(userId, values as unknown as ViewStateValues);
+        result = await viewService.saveUserDates(userId, values as never);
       });
 
       afterEach(() => {

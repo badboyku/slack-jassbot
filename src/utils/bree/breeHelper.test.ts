@@ -2,7 +2,6 @@ import Bree from 'bree';
 import { breeHelper, config, logger } from '@utils';
 import type { BreeOptions } from 'bree';
 
-jest.mock('bree');
 jest.mock('@utils/config');
 jest.mock('@utils/logger/logger');
 
@@ -22,8 +21,16 @@ describe('utils breeHelper', () => {
   });
 
   describe('calling function getBreeOptions', () => {
-    const configAppDefault = { logLevel: '', logOutputFormat: '', nodeEnv: '', port: 123, isTsNode: false };
-    const configBreeDefault = { jobs: { updateChannelsCron: '', updateUsersCron: '' }, isDisabled: false };
+    const configAppDefault = {
+      isTsNode: false,
+      logLevel: '',
+      logOutputFormat: '',
+      name: '',
+      nodeEnv: '',
+      port: 123,
+      version: '',
+    };
+    const configBreeDefault = { isDisabled: false, jobs: { updateChannelsCron: '', updateUsersCron: '' } };
 
     beforeEach(() => {
       jest.spyOn(logger, 'warn').mockImplementationOnce(() => {

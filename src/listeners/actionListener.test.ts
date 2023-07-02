@@ -1,7 +1,6 @@
 import { actionController } from '@controllers';
 import { actionListener } from '@listeners';
 import { logger } from '@utils';
-import type { AllMiddlewareArgs, SlackActionMiddlewareArgs } from '@slack/bolt';
 
 jest.mock('@controllers/actionController');
 jest.mock('@utils/logger/logger');
@@ -17,7 +16,7 @@ describe('listeners action', () => {
     const args = argsDefault;
 
     beforeEach(() => {
-      actionListener(args as unknown as SlackActionMiddlewareArgs & AllMiddlewareArgs);
+      actionListener(args as never);
     });
 
     it('calls ack', () => {
@@ -29,7 +28,7 @@ describe('listeners action', () => {
     const args = { ...argsDefault, action: { action_id: 'manageUserDates' } };
 
     beforeEach(() => {
-      actionListener(args as unknown as SlackActionMiddlewareArgs & AllMiddlewareArgs);
+      actionListener(args as never);
     });
 
     it('calls actionController.manageUserDates', () => {
@@ -45,7 +44,7 @@ describe('listeners action', () => {
         // Do nothing.
       });
 
-      actionListener(args as unknown as SlackActionMiddlewareArgs & AllMiddlewareArgs);
+      actionListener(args as never);
     });
 
     afterEach(() => {

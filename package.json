@@ -84,6 +84,9 @@
       "^@views": "<rootDir>/src/views"
     },
     "resetMocks": true,
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ],
     "testTimeout": 10000,
     "transform": {
       "^.+\\.(ts)$": "ts-jest"

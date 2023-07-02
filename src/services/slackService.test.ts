@@ -1,16 +1,7 @@
 import { slackClient } from '@clients';
 import { slackService } from '@services';
 import { SLACK_GET_LIMIT_DEFAULT } from '@utils/constants';
-import type {
-  GetChannelMemberIdsResult,
-  GetChannelsResult,
-  GetUsersConversationsResult,
-  GetUsersResult,
-  SlackClientGetConversationsListResult,
-  SlackClientGetConversationsMembersResult,
-  SlackClientGetUsersConversationsResult,
-  SlackClientGetUsersListResult,
-} from '@types';
+import type { GetChannelMemberIdsResult, GetChannelsResult, GetUsersConversationsResult, GetUsersResult } from '@types';
 
 jest.mock('@clients/slackClient');
 
@@ -33,9 +24,7 @@ describe('services slack', () => {
       const response = { members: [member1] };
 
       beforeEach(async () => {
-        jest
-          .spyOn(slackClient, 'getConversationsMembers')
-          .mockResolvedValueOnce({ response } as unknown as SlackClientGetConversationsMembersResult);
+        jest.spyOn(slackClient, 'getConversationsMembers').mockResolvedValueOnce({ response } as never);
 
         result = await slackService.getChannelMembers(channelId);
       });
@@ -60,8 +49,8 @@ describe('services slack', () => {
       beforeEach(async () => {
         jest
           .spyOn(slackClient, 'getConversationsMembers')
-          .mockResolvedValueOnce({ response: response1 } as unknown as SlackClientGetConversationsMembersResult)
-          .mockResolvedValueOnce({ response: response2 } as unknown as SlackClientGetConversationsMembersResult);
+          .mockResolvedValueOnce({ response: response1 } as never)
+          .mockResolvedValueOnce({ response: response2 } as never);
 
         result = await slackService.getChannelMembers(channelId);
       });
@@ -89,9 +78,7 @@ describe('services slack', () => {
 
     describe('with error', () => {
       beforeEach(async () => {
-        jest
-          .spyOn(slackClient, 'getConversationsMembers')
-          .mockResolvedValueOnce({ error } as unknown as SlackClientGetConversationsMembersResult);
+        jest.spyOn(slackClient, 'getConversationsMembers').mockResolvedValueOnce({ error } as never);
 
         result = await slackService.getChannelMembers(channelId);
       });
@@ -113,9 +100,7 @@ describe('services slack', () => {
       const response = { channels: [channel1] };
 
       beforeEach(async () => {
-        jest
-          .spyOn(slackClient, 'getConversationsList')
-          .mockResolvedValueOnce({ response } as unknown as SlackClientGetConversationsListResult);
+        jest.spyOn(slackClient, 'getConversationsList').mockResolvedValueOnce({ response } as never);
 
         result = await slackService.getChannels();
       });
@@ -137,9 +122,7 @@ describe('services slack', () => {
       const args = { types: 'foo' };
 
       beforeEach(async () => {
-        jest
-          .spyOn(slackClient, 'getConversationsList')
-          .mockResolvedValueOnce({} as unknown as SlackClientGetConversationsListResult);
+        jest.spyOn(slackClient, 'getConversationsList').mockResolvedValueOnce({} as never);
 
         result = await slackService.getChannels(args);
       });
@@ -160,8 +143,8 @@ describe('services slack', () => {
       beforeEach(async () => {
         jest
           .spyOn(slackClient, 'getConversationsList')
-          .mockResolvedValueOnce({ response: response1 } as unknown as SlackClientGetConversationsListResult)
-          .mockResolvedValueOnce({ response: response2 } as unknown as SlackClientGetConversationsListResult);
+          .mockResolvedValueOnce({ response: response1 } as never)
+          .mockResolvedValueOnce({ response: response2 } as never);
 
         result = await slackService.getChannels();
       });
@@ -185,9 +168,7 @@ describe('services slack', () => {
 
     describe('with error', () => {
       beforeEach(async () => {
-        jest
-          .spyOn(slackClient, 'getConversationsList')
-          .mockResolvedValueOnce({ error } as unknown as SlackClientGetConversationsListResult);
+        jest.spyOn(slackClient, 'getConversationsList').mockResolvedValueOnce({ error } as never);
 
         result = await slackService.getChannels();
       });
@@ -209,9 +190,7 @@ describe('services slack', () => {
       const response = { members: [user1] };
 
       beforeEach(async () => {
-        jest
-          .spyOn(slackClient, 'getUsersList')
-          .mockResolvedValueOnce({ response } as unknown as SlackClientGetUsersListResult);
+        jest.spyOn(slackClient, 'getUsersList').mockResolvedValueOnce({ response } as never);
 
         result = await slackService.getUsers();
       });
@@ -233,7 +212,7 @@ describe('services slack', () => {
       const args = { types: 'foo' };
 
       beforeEach(async () => {
-        jest.spyOn(slackClient, 'getUsersList').mockResolvedValueOnce({} as unknown as SlackClientGetUsersListResult);
+        jest.spyOn(slackClient, 'getUsersList').mockResolvedValueOnce({} as never);
 
         result = await slackService.getUsers(args);
       });
@@ -254,8 +233,8 @@ describe('services slack', () => {
       beforeEach(async () => {
         jest
           .spyOn(slackClient, 'getUsersList')
-          .mockResolvedValueOnce({ response: response1 } as unknown as SlackClientGetUsersListResult)
-          .mockResolvedValueOnce({ response: response2 } as unknown as SlackClientGetUsersListResult);
+          .mockResolvedValueOnce({ response: response1 } as never)
+          .mockResolvedValueOnce({ response: response2 } as never);
 
         result = await slackService.getUsers();
       });
@@ -279,9 +258,7 @@ describe('services slack', () => {
 
     describe('with error', () => {
       beforeEach(async () => {
-        jest
-          .spyOn(slackClient, 'getUsersList')
-          .mockResolvedValueOnce({ error } as unknown as SlackClientGetUsersListResult);
+        jest.spyOn(slackClient, 'getUsersList').mockResolvedValueOnce({ error } as never);
 
         result = await slackService.getUsers();
       });
@@ -303,9 +280,7 @@ describe('services slack', () => {
       const response = { channels: [channel1] };
 
       beforeEach(async () => {
-        jest
-          .spyOn(slackClient, 'getUsersConversations')
-          .mockResolvedValueOnce({ response } as unknown as SlackClientGetUsersConversationsResult);
+        jest.spyOn(slackClient, 'getUsersConversations').mockResolvedValueOnce({ response } as never);
 
         result = await slackService.getUsersConversations();
       });
@@ -328,9 +303,7 @@ describe('services slack', () => {
       const response = { channels: [channel1] };
 
       beforeEach(async () => {
-        jest
-          .spyOn(slackClient, 'getUsersConversations')
-          .mockResolvedValueOnce({ response } as unknown as SlackClientGetUsersConversationsResult);
+        jest.spyOn(slackClient, 'getUsersConversations').mockResolvedValueOnce({ response } as never);
 
         result = await slackService.getUsersConversations(args);
       });
@@ -355,8 +328,8 @@ describe('services slack', () => {
       beforeEach(async () => {
         jest
           .spyOn(slackClient, 'getUsersConversations')
-          .mockResolvedValueOnce({ response: response1 } as unknown as SlackClientGetUsersConversationsResult)
-          .mockResolvedValueOnce({ response: response2 } as unknown as SlackClientGetUsersConversationsResult);
+          .mockResolvedValueOnce({ response: response1 } as never)
+          .mockResolvedValueOnce({ response: response2 } as never);
 
         result = await slackService.getUsersConversations();
       });
@@ -380,9 +353,7 @@ describe('services slack', () => {
 
     describe('with error', () => {
       beforeEach(async () => {
-        jest
-          .spyOn(slackClient, 'getUsersConversations')
-          .mockResolvedValueOnce({ error } as unknown as SlackClientGetUsersConversationsResult);
+        jest.spyOn(slackClient, 'getUsersConversations').mockResolvedValueOnce({ error } as never);
 
         result = await slackService.getUsersConversations();
       });

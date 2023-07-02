@@ -1,21 +1,54 @@
 /* istanbul ignore file */
-import { model, Model, Schema } from 'mongoose';
-import type { ChannelDocType, ChannelHydratedDocument, ChannelMethods } from '@types';
+import type { ChannelDoc, ChannelMongoModel } from '@types';
 
-const { Boolean, Number, String } = Schema.Types;
-
-type ChannelModel = Model<ChannelDocType, {}, ChannelMethods>;
-const schema = new Schema<ChannelDocType, ChannelModel, ChannelMethods, {}, {}, {}, {}, ChannelHydratedDocument>(
-  {
-    channelId: { type: String, unique: true, required: true },
-    name: { type: String, required: false, default: '' },
-    isArchived: { type: Boolean, index: true, required: false, default: false },
-    isMember: { type: Boolean, index: true, required: false, default: false },
-    isPrivate: { type: Boolean, required: false, default: false },
-    numMembers: { type: Number, index: true, required: false, default: 0 },
-    memberIds: { type: [String], index: true, required: false, default: [] },
+const model = (): ChannelMongoModel => ({
+  addTimestamps() {
+    return true;
   },
-  { collection: 'channel', timestamps: true },
-);
 
-export default model<ChannelDocType, ChannelModel>('Channel', schema);
+  getCollName() {
+    return 'channel';
+  },
+
+  getDefaults() {
+    return {
+      name: '',
+      isArchived: false,
+      isMember: false,
+      isPrivate: false,
+      numMembers: 0,
+      memberIds: [],
+    };
+  },
+
+  getMethods(_d: ChannelDoc) {
+    return {};
+  },
+
+  getModel(d: ChannelDoc) {
+    return { ...d, ...this.getMethods(d) };
+  },
+
+  getValidator() {
+    return {
+      $jsonSchema: {
+        bsonType: 'object',
+        properties: {
+          channelId: { bsonType: 'string' },
+          name: { bsonType: 'string' },
+          isArchived: { bsonType: 'bool' },
+          isMember: { bsonType: 'bool' },
+          isPrivate: { bsonType: 'bool' },
+          numMembers: { bsonType: 'number' },
+          memberIds: { bsonType: 'array' },
+          createdAt: { bsonType: 'date' },
+          updatedAt: { bsonType: 'date' },
+          deletedAt: { bsonType: ['null', 'date'] },
+        },
+        required: ['channelId'],
+      },
+    };
+  },
+});
+
+export default model();

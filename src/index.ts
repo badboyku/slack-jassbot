@@ -1,12 +1,12 @@
 /* istanbul ignore file */
-import { dbNewJassbot } from '@db/sources';
+import { dbJassbot } from '@db/sources';
 import { app, bree, logger } from '@utils';
 
 (async () => {
   logger.info('Starting Application');
 
   // Connect to database.
-  const { isConnected: isDbConnected } = await dbNewJassbot.connect();
+  const { isConnected: isDbConnected } = await dbJassbot.connect();
   if (!isDbConnected) {
     logger.warn('Application Exiting', { error: 'Database failed to connect' });
 
@@ -14,12 +14,12 @@ import { app, bree, logger } from '@utils';
   }
 
   // Sync validations.
-  await dbNewJassbot.syncValidations();
+  await dbJassbot.syncValidations();
 
   // Start app.
   const { isStarted: isAppStarted } = await app.start();
   if (!isAppStarted) {
-    await dbNewJassbot.close();
+    await dbJassbot.close();
     logger.warn('Application Exiting', { error: 'App failed to start' });
 
     process.exit(1);

@@ -1,14 +1,8 @@
 /* istanbul ignore file */
-import type { Sort } from '@types';
-import type { Sort as MongoDbSort } from 'mongodb';
-
 // Database
-export const DB_BATCH_SIZE_DEFAULT = 1000;
-export const DB_BATCH_SIZE_MAX = 5000;
-export const DB_LIMIT_DEFAULT = 1000;
-export const DB_LIMIT_MAX = 5000;
-export const DB_SORT_DEFAULT_OLD: Sort = { _id: 1 };
-export const DB_SORT_DEFAULT: MongoDbSort = { _id: 1 };
+export const DB_LIMIT_DEFAULT = 300;
+export const DB_LIMIT_MAX = 1000;
+export const DB_SORT_DEFAULT = '_id';
 
 // Logger
 export const LOG_FORMATS = { DEV: 'DEV', ELK: 'ELK' };

@@ -7,7 +7,15 @@ describe('utils logger', () => {
   const message = 'message';
   const context = { foo: 'bar' };
   const logMessage = 'logMessage';
-  const configAppDefault = { logLevel: 'INFO', logOutputFormat: 'ELK', nodeEnv: 'TEST', port: 3000, isTsNode: true };
+  const configAppDefault = {
+    isTsNode: true,
+    logLevel: 'INFO',
+    logOutputFormat: 'ELK',
+    name: '',
+    nodeEnv: 'TEST',
+    port: 3000,
+    version: '',
+  };
 
   beforeEach(() => {
     jest.spyOn(JSON, 'stringify').mockReturnValueOnce(logMessage);

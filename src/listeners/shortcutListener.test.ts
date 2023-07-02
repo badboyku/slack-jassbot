@@ -1,6 +1,5 @@
 import { shortcutListener } from '@listeners';
 import { logger } from '@utils';
-import type { AllMiddlewareArgs, SlackShortcutMiddlewareArgs } from '@slack/bolt';
 
 jest.mock('@utils/logger/logger');
 
@@ -15,7 +14,7 @@ describe('listeners shortcut', () => {
     const args = argsDefault;
 
     beforeEach(() => {
-      shortcutListener(args as unknown as SlackShortcutMiddlewareArgs & AllMiddlewareArgs);
+      shortcutListener(args as never);
     });
 
     it('calls ack', () => {
@@ -31,7 +30,7 @@ describe('listeners shortcut', () => {
         // Do nothing.
       });
 
-      shortcutListener(args as unknown as SlackShortcutMiddlewareArgs & AllMiddlewareArgs);
+      shortcutListener(args as never);
     });
 
     afterEach(() => {

@@ -1,6 +1,5 @@
 import { commandListener } from '@listeners';
 import { logger } from '@utils';
-import type { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from '@slack/bolt';
 
 jest.mock('@utils/logger/logger');
 
@@ -15,7 +14,7 @@ describe('listeners command', () => {
     const args = argsDefault;
 
     beforeEach(() => {
-      commandListener(args as unknown as SlackCommandMiddlewareArgs & AllMiddlewareArgs);
+      commandListener(args as never);
     });
 
     it('calls ack', () => {
@@ -31,7 +30,7 @@ describe('listeners command', () => {
         // Do nothing.
       });
 
-      commandListener(args as unknown as SlackCommandMiddlewareArgs & AllMiddlewareArgs);
+      commandListener(args as never);
     });
 
     afterEach(() => {

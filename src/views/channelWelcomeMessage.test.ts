@@ -1,5 +1,4 @@
 import { channelWelcomeMessage, manageUserDates } from '@views';
-import type { Button } from '@slack/types';
 import type { ChatPostMessageArguments } from '@slack/web-api';
 
 jest.mock('@views/manageUserDates');
@@ -12,7 +11,7 @@ describe('views channelWelcomeMessage', () => {
 
     describe('successfully', () => {
       beforeEach(() => {
-        jest.spyOn(manageUserDates, 'getButton').mockReturnValueOnce(button as unknown as Button);
+        jest.spyOn(manageUserDates, 'getButton').mockReturnValueOnce(button as never);
 
         options = channelWelcomeMessage.getOptions(channel);
       });

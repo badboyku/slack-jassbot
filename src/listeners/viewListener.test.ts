@@ -1,7 +1,6 @@
 import { viewController } from '@controllers';
 import { viewListener } from '@listeners';
 import { logger } from '@utils';
-import type { AllMiddlewareArgs, SlackViewMiddlewareArgs } from '@slack/bolt';
 
 jest.mock('@controllers/viewController');
 jest.mock('@utils/logger/logger');
@@ -17,7 +16,7 @@ describe('listeners view', () => {
     const args = argsDefault;
 
     beforeEach(() => {
-      viewListener(args as unknown as SlackViewMiddlewareArgs & AllMiddlewareArgs);
+      viewListener(args as never);
     });
 
     it('calls ack', () => {
@@ -29,7 +28,7 @@ describe('listeners view', () => {
     const args = { ...argsDefault, view: { callback_id: 'saveUserDates' } };
 
     beforeEach(() => {
-      viewListener(args as unknown as SlackViewMiddlewareArgs & AllMiddlewareArgs);
+      viewListener(args as never);
     });
 
     it('calls viewController.saveUserDates', () => {
@@ -41,7 +40,7 @@ describe('listeners view', () => {
     const args = { ...argsDefault, view: { callback_id: 'saveUserDatesRefreshAppHome' } };
 
     beforeEach(() => {
-      viewListener(args as unknown as SlackViewMiddlewareArgs & AllMiddlewareArgs);
+      viewListener(args as never);
     });
 
     it('calls viewController.saveUserDates with refreshAppHome', () => {
@@ -57,7 +56,7 @@ describe('listeners view', () => {
         // Do nothing.
       });
 
-      viewListener(args as unknown as SlackViewMiddlewareArgs & AllMiddlewareArgs);
+      viewListener(args as never);
     });
 
     afterEach(() => {

@@ -1,30 +1,30 @@
 /* istanbul ignore file */
-import { dbNewJassbot } from '@db/sources';
-import { userService } from '@services';
-import { logger, scriptHelper } from '@utils';
+import { dbJassbot } from '../db/sources';
+import { logger, mongodb } from '../utils';
+import scriptsHelper from './scriptsHelper';
 
 (async () => {
   logger.info('scripts: deleteUsers called');
 
-  const { isConnected: isDbConnected } = await dbNewJassbot.connect();
-  if (!isDbConnected) {
+  const { key, error: keyError } = scriptsHelper.getFakedataKey();
+  if (keyError) {
+    logger.info('scripts: deleteUsers exiting', { error: keyError });
+
+    process.exit(1);
+  }
+
+  const { isConnected } = await dbJassbot.connect();
+  if (!isConnected) {
     logger.info('scripts: deleteUsers exiting', { error: 'Database failed to connect' });
 
     process.exit(1);
   }
 
-  const { fakedataPrefix, error: fakedataPrefixError } = scriptHelper.getFakedataPrefix();
-  if (fakedataPrefixError) {
-    logger.info('scripts: deleteUsers exiting', { error: fakedataPrefixError });
+  const filter = { userId: { $regex: `^${key}` } };
+  const results = await mongodb.deleteMany(dbJassbot.getUserCollection(), filter);
+  logger.info('scripts: deleteUsers completed', { results });
 
-    process.exit(1);
-  }
-
-  const filter = { userId: { $regex: `^${fakedataPrefix}` } };
-  const { result, error } = await userService.deleteMany(filter);
-  logger.info('scripts: deleteUsers completed', { result, error });
-
-  await dbNewJassbot.close();
+  await dbJassbot.close();
 
   process.exit(0);
 })();

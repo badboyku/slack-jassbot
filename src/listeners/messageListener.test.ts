@@ -1,6 +1,5 @@
 import { messageListener } from '@listeners';
 import { logger } from '@utils';
-import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 
 jest.mock('@utils/logger/logger');
 
@@ -19,7 +18,7 @@ describe('listeners message', () => {
         // Do nothing.
       });
 
-      messageListener(args as unknown as SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs);
+      messageListener(args as never);
     });
 
     afterEach(() => {

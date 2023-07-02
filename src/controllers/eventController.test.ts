@@ -2,13 +2,6 @@ import { eventController } from '@controllers';
 import { eventService } from '@services';
 import { logger } from '@utils';
 import { appHome, channelWelcomeMessage } from '@views';
-import type {
-  AppHomeOpenedArgs,
-  AppHomeOpenedResult,
-  MemberJoinedChannelArgs,
-  MemberJoinedChannelResult,
-} from '@types';
-import type { ChatPostMessageArguments, HomeView } from '@slack/web-api';
 
 jest.mock('@services/eventService');
 jest.mock('@utils/logger/logger');
@@ -32,10 +25,10 @@ describe('controllers event', () => {
         beforeEach(async () => {
           client = { views: { publish: jest.fn() } };
           const args = { client, event: { channel, tab: 'home', user: userId } };
-          jest.spyOn(eventService, 'appHomeOpened').mockResolvedValueOnce({ user } as AppHomeOpenedResult);
-          jest.spyOn(appHome, 'getView').mockReturnValueOnce(homeView as HomeView);
+          jest.spyOn(eventService, 'appHomeOpened').mockResolvedValueOnce({ user } as never);
+          jest.spyOn(appHome, 'getView').mockReturnValueOnce(homeView as never);
 
-          await eventController.appHomeOpened(args as unknown as AppHomeOpenedArgs);
+          await eventController.appHomeOpened(args as never);
         });
 
         afterEach(() => {
@@ -63,10 +56,10 @@ describe('controllers event', () => {
             },
             event: { channel, tab: 'home', user: userId },
           };
-          jest.spyOn(eventService, 'appHomeOpened').mockResolvedValueOnce({ user } as AppHomeOpenedResult);
-          jest.spyOn(appHome, 'getView').mockReturnValueOnce(homeView as HomeView);
+          jest.spyOn(eventService, 'appHomeOpened').mockResolvedValueOnce({ user } as never);
+          jest.spyOn(appHome, 'getView').mockReturnValueOnce(homeView as never);
 
-          await eventController.appHomeOpened(args as unknown as AppHomeOpenedArgs);
+          await eventController.appHomeOpened(args as never);
         });
 
         afterEach(() => {
@@ -88,12 +81,10 @@ describe('controllers event', () => {
       beforeEach(async () => {
         client = { chat: { postMessage: jest.fn() } };
         const args = { client, event: { channel: channelId, channel_type: channelType, user: userId } };
-        jest
-          .spyOn(eventService, 'memberJoinedChannel')
-          .mockResolvedValueOnce({ channel: { isMember: true } } as MemberJoinedChannelResult);
-        jest.spyOn(channelWelcomeMessage, 'getOptions').mockReturnValueOnce(options as ChatPostMessageArguments);
+        jest.spyOn(eventService, 'memberJoinedChannel').mockResolvedValueOnce({ channel: { isMember: true } } as never);
+        jest.spyOn(channelWelcomeMessage, 'getOptions').mockReturnValueOnce(options as never);
 
-        await eventController.memberJoinedChannel(args as unknown as MemberJoinedChannelArgs);
+        await eventController.memberJoinedChannel(args as never);
       });
 
       afterEach(() => {
@@ -119,12 +110,10 @@ describe('controllers event', () => {
       beforeEach(async () => {
         client = { chat: { postMessage: jest.fn() } };
         const args = { client, event: { channel: channelId, channel_type: channelType, user: userId } };
-        jest
-          .spyOn(eventService, 'memberJoinedChannel')
-          .mockResolvedValueOnce({ channel: null } as MemberJoinedChannelResult);
+        jest.spyOn(eventService, 'memberJoinedChannel').mockResolvedValueOnce({ channel: null } as never);
         jest.spyOn(channelWelcomeMessage, 'getOptions');
 
-        await eventController.memberJoinedChannel(args as unknown as MemberJoinedChannelArgs);
+        await eventController.memberJoinedChannel(args as never);
       });
 
       afterEach(() => {
@@ -154,12 +143,10 @@ describe('controllers event', () => {
           },
           event: { channel: channelId, channel_type: channelType, user: userId },
         };
-        jest
-          .spyOn(eventService, 'memberJoinedChannel')
-          .mockResolvedValueOnce({ channel: { isMember: true } } as MemberJoinedChannelResult);
-        jest.spyOn(channelWelcomeMessage, 'getOptions').mockReturnValueOnce(options as ChatPostMessageArguments);
+        jest.spyOn(eventService, 'memberJoinedChannel').mockResolvedValueOnce({ channel: { isMember: true } } as never);
+        jest.spyOn(channelWelcomeMessage, 'getOptions').mockReturnValueOnce(options as never);
 
-        await eventController.memberJoinedChannel(args as unknown as MemberJoinedChannelArgs);
+        await eventController.memberJoinedChannel(args as never);
       });
 
       afterEach(() => {

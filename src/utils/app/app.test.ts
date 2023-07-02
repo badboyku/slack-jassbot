@@ -8,7 +8,6 @@ import {
   viewListener,
 } from '@listeners';
 import { app, appHelper, config, logger } from '@utils';
-import type { App, CodedError } from '@slack/bolt';
 import type { AppStartResult } from '@types';
 
 jest.mock('@listeners/actionListener');
@@ -23,7 +22,15 @@ jest.mock('@utils/config');
 jest.mock('@utils/logger/logger');
 
 describe('utils app', () => {
-  const configAppDefault = { logLevel: '', logOutputFormat: '', nodeEnv: '', port: 123, isTsNode: false };
+  const configAppDefault = {
+    isTsNode: false,
+    logLevel: '',
+    logOutputFormat: '',
+    name: '',
+    nodeEnv: '',
+    port: 123,
+    version: '',
+  };
   const err = new Error('some error');
   const appMockDefault = {
     error: jest.fn(),
@@ -39,15 +46,15 @@ describe('utils app', () => {
 
   describe('calling function start', () => {
     describe('successfully', () => {
-      const error = (callback: (_error: CodedError) => void) => {
-        callback(err as CodedError);
+      const error = (callback: (_error: never) => void) => {
+        callback(err as never);
       };
       const appMock = { ...appMockDefault, error };
       let result: AppStartResult;
 
       beforeEach(async () => {
         config.app = configAppDefault;
-        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as never);
         jest.spyOn(logger, 'info').mockImplementationOnce(() => {
           // Do nothing.
         });
@@ -116,7 +123,7 @@ describe('utils app', () => {
           throw err;
         });
         const appMock = { ...appMockDefault, start };
-        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as never);
         jest.spyOn(logger, 'warn').mockImplementation(() => {
           // Do nothing.
         });

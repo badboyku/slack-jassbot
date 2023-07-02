@@ -1,7 +1,6 @@
 import { eventController } from '@controllers';
 import { eventListener } from '@listeners';
 import { logger } from '@utils';
-import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 
 jest.mock('@controllers/eventController');
 jest.mock('@utils/logger/logger');
@@ -17,7 +16,7 @@ describe('listeners event', () => {
     const args = { ...argsDefault, event: { type: 'app_home_opened' } };
 
     beforeEach(() => {
-      eventListener(args as unknown as SlackEventMiddlewareArgs & AllMiddlewareArgs);
+      eventListener(args as never);
     });
 
     it('calls actionController.appHomeOpened', () => {
@@ -29,7 +28,7 @@ describe('listeners event', () => {
     const args = { ...argsDefault, event: { type: 'app_mention' } };
 
     beforeEach(() => {
-      eventListener(args as unknown as SlackEventMiddlewareArgs & AllMiddlewareArgs);
+      eventListener(args as never);
     });
 
     it('calls actionController.appMention', () => {
@@ -41,7 +40,7 @@ describe('listeners event', () => {
     const args = { ...argsDefault, event: { type: 'member_joined_channel' } };
 
     beforeEach(() => {
-      eventListener(args as unknown as SlackEventMiddlewareArgs & AllMiddlewareArgs);
+      eventListener(args as never);
     });
 
     it('calls actionController.memberJoinedChannel', () => {
@@ -53,7 +52,7 @@ describe('listeners event', () => {
     const args = { ...argsDefault, event: { type: 'member_left_channel' } };
 
     beforeEach(() => {
-      eventListener(args as unknown as SlackEventMiddlewareArgs & AllMiddlewareArgs);
+      eventListener(args as never);
     });
 
     it('calls actionController.memberLeftChannel', () => {
@@ -69,7 +68,7 @@ describe('listeners event', () => {
         // Do nothing.
       });
 
-      eventListener(args as unknown as SlackEventMiddlewareArgs & AllMiddlewareArgs);
+      eventListener(args as never);
     });
 
     afterEach(() => {

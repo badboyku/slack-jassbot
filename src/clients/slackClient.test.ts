@@ -1,7 +1,6 @@
 import { slackClient } from '@clients';
 import { SlackClientError } from '@errors';
 import { appHelper, logger } from '@utils';
-import type { App } from '@slack/bolt';
 import type {
   SlackClientGetConversationsListResult,
   SlackClientGetConversationsMembersResult,
@@ -29,7 +28,7 @@ describe('clients slack', () => {
 
       beforeEach(async () => {
         appMock.client.conversations.list.mockResolvedValue(responseSuccess);
-        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as never);
         jest.spyOn(logger, 'warn').mockImplementation(() => {
           // Do nothing.
         });
@@ -59,7 +58,7 @@ describe('clients slack', () => {
 
       beforeEach(async () => {
         appMock.client.conversations.list.mockRejectedValueOnce(err);
-        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as never);
         jest.spyOn(logger, 'warn').mockImplementation(() => {
           // Do nothing.
         });
@@ -90,7 +89,7 @@ describe('clients slack', () => {
 
       beforeEach(async () => {
         appMock.client.conversations.members.mockResolvedValue(responseSuccess);
-        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as never);
         jest.spyOn(logger, 'warn').mockImplementation(() => {
           // Do nothing.
         });
@@ -120,7 +119,7 @@ describe('clients slack', () => {
 
       beforeEach(async () => {
         appMock.client.conversations.members.mockRejectedValueOnce(err);
-        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as never);
         jest.spyOn(logger, 'warn').mockImplementation(() => {
           // Do nothing.
         });
@@ -155,7 +154,7 @@ describe('clients slack', () => {
 
       beforeEach(async () => {
         appMock.client.users.conversations.mockResolvedValue(responseSuccess);
-        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as never);
         jest.spyOn(logger, 'warn').mockImplementation(() => {
           // Do nothing.
         });
@@ -185,7 +184,7 @@ describe('clients slack', () => {
 
       beforeEach(async () => {
         appMock.client.users.conversations.mockRejectedValueOnce(err);
-        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as never);
         jest.spyOn(logger, 'warn').mockImplementation(() => {
           // Do nothing.
         });
@@ -216,7 +215,7 @@ describe('clients slack', () => {
 
       beforeEach(async () => {
         appMock.client.users.list.mockResolvedValue(responseSuccess);
-        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as never);
         jest.spyOn(logger, 'warn').mockImplementation(() => {
           // Do nothing.
         });
@@ -246,7 +245,7 @@ describe('clients slack', () => {
 
       beforeEach(async () => {
         appMock.client.users.list.mockRejectedValueOnce(err);
-        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as unknown as App);
+        jest.spyOn(appHelper, 'getApp').mockReturnValueOnce(appMock as never);
         jest.spyOn(logger, 'warn').mockImplementation(() => {
           // Do nothing.
         });
