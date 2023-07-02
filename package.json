@@ -31,6 +31,7 @@
     "scripts:addChannels": "TS_NODE=true node -r ts-node/register -r tsconfig-paths/register -r dotenv/config ./src/scripts/addChannels.ts",
     "scripts:deleteChannels": "TS_NODE=true node -r ts-node/register -r tsconfig-paths/register -r dotenv/config ./src/scripts/deleteChannels.ts",
     "scripts:addUsers": "TS_NODE=true node -r ts-node/register -r tsconfig-paths/register -r dotenv/config ./src/scripts/addUsers.ts",
+    "scripts:addUsersToChannels": "TS_NODE=true node -r ts-node/register -r tsconfig-paths/register -r dotenv/config ./src/scripts/addUsersToChannels.ts",
     "scripts:deleteUsers": "TS_NODE=true node -r ts-node/register -r tsconfig-paths/register -r dotenv/config ./src/scripts/deleteUsers.ts",
     "scripts:zzz": "TS_NODE=true node -r ts-node/register -r tsconfig-paths/register -r dotenv/config ./src/scripts/zzz.ts",
     "test": "jest",
