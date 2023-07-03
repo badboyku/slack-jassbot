@@ -17,7 +17,7 @@ const findTomorrowsBirthdays = async () => {
     userLookup[userId] = user;
   });
 
-  const channels = await channelService.findAll({ isArchived: false, isMember: true, members: { $in: bdayUserIds } });
+  const channels = await channelService.findAll({ isArchived: false, isMember: true, memberIds: { $in: bdayUserIds } });
 
   const bdayChannels: { [channelId: string]: UserModel[] } = {};
   channels.forEach((channel) => {
