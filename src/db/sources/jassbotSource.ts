@@ -8,16 +8,6 @@ import type { ChannelDoc, DbCloseResult, DbConnectResult, UserDoc } from '@types
 
 const dbName = 'jassbot';
 
-let mongoClient: MongoClient;
-const getMongoClient = () => {
-  if (!mongoClient) {
-    const options = { serverApi: { strict: true, version: ServerApiVersion.v1 } };
-    mongoClient = new MongoClient(config.db.jassbot.uri, options);
-  }
-
-  return mongoClient;
-};
-
 const syncValidation = (db: Db, collMod: string, validator: Document): Promise<boolean> => {
   logger.debug(`db: ${dbName} syncValidation called`, { collMod, validator });
 
@@ -80,4 +70,6 @@ export const db = (client: MongoClient) => ({
   },
 });
 
-export default db(getMongoClient());
+export default db(
+  new MongoClient(config.db.jassbot.uri, { serverApi: { strict: true, version: ServerApiVersion.v1 } }),
+);

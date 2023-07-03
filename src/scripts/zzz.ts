@@ -2,11 +2,11 @@
 // import { faker } from '@faker-js/faker';
 // import { UserModel } from '@db/models';
 import { dbJassbot } from '@db/sources';
-import { userService } from '@services';
-import { crypto, dateTime, logger /* , mongodb */ } from '@utils';
+import { /* userService, */ jobService } from '@services';
+import { /* crypto, dateTime, */ logger /* , mongodb */ } from '@utils';
 import scriptsHelper from './scriptsHelper';
 // import type { MongoError, MongoServerError } from 'mongodb';
-import type { UserModel as UserModelType } from '@types';
+// import type { UserModel as UserModelType } from '@types';
 
 // const getUserData = (key: string) => {
 //   const firstName = faker.person.firstName();
@@ -76,17 +76,18 @@ import type { UserModel as UserModelType } from '@types';
   // }
 
   // userService.findAll Example
-  const tomorrowsBirthday = dateTime.getDateTime().plus({ days: 1 }).toFormat('LL-dd');
-  const faUsers = await userService.findAll({ birthdayLookup: crypto.createHmac(tomorrowsBirthday), isDeleted: false });
-  const firstUser = faUsers.length ? (faUsers[0] as UserModelType) : undefined;
-  const birthdayDate = firstUser?.getBirthdayDate();
-  const workAnniversaryDate = firstUser?.getWorkAnniversaryDate();
-  logger.debug('scripts: zzz userService.findAll', {
-    numUsers: faUsers.length,
-    firstUser,
-    birthdayDate,
-    workAnniversaryDate,
-  });
+  // const tomorrowsBirthday = dateTime.getDateTime().plus({ days: 1 }).toFormat('LL-dd');
+  // const faFilter = { birthdayLookup: crypto.createHmac(tomorrowsBirthday), isDeleted: false };
+  // const faUsers = await userService.findAll(faFilter);
+  // const firstUser = faUsers.length ? (faUsers[0] as UserModelType) : undefined;
+  // const birthdayDate = firstUser?.getBirthdayDate();
+  // const workAnniversaryDate = firstUser?.getWorkAnniversaryDate();
+  // logger.debug('scripts: zzz userService.findAll', {
+  //   numUsers: faUsers.length,
+  //   firstUser,
+  //   birthdayDate,
+  //   workAnniversaryDate,
+  // });
 
   // const userColl = dbJassbot.getUserCollection();
 
@@ -154,6 +155,8 @@ import type { UserModel as UserModelType } from '@types';
   //   birthdayDate,
   //   workAnniversaryDate,
   // });
+
+  await jobService.findTomorrowsBirthdays();
 
   await dbJassbot.close();
   logger.info('scripts: zzz completed');
