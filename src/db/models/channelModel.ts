@@ -21,12 +21,12 @@ const model = (): ChannelMongoModel => ({
     };
   },
 
-  getMethods(_d: ChannelDoc) {
-    return {};
-  },
-
   getModel(d: ChannelDoc) {
-    return { ...d, ...this.getMethods(d) };
+    return {
+      ...d,
+
+      // Custom Methods.
+    };
   },
 
   getValidator() {

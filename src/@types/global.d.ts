@@ -43,7 +43,6 @@ export type MongoModel = {
   addTimestamps: () => boolean;
   getCollName: () => string;
   getDefaults: () => {};
-  getMethods: (d: MongoDoc) => {};
   getModel: (d: MongoDoc) => {};
   getValidator: () => BsonDoc;
 };
@@ -69,7 +68,6 @@ export type ChannelMongoModel = {
   addTimestamps: () => boolean;
   getCollName: () => string;
   getDefaults: () => Channelata;
-  getMethods: (d: ChannelDoc) => ChannelMethods;
   getModel: (d: ChannelDoc) => ChannelModel;
   getValidator: () => BsonDoc;
 } & MongoModel;
@@ -112,7 +110,6 @@ export type UserMongoModel = {
   addTimestamps: () => boolean;
   getCollName: () => string;
   getDefaults: () => UserData;
-  getMethods: (d: UserDoc) => UserMethods;
   getModel: (d: UserDoc) => UserModel;
   getValidator: () => BsonDoc;
 } & MongoModel;

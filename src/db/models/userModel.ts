@@ -39,20 +39,18 @@ const model = (): UserMongoModel => ({
     };
   },
 
-  getMethods(d: UserDoc) {
+  getModel(d: UserDoc) {
     return {
-      getBirthdayDate(): DateTime | undefined {
-        return d.birthday ? dateTime.getDateTimeFromIso(crypto.decrypt(d.birthday)) : undefined;
-      },
+      ...d,
 
+      // Custom methods.
+      getBirthdayDate(): DateTime | undefined {
+        return this.birthday ? dateTime.getDateTimeFromIso(crypto.decrypt(this.birthday)) : undefined;
+      },
       getWorkAnniversaryDate(): DateTime | undefined {
-        return d.workAnniversary ? dateTime.getDateTimeFromIso(crypto.decrypt(d.workAnniversary)) : undefined;
+        return this.workAnniversary ? dateTime.getDateTimeFromIso(crypto.decrypt(this.workAnniversary)) : undefined;
       },
     };
-  },
-
-  getModel(d: UserDoc) {
-    return { ...d, ...this.getMethods(d) };
   },
 
   getValidator() {

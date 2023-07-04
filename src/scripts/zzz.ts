@@ -2,7 +2,7 @@
 // import { faker } from '@faker-js/faker';
 // import { UserModel } from '@db/models';
 import { dbJassbot } from '@db/sources';
-import { /* userService, */ jobService } from '@services';
+// import { userService, jobService } from '@services';
 import { /* crypto, dateTime, */ logger /* , mongodb */ } from '@utils';
 import scriptsHelper from './scriptsHelper';
 // import type { MongoError, MongoServerError } from 'mongodb';
@@ -99,7 +99,16 @@ import scriptsHelper from './scriptsHelper';
   //   const { userId } = foUser;
   //   const birthdayDate = foUser.getBirthdayDate();
   //   const workAnniversaryDate = foUser.getWorkAnniversaryDate();
-  //   logger.debug('scripts: zzz mongodb.findOne', { userId, foUser, birthdayDate, workAnniversaryDate });
+  //   logger.debug('scripts: zzz mongodb.findOne1', { userId, foUser, birthdayDate, workAnniversaryDate });
+  //
+  //   const newData = getUserData(key);
+  //   foUser.birthday = newData.birthday;
+  //   foUser.birthdayLookup = newData.birthdayLookup;
+  //   foUser.workAnniversary = newData.workAnniversary;
+  //   foUser.workAnniversaryLookup = newData.workAnniversaryLookup;
+  //   const birthdayDate2 = foUser.getBirthdayDate();
+  //   const workAnniversaryDate2 = foUser.getWorkAnniversaryDate();
+  //   logger.debug('scripts: zzz mongodb.findOne2', { userId, foUser, birthdayDate2, workAnniversaryDate2 });
   // } else if (foError) {
   //   logger.debug('scripts: zzz mongodb.findOne', { foError });
   // } else {
@@ -156,7 +165,7 @@ import scriptsHelper from './scriptsHelper';
   //   workAnniversaryDate,
   // });
 
-  await jobService.findTomorrowsBirthdays();
+  // await jobService.findTomorrowsBirthdays();
 
   await dbJassbot.close();
   logger.info('scripts: zzz completed');
