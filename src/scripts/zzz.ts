@@ -4,7 +4,7 @@
 import { dbJassbot } from '@db/sources';
 // import { userService, jobService } from '@services';
 import { /* crypto, dateTime, */ logger /* , mongodb */ } from '@utils';
-import scriptsHelper from './scriptsHelper';
+// import scriptsHelper from './scriptsHelper';
 // import type { MongoError, MongoServerError } from 'mongodb';
 // import type { UserModel as UserModelType } from '@types';
 
@@ -45,12 +45,12 @@ import scriptsHelper from './scriptsHelper';
 (async () => {
   logger.info('scripts: zzz called');
 
-  const { /* key, */ error: keyError } = scriptsHelper.getFakedataKey();
-  if (keyError) {
-    logger.info('scripts: zzz exiting', { error: keyError });
-
-    process.exit(1);
-  }
+  // const { key, error: keyError } = scriptsHelper.getFakedataKey();
+  // if (keyError) {
+  //   logger.info('scripts: zzz exiting', { error: keyError });
+  //
+  //   process.exit(1);
+  // }
 
   const { isConnected } = await dbJassbot.connect();
   if (!isConnected) {

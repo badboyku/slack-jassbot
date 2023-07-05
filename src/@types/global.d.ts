@@ -39,12 +39,21 @@ export type MemberLeftChannelArgs = SlackEventMiddlewareArgs<'member_left_channe
 
 /** Db Types */
 // Models
+export type MongoModelOptions = {
+  addTimestamps?: boolean;
+  collectionName: string;
+  defaults?: BsonDoc;
+  methods?: BsonDoc;
+  validateBeforeSave?: boolean;
+  validator?: BsonDoc;
+};
 export type MongoModel = {
+  options: MongoModelOptions;
   addTimestamps: () => boolean;
-  getCollName: () => string;
-  getDefaults: () => {};
-  getModel: (d: MongoDoc) => {};
-  getValidator: () => BsonDoc;
+  getCollectionName: () => string;
+  getDefaults: () => BsonDoc | undefined;
+  getModel: (d: MongoDoc) => MongoDoc;
+  getValidator: () => BsonDoc | undefined;
 };
 export type MongoId = { _id: BSON.ObjectId };
 export type MongoTimestamps = { createdAt: Date; updatedAt: Date; deletedAt?: Date | null };
@@ -65,11 +74,8 @@ export type ChannelDoc = MongoDoc<Channel>;
 export type ChannelMethods = {};
 export type ChannelModel = Channel & ChannelMethods;
 export type ChannelMongoModel = {
-  addTimestamps: () => boolean;
-  getCollName: () => string;
-  getDefaults: () => Channelata;
+  getDefaults: () => ChannelData;
   getModel: (d: ChannelDoc) => ChannelModel;
-  getValidator: () => BsonDoc;
 } & MongoModel;
 
 // User
@@ -107,11 +113,8 @@ export type UserMethods = {
 };
 export type UserModel = User & UserMethods;
 export type UserMongoModel = {
-  addTimestamps: () => boolean;
-  getCollName: () => string;
   getDefaults: () => UserData;
   getModel: (d: UserDoc) => UserModel;
-  getValidator: () => BsonDoc;
 } & MongoModel;
 
 // sources

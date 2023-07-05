@@ -8,8 +8,12 @@ import type { ChannelDoc, DbCloseResult, DbConnectResult, UserDoc } from '@types
 
 const dbName = 'jassbot';
 
-const syncValidation = (db: Db, collMod: string, validator: Document): Promise<boolean> => {
+const syncValidation = (db: Db, collMod: string, validator?: Document): Promise<boolean> | boolean => {
   logger.debug(`db: ${dbName} syncValidation called`, { collMod, validator });
+
+  if (!validator) {
+    return true;
+  }
 
   return db
     .command({ collMod, validator })
@@ -57,16 +61,17 @@ export const db = (client: MongoClient) => ({
   },
 
   getChannelCollection(): Collection<ChannelDoc> {
-    return client.db(dbName).collection<ChannelDoc>(ChannelModel.getCollName());
+    return client.db(dbName).collection<ChannelDoc>(ChannelModel.getCollectionName());
   },
 
   getUserCollection(): Collection<UserDoc> {
-    return client.db(dbName).collection<UserDoc>(UserModel.getCollName());
+    return client.db(dbName).collection<UserDoc>(UserModel.getCollectionName());
   },
 
   async syncValidations(): Promise<void> {
-    await syncValidation(client.db(dbName), ChannelModel.getCollName(), ChannelModel.getValidator());
-    await syncValidation(client.db(dbName), UserModel.getCollName(), UserModel.getValidator());
+    for await (const model of [ChannelModel, UserModel]) {
+      await syncValidation(client.db(dbName), model.getCollectionName(), model.getValidator());
+    }
   },
 });
 

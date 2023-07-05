@@ -51,7 +51,7 @@
     "collectCoverageFrom": [
       "src/**/*.{js,ts}",
       "!src/**/*.d.ts",
-      "!src/db/models/*.ts",
+      "!src/db/models/*Model.ts",
       "!src/jobs/*.ts",
       "!src/scripts/*.ts"
     ],

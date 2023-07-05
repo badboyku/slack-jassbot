@@ -15,6 +15,7 @@ describe('db source jassbot', () => {
   const collection = {};
   const collName = 'collName';
   const error = 'error';
+  const validator = {};
 
   describe('calling function close', () => {
     let result: DbCloseResult;
@@ -112,7 +113,7 @@ describe('db source jassbot', () => {
     describe('successfully', () => {
       beforeEach(async () => {
         client.db.mockReturnValueOnce(db);
-        jest.spyOn(ChannelModel, 'getCollName').mockReturnValueOnce(collName);
+        jest.spyOn(ChannelModel, 'getCollectionName').mockReturnValueOnce(collName);
         db.collection.mockReturnValueOnce(collection);
 
         result = await dbJassbot(client as never).getChannelCollection();
@@ -126,8 +127,8 @@ describe('db source jassbot', () => {
         expect(client.db).toHaveBeenCalledWith('jassbot');
       });
 
-      it('calls ChannelModel.getCollName', () => {
-        expect(ChannelModel.getCollName).toHaveBeenCalled();
+      it('calls ChannelModel.getCollectionName', () => {
+        expect(ChannelModel.getCollectionName).toHaveBeenCalled();
       });
 
       it('calls db.collection', () => {
@@ -146,7 +147,7 @@ describe('db source jassbot', () => {
     describe('successfully', () => {
       beforeEach(async () => {
         client.db.mockReturnValueOnce(db);
-        jest.spyOn(UserModel, 'getCollName').mockReturnValueOnce(collName);
+        jest.spyOn(UserModel, 'getCollectionName').mockReturnValueOnce(collName);
         db.collection.mockReturnValueOnce(collection);
 
         result = await dbJassbot(client as never).getUserCollection();
@@ -160,8 +161,8 @@ describe('db source jassbot', () => {
         expect(client.db).toHaveBeenCalledWith('jassbot');
       });
 
-      it('calls UserModel.getCollName', () => {
-        expect(UserModel.getCollName).toHaveBeenCalled();
+      it('calls UserModel.getCollectionName', () => {
+        expect(UserModel.getCollectionName).toHaveBeenCalled();
       });
 
       it('calls db.collection', () => {
@@ -175,7 +176,44 @@ describe('db source jassbot', () => {
   });
 
   describe('calling function syncValidations', () => {
-    describe('successfully', () => {
+    const testCases = [
+      { modelName: 'ChannelModel', model: ChannelModel },
+      { modelName: 'UserModel', model: UserModel },
+    ];
+    testCases.forEach(({ modelName, model }) => {
+      describe(`successfully for ${modelName}`, () => {
+        beforeEach(async () => {
+          client.db.mockReturnValue(db);
+          jest.spyOn(model, 'getCollectionName').mockReturnValue(collName);
+          jest.spyOn(model, 'getValidator').mockReturnValue(validator);
+          db.command.mockResolvedValue({});
+
+          await dbJassbot(client as never).syncValidations();
+        });
+
+        afterEach(() => {
+          jest.restoreAllMocks();
+        });
+
+        it('calls client.db', () => {
+          expect(client.db).toHaveBeenCalledWith('jassbot');
+        });
+
+        it(`calls ${modelName}.getCollectionName`, () => {
+          expect(model.getCollectionName).toHaveBeenCalled();
+        });
+
+        it(`calls ${modelName}.getValidator`, () => {
+          expect(model.getValidator).toHaveBeenCalled();
+        });
+
+        it('calls db.command', () => {
+          expect(db.command).toHaveBeenCalledWith({ collMod: collName, validator });
+        });
+      });
+    });
+
+    describe('with model validator undefined', () => {
       beforeEach(async () => {
         client.db.mockReturnValue(db);
         db.command.mockResolvedValue({});
@@ -187,18 +225,18 @@ describe('db source jassbot', () => {
         jest.restoreAllMocks();
       });
 
-      it('calls client.db', () => {
-        expect(client.db).toHaveBeenCalledWith('jassbot');
-      });
-
-      it('calls db.command', () => {
-        expect(db.command).toHaveBeenCalledWith({ collMod: undefined, validator: undefined });
+      it('does not call db.command', () => {
+        expect(db.command).not.toHaveBeenCalled();
       });
     });
 
     describe('with error', () => {
       beforeEach(async () => {
         client.db.mockReturnValue(db);
+        jest.spyOn(ChannelModel, 'getCollectionName').mockReturnValue(collName);
+        jest.spyOn(ChannelModel, 'getValidator').mockReturnValue(validator);
+        jest.spyOn(UserModel, 'getCollectionName').mockReturnValue(collName);
+        jest.spyOn(UserModel, 'getValidator').mockReturnValue(validator);
         db.command.mockRejectedValue(error);
         jest.spyOn(logger, 'warn');
 
@@ -210,36 +248,7 @@ describe('db source jassbot', () => {
       });
 
       it('calls logger.warn', () => {
-        expect(logger.warn).toHaveBeenCalledWith('db: jassbot syncValidation failed', { collMod: undefined, error });
-      });
-    });
-
-    const testCases = [
-      { modelName: 'ChannelModel', model: ChannelModel },
-      { modelName: 'UserModel', model: UserModel },
-    ];
-    testCases.forEach(({ modelName, model }) => {
-      describe(`for ${modelName}`, () => {
-        beforeEach(async () => {
-          client.db.mockReturnValue(db);
-          jest.spyOn(model, 'getCollName');
-          jest.spyOn(model, 'getValidator');
-          db.command.mockResolvedValue({});
-
-          await dbJassbot(client as never).syncValidations();
-        });
-
-        afterEach(() => {
-          jest.restoreAllMocks();
-        });
-
-        it(`calls ${modelName}.getCollName`, () => {
-          expect(model.getCollName).toHaveBeenCalled();
-        });
-
-        it(`calls ${modelName}.getValidator`, () => {
-          expect(model.getValidator).toHaveBeenCalled();
-        });
+        expect(logger.warn).toHaveBeenCalledWith('db: jassbot syncValidation failed', { collMod: collName, error });
       });
     });
   });
