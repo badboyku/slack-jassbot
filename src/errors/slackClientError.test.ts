@@ -1,6 +1,6 @@
 import { SlackClientError } from '@errors';
 
-describe('errors SlackClientError', () => {
+describe('SlackClientError Error', () => {
   const message = 'message';
   const response = { ok: true };
   let error: SlackClientError;

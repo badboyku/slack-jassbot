@@ -60,7 +60,7 @@ const UserModel = model({
         channelIds: { bsonType: 'array' },
         createdAt: { bsonType: 'date' },
         updatedAt: { bsonType: 'date' },
-        deletedAt: { bsonType: ['null', 'date'] },
+        deletedAt: { bsonType: ['date', 'null'] },
       },
       required: ['userId'],
     },

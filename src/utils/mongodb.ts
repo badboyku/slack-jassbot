@@ -81,7 +81,7 @@ const bulkWrite = (
   options?: BulkWriteOptions,
 ): Promise<BulkWrite> | BulkWrite => {
   logger.debug('mongodb: bulkWrite called', {
-    collName: collection.collectionName,
+    collectionName: collection.collectionName,
     numOps: operations.length,
     options,
   });
@@ -109,7 +109,7 @@ const deleteMany = (
   filter?: Filter<Document>,
   options?: DeleteOptions,
 ): Promise<DeleteMany> => {
-  logger.debug('mongodb: deleteMany called', { collName: collection.collectionName, filter, options });
+  logger.debug('mongodb: deleteMany called', { collectionName: collection.collectionName, filter, options });
 
   return collection
     .deleteMany(filter, options)
@@ -129,7 +129,7 @@ const find = async (
   Model?: MongoModel,
 ): Promise<Find> => {
   logger.debug('mongodb: find called', {
-    collName: collection.collectionName,
+    collectionName: collection.collectionName,
     filter,
     options,
     params,
@@ -162,7 +162,12 @@ const findOne = (
   options?: FindOptions,
   Model?: MongoModel,
 ): Promise<FindOne> => {
-  logger.debug('mongodb: findOne called', { collName: collection.collectionName, filter, options, withModel: !!Model });
+  logger.debug('mongodb: findOne called', {
+    collectionName: collection.collectionName,
+    filter,
+    options,
+    withModel: !!Model,
+  });
 
   return collection
     .findOne(filter, options)
@@ -182,7 +187,7 @@ const findOneAndUpdate = (
   Model?: MongoModel,
 ): Promise<FindOneAndUpdate> => {
   logger.debug('mongodb: findOneAndUpdate called', {
-    collName: collection.collectionName,
+    collectionName: collection.collectionName,
     filter,
     update,
     options,
@@ -214,10 +219,14 @@ const insertOne = (
   options?: InsertOneOptions,
   Model?: MongoModel,
 ): Promise<InsertOne> => {
-  logger.debug('mongodb: insertOne called', { collName: collection.collectionName, doc, options, withModel: !!Model });
+  logger.debug('mongodb: insertOne called', {
+    collectionName: collection.collectionName,
+    doc,
+    options,
+    withModel: !!Model,
+  });
 
   const newDoc = Model?.addTimestamps() ? getDocWithTimestamps(doc) : doc;
-  logger.debug('newDoc', { newDoc });
 
   return collection
     .insertOne(newDoc, options)
