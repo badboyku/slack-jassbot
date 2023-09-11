@@ -36,11 +36,12 @@ const findOneAndUpdateByChannelId = (
 ): Promise<Channel | undefined> => {
   logger.debug('channelService: findOneAndUpdateByChannelId called', { channelId, data, options });
 
+  const collection = dbJassbot.getChannelCollection();
   const filter = { channelId };
   const update = { $set: data };
 
   return mongodb
-    .findOneAndUpdate(dbJassbot.getChannelCollection(), filter, update, options, ChannelModel)
+    .findOneAndUpdate(collection, filter, update, options, ChannelModel)
     .then(({ doc, error }) => (!error && doc ? doc : undefined));
 };
 

@@ -36,11 +36,12 @@ const findOneAndUpdateByUserId = (
 ): Promise<User | undefined> => {
   logger.debug('userService: findOneAndUpdateByUserId called', { userId, data, options });
 
+  const collection = dbJassbot.getUserCollection();
   const filter = { userId };
   const update = { $set: data };
 
   return mongodb
-    .findOneAndUpdate(dbJassbot.getUserCollection(), filter, update, options, UserModel)
+    .findOneAndUpdate(collection, filter, update, options, UserModel)
     .then(({ doc, error }) => (!error && doc ? doc : undefined));
 };
 
