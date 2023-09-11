@@ -1,8 +1,8 @@
 import { dbJassbot } from '@db/sources';
 import { channelService, slackService, userService } from '@services';
 import { crypto, dateTime, logger, mongodb } from '@utils';
-import type { AnyBulkWriteOperation } from 'mongodb';
-import type { UpdateChannelsResult, UpdateUsersResult, UserModel } from '@types';
+import type { AnyBulkWriteOperation, Collection } from 'mongodb';
+import type { UpdateChannelsResult, UpdateUsersResult, User } from '@types';
 
 /* istanbul ignore next TODO: add unit tests */
 const findTomorrowsBirthdays = async () => {
@@ -10,7 +10,7 @@ const findTomorrowsBirthdays = async () => {
   const users = await userService.findAll({ birthdayLookup: crypto.createHmac(tomorrowsBirthday), isDeleted: false });
 
   const bdayUserIds: string[] = [];
-  const userLookup: { [userId: string]: UserModel } = {};
+  const userLookup: { [userId: string]: User } = {};
   users.forEach((user) => {
     const { userId } = user;
     bdayUserIds.push(userId);
@@ -19,11 +19,11 @@ const findTomorrowsBirthdays = async () => {
 
   const channels = await channelService.findAll({ isArchived: false, isMember: true, memberIds: { $in: bdayUserIds } });
 
-  const bdayChannels: { [channelId: string]: UserModel[] } = {};
+  const bdayChannels: { [channelId: string]: User[] } = {};
   channels.forEach((channel) => {
     const { channelId, memberIds = [] } = channel;
 
-    const bdayUsers: UserModel[] = [];
+    const bdayUsers: User[] = [];
     memberIds.forEach((memberId) => {
       if (bdayUserIds.includes(memberId)) {
         bdayUsers.push(userLookup[memberId]);
@@ -98,8 +98,9 @@ const updateChannels = async (): Promise<UpdateChannelsResult> => {
     }
   });
 
+  const collection = dbJassbot.getChannelCollection() as unknown as Collection;
   const options = { ordered: false };
-  const results = await mongodb.bulkWrite(dbJassbot.getChannelCollection(), operations, options);
+  const results = await mongodb.bulkWrite(collection, operations, options);
 
   return { results };
 };
@@ -188,8 +189,9 @@ const updateUsers = async (): Promise<UpdateUsersResult> => {
     }
   });
 
+  const collection = dbJassbot.getUserCollection() as unknown as Collection;
   const options = { ordered: false };
-  const results = await mongodb.bulkWrite(dbJassbot.getUserCollection(), operations, options);
+  const results = await mongodb.bulkWrite(collection, operations, options);
 
   return { results };
 };

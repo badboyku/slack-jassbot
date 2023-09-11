@@ -2,7 +2,7 @@ import { ChannelModel } from '@db/models';
 import { dbJassbot } from '@db/sources';
 import { channelService } from '@services';
 import { mongodb } from '@utils';
-import type { ChannelModel as ChannelModelType } from '@types';
+import type { Channel } from '@types';
 
 jest.mock('@db/models/channelModel');
 jest.mock('@db/sources/jassbotSource');
@@ -18,12 +18,12 @@ describe('services channel', () => {
 
   describe('calling function findAll', () => {
     const filter = {};
-    let result: ChannelModelType[];
+    let result: Channel[];
 
     describe('successfully', () => {
       beforeEach(async () => {
         jest.spyOn(dbJassbot, 'getChannelCollection').mockReturnValueOnce(collection as never);
-        jest.spyOn(mongodb, 'find').mockResolvedValueOnce({ result: [channel1] });
+        jest.spyOn(mongodb, 'find').mockResolvedValueOnce({ result: [channel1], totalCount: 1 });
 
         result = await channelService.findAll(filter);
       });
@@ -50,8 +50,12 @@ describe('services channel', () => {
         jest.spyOn(dbJassbot, 'getChannelCollection').mockReturnValueOnce(collection as never);
         jest
           .spyOn(mongodb, 'find')
-          .mockResolvedValueOnce({ result: [channel1], pageInfo: { endCursor: channel1._id, hasNextPage: true } })
-          .mockResolvedValueOnce({ result: [channel2] });
+          .mockResolvedValueOnce({
+            result: [channel1],
+            totalCount: 1,
+            pageInfo: { endCursor: channel1._id, hasNextPage: true },
+          })
+          .mockResolvedValueOnce({ result: [channel2], totalCount: 1 });
 
         result = await channelService.findAll(filter);
       });
@@ -78,7 +82,7 @@ describe('services channel', () => {
 
   describe('calling function findOneAndUpdateByChannelId', () => {
     const data = {};
-    let result: ChannelModelType | undefined;
+    let result: Channel | undefined;
 
     describe('successfully', () => {
       beforeEach(async () => {

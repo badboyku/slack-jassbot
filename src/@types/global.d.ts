@@ -1,10 +1,8 @@
-import type { Document as BsonDoc } from 'bson';
-import type { DateTime } from 'luxon';
 import type {
   BSON,
   BulkWriteResult,
   DeleteResult,
-  Document as MongoDoc,
+  Document,
   InsertOneResult,
   ModifyResult,
   MongoBulkWriteError,
@@ -39,21 +37,21 @@ export type MemberLeftChannelArgs = SlackEventMiddlewareArgs<'member_left_channe
 
 /** Db Types */
 // Models
-export type MongoModelOptions = {
+export type MongoModelOptions<T extends Document> = {
   addTimestamps?: boolean;
   collectionName: string;
-  defaults?: BsonDoc;
-  methods?: BsonDoc;
+  defaults?: Partial<T>;
+  methods?: Document;
   validateBeforeSave?: boolean;
-  validator?: BsonDoc;
+  validator?: Document;
 };
-export type MongoModel = {
-  options: MongoModelOptions;
+export type MongoModel<T extends Document> = {
   addTimestamps: () => boolean;
   getCollectionName: () => string;
-  getDefaults: () => BsonDoc | undefined;
-  getModel: (d: MongoDoc) => MongoDoc;
-  getValidator: () => BsonDoc | undefined;
+  getDefaults: () => Partial<T> | undefined;
+  getModel: (d: Partial<T>) => T & MongoModelOptions<T>['methods'];
+  getValidator: () => Document | undefined;
+  options: MongoModelOptions<T>;
 };
 export type MongoId = { _id: BSON.ObjectId };
 export type MongoTimestamps = { createdAt: Date; updatedAt: Date; deletedAt?: Date | null };
@@ -69,14 +67,14 @@ export type Channel = {
   memberIds?: string[];
 } & MongoId &
   MongoTimestamps;
-export type ChannelData = Partial<Channel>;
-export type ChannelDoc = MongoDoc<Channel>;
-export type ChannelMethods = {};
-export type ChannelModel = Channel & ChannelMethods;
-export type ChannelMongoModel = {
-  getDefaults: () => ChannelData;
-  getModel: (d: ChannelDoc) => ChannelModel;
-} & MongoModel;
+// export type ChannelData = Partial<Channel>;
+// export type ChannelDoc = Document<Channel>;
+// export type ChannelMethods = {};
+// export type ChannelModel = Channel & ChannelMethods;
+// export type ChannelMongoModel = {
+//   getDefaults: () => ChannelData;
+//   getModel: (d: ChannelDoc) => ChannelModel;
+// } & MongoModel;
 
 // User
 export type User = {
@@ -105,17 +103,17 @@ export type User = {
   channelIds?: string[];
 } & MongoId &
   MongoTimestamps;
-export type UserData = Partial<User>;
-export type UserDoc = MongoDoc<User>;
-export type UserMethods = {
-  getBirthdayDate: () => DateTime | undefined;
-  getWorkAnniversaryDate: () => DateTime | undefined;
-};
-export type UserModel = User & UserMethods;
-export type UserMongoModel = {
-  getDefaults: () => UserData;
-  getModel: (d: UserDoc) => UserModel;
-} & MongoModel;
+// export type UserData = Partial<User>;
+// export type UserDoc = Document<User>;
+// export type UserMethods = {
+//   getBirthdayDate: () => DateTime | undefined;
+//   getWorkAnniversaryDate: () => DateTime | undefined;
+// };
+// export type UserModel = User & UserMethods;
+// export type UserMongoModel = {
+//   getDefaults: () => UserData;
+//   getModel: (d: UserDoc) => UserModel;
+// } & MongoModel;
 
 // sources
 export type DbConnectResult = { isConnected: boolean };
@@ -123,10 +121,10 @@ export type DbCloseResult = { isClosed: boolean };
 
 /** Services Types */
 // action
-export type ManageUserDatesResult = { user?: UserModel };
+export type ManageUserDatesResult = { user?: User };
 
 // event
-export type AppHomeOpenedResult = { user?: UserModel };
+export type AppHomeOpenedResult = { user?: User };
 export type MemberJoinedChannelResult = { channel: ChannelModel | undefined };
 
 // job
@@ -140,7 +138,7 @@ export type GetUsersResult = { users: SlackMember[] } & SlackError;
 export type GetUsersConversationsResult = { userId: string; channels: SlackChannel[] } & SlackError;
 
 // view
-export type SaveUserDatesResult = { user?: UserModel; hasSaveError: boolean };
+export type SaveUserDatesResult = { user?: User; hasSaveError: boolean };
 export type ViewStateValues = { [blockId: string]: { [actionId: string]: ViewStateValue } };
 
 /** Utils Types */
@@ -160,7 +158,7 @@ export type Config = {
   };
   bree: { isDisabled: boolean; jobs: { updateChannelsCron: string; updateUsersCron: string } };
   crypto: { key: string };
-  db: { jassbot: { uri: string } };
+  db: { mongo: { countDocsLimit: number }; jassbot: { uri: string } };
   slack: { apiHost: string; appToken: string; botToken: string; botUserId: string; logLevel: string };
 };
 
@@ -176,11 +174,15 @@ export type Logger = {
 // mongodb
 export type BulkWrite = { result?: BulkWriteResult; error?: MongoBulkWriteError };
 export type DeleteMany = { result?: DeleteResult; error?: MongoError };
-export type PageInfo = { startCursor?: string; hasPreviousPage?: boolean; endCursor?: string; hasNextPage?: boolean };
-export type Find = { result: MongoDoc[]; pageInfo?: PageInfo };
-export type FindOne = { result?: MongoDoc | null; error?: MongoError };
-export type FindOneAndUpdate = { doc?: MongoDoc<DocId>; result?: ModifyResult<MongoDoc>; error?: MongoServerError };
-export type FindParams = { after?: string; before?: string; limit?: number; sort?: string };
-export type InsertOne = { doc?: MongoDoc<DocId>; result?: InsertOneResult<MongoDoc>; error?: MongoServerError };
+export type PageInfo = { endCursor?: string; hasNextPage?: boolean };
+export type Find<T extends Document> = { result: T[]; totalCount: number; pageInfo?: PageInfo };
+export type FindOne<T extends Document> = { result?: T | null; error?: MongoError };
+export type FindOneAndUpdate<T extends Document> = {
+  doc?: T;
+  result?: ModifyResult<T>;
+  error?: MongoServerError;
+};
+export type FindParams = { after?: string; limit?: number; sortDirection?: string; skip?: number };
+export type InsertOne<T extends Document> = { doc?: T; result?: InsertOneResult<T>; error?: MongoServerError };
 
 declare global {}

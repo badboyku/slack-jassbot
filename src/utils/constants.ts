@@ -2,7 +2,11 @@
 // Database
 export const DB_LIMIT_DEFAULT = 300;
 export const DB_LIMIT_MAX = 1000;
-export const DB_SORT_DEFAULT = '_id';
+export const DB_SKIP_DEFAULT = 0;
+export const DB_SKIP_MAX = 1000;
+export const DB_SORT_BY_DEFAULT = '_id';
+export const DB_SORT_DIRECTIONS = { ASC: 'asc', DESC: 'desc' };
+export const DB_SORT_DIRECTION_DEFAULT = DB_SORT_DIRECTIONS.ASC;
 
 // Logger
 export const LOG_FORMATS = { DEV: 'DEV', ELK: 'ELK' };

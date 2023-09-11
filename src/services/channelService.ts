@@ -2,14 +2,14 @@ import { ChannelModel } from '@db/models';
 import { dbJassbot } from '@db/sources';
 import { logger, mongodb } from '@utils';
 import type { Filter, FindOneAndUpdateOptions } from 'mongodb';
-import type { ChannelData, ChannelModel as ChannelModelType } from '@types';
+import type { Channel } from '@types';
 
-const findAll = async (filter: Filter<ChannelData>): Promise<ChannelModelType[]> => {
+const findAll = async (filter: Filter<Channel>): Promise<Channel[]> => {
   logger.debug('channelService: findAll called', { filter });
 
   const collection = dbJassbot.getChannelCollection();
   const options = { limit: 1000 };
-  let all: ChannelModelType[] = [];
+  let all: Channel[] = [];
   let after: string | undefined;
   let hasMore = false;
 
@@ -19,7 +19,7 @@ const findAll = async (filter: Filter<ChannelData>): Promise<ChannelModelType[]>
     const { result, pageInfo } = await mongodb.find(collection, filter, options, findParams, ChannelModel);
 
     if (result.length > 0) {
-      all = [...all, ...(result as ChannelModelType[])];
+      all = [...all, ...result];
     }
 
     after = pageInfo?.endCursor;
@@ -31,9 +31,9 @@ const findAll = async (filter: Filter<ChannelData>): Promise<ChannelModelType[]>
 
 const findOneAndUpdateByChannelId = (
   channelId: string,
-  data?: ChannelData,
+  data?: Partial<Channel>,
   options?: FindOneAndUpdateOptions,
-): Promise<ChannelModelType | undefined> => {
+): Promise<Channel | undefined> => {
   logger.debug('channelService: findOneAndUpdateByChannelId called', { channelId, data, options });
 
   const filter = { channelId };

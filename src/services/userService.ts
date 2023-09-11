@@ -2,14 +2,14 @@ import { UserModel } from '@db/models';
 import { dbJassbot } from '@db/sources';
 import { logger, mongodb } from '@utils';
 import type { Filter, FindOneAndUpdateOptions } from 'mongodb';
-import type { UserData, UserModel as UserModelType } from '@types';
+import type { User } from '@types';
 
-const findAll = async (filter: Filter<UserData>): Promise<UserModelType[]> => {
+const findAll = async (filter: Filter<User>): Promise<User[]> => {
   logger.debug('userService: findAll called', { filter });
 
   const collection = dbJassbot.getUserCollection();
   const options = { limit: 1000 };
-  let all: UserModelType[] = [];
+  let all: User[] = [];
   let after: string | undefined;
   let hasMore = false;
 
@@ -19,7 +19,7 @@ const findAll = async (filter: Filter<UserData>): Promise<UserModelType[]> => {
     const { result, pageInfo } = await mongodb.find(collection, filter, options, findParams, UserModel);
 
     if (result.length > 0) {
-      all = [...all, ...(result as UserModelType[])];
+      all = [...all, ...result];
     }
 
     after = pageInfo?.endCursor;
@@ -31,9 +31,9 @@ const findAll = async (filter: Filter<UserData>): Promise<UserModelType[]> => {
 
 const findOneAndUpdateByUserId = (
   userId: string,
-  data?: UserData,
+  data?: Partial<User>,
   options?: FindOneAndUpdateOptions,
-): Promise<UserModelType | undefined> => {
+): Promise<User | undefined> => {
   logger.debug('userService: findOneAndUpdateByUserId called', { userId, data, options });
 
   const filter = { userId };

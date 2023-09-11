@@ -23,6 +23,7 @@ const config: Config = {
     key: process.env.CRYPTO_KEY || '',
   },
   db: {
+    mongo: { countDocsLimit: Number(process.env.DB_MONGO_COUNT_DOCS_LIMIT) || 10000 },
     jassbot: { uri: process.env.DB_JASSBOT_URI || '' },
   },
   slack: {

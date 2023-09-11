@@ -1,10 +1,9 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import { ChannelModel, UserModel } from '@db/models';
-import { logger } from '@utils';
-import config from '@utils/config';
+import { config, logger } from '@utils';
 import type { Document } from 'bson';
 import type { Collection, Db } from 'mongodb';
-import type { ChannelDoc, DbCloseResult, DbConnectResult, UserDoc } from '@types';
+import type { Channel, DbCloseResult, DbConnectResult, User } from '@types';
 
 const dbName = 'jassbot';
 
@@ -60,12 +59,16 @@ export const db = (client: MongoClient) => ({
       });
   },
 
-  getChannelCollection(): Collection<ChannelDoc> {
-    return client.db(dbName).collection<ChannelDoc>(ChannelModel.getCollectionName());
+  getCollection<T extends Document>(name: string): Collection<T> {
+    return client.db(dbName).collection<T>(name);
   },
 
-  getUserCollection(): Collection<UserDoc> {
-    return client.db(dbName).collection<UserDoc>(UserModel.getCollectionName());
+  getChannelCollection() {
+    return this.getCollection<Channel>(ChannelModel.getCollectionName());
+  },
+
+  getUserCollection() {
+    return this.getCollection<User>(UserModel.getCollectionName());
   },
 
   async syncValidations(): Promise<void> {

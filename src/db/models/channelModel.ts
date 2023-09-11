@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 import { model } from '@db/models/modelHelper';
-import type { ChannelMongoModel } from '@types';
+import type { Channel } from '@types';
 
-const ChannelModel = model({
+const ChannelModel = model<Channel>({
   addTimestamps: true,
   collectionName: 'channel',
   defaults: {
@@ -31,6 +31,9 @@ const ChannelModel = model({
       required: ['channelId'],
     },
   },
-}) as ChannelMongoModel;
+});
+
+// Add custom methods.
+ChannelModel.options.methods = {};
 
 export default ChannelModel;

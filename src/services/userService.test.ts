@@ -2,7 +2,7 @@ import { UserModel } from '@db/models';
 import { dbJassbot } from '@db/sources';
 import { userService } from '@services';
 import { mongodb } from '@utils';
-import type { UserModel as UserModelType } from '@types';
+import type { User } from '@types';
 
 jest.mock('@db/models/userModel');
 jest.mock('@db/sources/jassbotSource');
@@ -18,12 +18,12 @@ describe('services user', () => {
 
   describe('calling function findAll', () => {
     const filter = {};
-    let result: UserModelType[];
+    let result: User[];
 
     describe('successfully', () => {
       beforeEach(async () => {
         jest.spyOn(dbJassbot, 'getUserCollection').mockReturnValueOnce(collection as never);
-        jest.spyOn(mongodb, 'find').mockResolvedValueOnce({ result: [user1] });
+        jest.spyOn(mongodb, 'find').mockResolvedValueOnce({ result: [user1], totalCount: 1 });
 
         result = await userService.findAll(filter);
       });
@@ -50,8 +50,12 @@ describe('services user', () => {
         jest.spyOn(dbJassbot, 'getUserCollection').mockReturnValueOnce(collection as never);
         jest
           .spyOn(mongodb, 'find')
-          .mockResolvedValueOnce({ result: [user1], pageInfo: { endCursor: user1._id, hasNextPage: true } })
-          .mockResolvedValueOnce({ result: [user2] });
+          .mockResolvedValueOnce({
+            result: [user1],
+            totalCount: 1,
+            pageInfo: { endCursor: user1._id, hasNextPage: true },
+          })
+          .mockResolvedValueOnce({ result: [user2], totalCount: 1 });
 
         result = await userService.findAll(filter);
       });
@@ -72,7 +76,7 @@ describe('services user', () => {
 
   describe('calling function findOneAndUpdateByUserId', () => {
     const data = {};
-    let result: UserModelType | undefined;
+    let result: User | undefined;
 
     describe('successfully', () => {
       beforeEach(async () => {

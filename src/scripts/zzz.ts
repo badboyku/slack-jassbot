@@ -6,7 +6,7 @@ import { dbJassbot } from '@db/sources';
 import { /* crypto, dateTime, */ logger /* , mongodb */ } from '@utils';
 // import scriptsHelper from './scriptsHelper';
 // import type { MongoError, MongoServerError } from 'mongodb';
-// import type { UserModel as UserModelType } from '@types';
+// import type { User } from '@types';
 
 // const getUserData = (key: string) => {
 //   const firstName = faker.person.firstName();
@@ -79,7 +79,7 @@ import { /* crypto, dateTime, */ logger /* , mongodb */ } from '@utils';
   // const tomorrowsBirthday = dateTime.getDateTime().plus({ days: 1 }).toFormat('LL-dd');
   // const faFilter = { birthdayLookup: crypto.createHmac(tomorrowsBirthday), isDeleted: false };
   // const faUsers = await userService.findAll(faFilter);
-  // const firstUser = faUsers.length ? (faUsers[0] as UserModelType) : undefined;
+  // const firstUser = faUsers.length ? (faUsers[0] as User) : undefined;
   // const birthdayDate = firstUser?.getBirthdayDate();
   // const workAnniversaryDate = firstUser?.getWorkAnniversaryDate();
   // logger.debug('scripts: zzz userService.findAll', {
@@ -94,7 +94,7 @@ import { /* crypto, dateTime, */ logger /* , mongodb */ } from '@utils';
   // mongodb.findOne example
   // const foFilter = { userId: 'JOEYTEST7YTBZP1' };
   // const fo = await mongodb.findOne(userColl, foFilter, {}, UserModel);
-  // const { result: foUser, error: foError } = fo as { result?: UserModelType; error?: MongoError };
+  // const { result: foUser, error: foError } = fo as { result?: User; error?: MongoError };
   // if (foUser) {
   //   const { userId } = foUser;
   //   const birthdayDate = foUser.getBirthdayDate();
@@ -119,7 +119,7 @@ import { /* crypto, dateTime, */ logger /* , mongodb */ } from '@utils';
   // const foauFilter = { userId: 'JOEYTEST7YTBZP1' };
   // const foauUpdate = { $set: { realName: 'fff', displayName: 'aaaa' } };
   // const foau = await mongodb.findOneAndUpdate(userColl, foauFilter, foauUpdate, {}, UserModel);
-  // const { doc: foauUser, error: foauError } = foau as { doc: UserModelType; error: MongoServerError };
+  // const { doc: foauUser, error: foauError } = foau as { doc: User; error: MongoServerError };
   // if (foauUser) {
   //   const { userId } = foauUser;
   //   const birthdayDate = foauUser.getBirthdayDate();
@@ -138,7 +138,7 @@ import { /* crypto, dateTime, */ logger /* , mongodb */ } from '@utils';
   //   realName: 'ooo',
   // };
   // const ioResult = await mongodb.insertOne(userColl, ioDoc, {}, UserModel);
-  // const { doc: ioUser, error: ioError } = ioResult as { doc?: UserModelType; error?: MongoServerError };
+  // const { doc: ioUser, error: ioError } = ioResult as { doc?: User; error?: MongoServerError };
   // if (ioUser) {
   //   const { userId } = ioUser;
   //   const birthdayDate = ioUser.getBirthdayDate();
@@ -154,7 +154,7 @@ import { /* crypto, dateTime, */ logger /* , mongodb */ } from '@utils';
   // const findFilter = { isAdmin: true };
   // const fResult = await mongodb.find(userColl, findFilter, {}, {}, UserModel);
   // const { result, pageInfo } = fResult;
-  // const firstUser = result.length ? (result[100] as UserModelType) : undefined;
+  // const firstUser = result.length ? (result[100] as User) : undefined;
   // const birthdayDate = firstUser?.getBirthdayDate();
   // const workAnniversaryDate = firstUser?.getWorkAnniversaryDate();
   // logger.debug('scripts: zzz mongodb.find', {

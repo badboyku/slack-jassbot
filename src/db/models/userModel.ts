@@ -2,9 +2,9 @@
 import { model } from '@db/models/modelHelper';
 import { crypto, dateTime } from '@utils';
 import { USER_TZ_DEFAULT } from '@utils/constants';
-import type { UserMongoModel } from '@types';
+import type { User } from '@types';
 
-const UserModel = model({
+const UserModel = model<User>({
   addTimestamps: true,
   collectionName: 'user',
   defaults: {
@@ -65,7 +65,7 @@ const UserModel = model({
       required: ['userId'],
     },
   },
-}) as UserMongoModel;
+});
 
 // Add custom methods.
 UserModel.options.methods = {

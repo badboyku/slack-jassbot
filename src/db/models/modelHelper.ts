@@ -1,12 +1,12 @@
 import type { Document as MongoDoc } from 'mongodb';
 import type { MongoModel, MongoModelOptions } from '@types';
 
-export const model = (options: MongoModelOptions): MongoModel => {
+export const model = <T extends MongoDoc>(options: MongoModelOptions<T>): MongoModel<T> => {
   return {
     options,
 
     addTimestamps() {
-      return this.options?.addTimestamps || false;
+      return this.options?.addTimestamps ?? false;
     },
 
     getCollectionName() {
@@ -14,15 +14,15 @@ export const model = (options: MongoModelOptions): MongoModel => {
     },
 
     getDefaults() {
-      return this.options?.defaults || undefined;
+      return this.options?.defaults;
     },
 
-    getModel(doc: MongoDoc) {
-      return { ...doc, ...this.options?.methods };
+    getModel(doc) {
+      return { ...doc, ...this.options?.methods } as T;
     },
 
     getValidator() {
-      return this.options?.validator || undefined;
+      return this.options?.validator;
     },
   };
 };

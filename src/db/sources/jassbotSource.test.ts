@@ -2,7 +2,7 @@ import { ChannelModel, UserModel } from '@db/models';
 import { db as dbJassbot } from '@db/sources/jassbotSource';
 import { logger } from '@utils';
 import type { Collection } from 'mongodb';
-import type { DbCloseResult, DbConnectResult } from '@types';
+import type { Channel, DbCloseResult, DbConnectResult, User } from '@types';
 
 jest.mock('@db/models/channelModel');
 jest.mock('@db/models/userModel');
@@ -108,15 +108,15 @@ describe('db source jassbot', () => {
   });
 
   describe('calling function getChannelCollection', () => {
-    let result: Collection;
+    let result: Collection<Channel>;
 
     describe('successfully', () => {
-      beforeEach(async () => {
+      beforeEach(() => {
         client.db.mockReturnValueOnce(db);
         jest.spyOn(ChannelModel, 'getCollectionName').mockReturnValueOnce(collName);
         db.collection.mockReturnValueOnce(collection);
 
-        result = await dbJassbot(client as never).getChannelCollection();
+        result = dbJassbot(client as never).getChannelCollection();
       });
 
       afterEach(() => {
@@ -142,15 +142,15 @@ describe('db source jassbot', () => {
   });
 
   describe('calling function getUserCollection', () => {
-    let result: Collection;
+    let result: Collection<User>;
 
     describe('successfully', () => {
-      beforeEach(async () => {
+      beforeEach(() => {
         client.db.mockReturnValueOnce(db);
         jest.spyOn(UserModel, 'getCollectionName').mockReturnValueOnce(collName);
         db.collection.mockReturnValueOnce(collection);
 
-        result = await dbJassbot(client as never).getUserCollection();
+        result = dbJassbot(client as never).getUserCollection();
       });
 
       afterEach(() => {
