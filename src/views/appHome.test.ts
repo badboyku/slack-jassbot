@@ -1,6 +1,6 @@
 import { appHome, manageUserDates } from '@views';
 import type { HomeView } from '@slack/types';
-import type { UserModel } from '@types';
+import type { User } from '@types';
 
 jest.mock('@views/manageUserDates');
 
@@ -29,7 +29,7 @@ describe('views appHome', () => {
       { type: 'section', text: { type: 'mrkdwn', text: '\n' } },
       { type: 'actions', block_id: 'appHomeActions', elements: [button] },
     ];
-    let user: UserModel | undefined;
+    let user: User | undefined;
     let view: HomeView;
 
     describe('successfully with user', () => {

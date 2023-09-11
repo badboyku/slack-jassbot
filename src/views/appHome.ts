@@ -1,8 +1,8 @@
 import { manageUserDates } from '@views';
 import type { HomeView } from '@slack/web-api';
-import type { UserModel } from '@types';
+import type { User } from '@types';
 
-const getView = (user?: UserModel): HomeView => {
+const getView = (user?: User): HomeView => {
   const birthday = user?.getBirthdayDate()?.toFormat('`DDD`') || '-----';
   const workAnniversary = user?.getWorkAnniversaryDate()?.toFormat('`DDD`') || '-----';
   const greeting = !user

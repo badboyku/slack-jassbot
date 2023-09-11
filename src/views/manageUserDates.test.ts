@@ -1,7 +1,7 @@
 import { manageUserDates } from '@views';
 import type { Button, Datepicker, InputBlock, ModalView } from '@slack/types';
 import type { ChatPostMessageArguments } from '@slack/web-api';
-import type { UserModel } from '@types';
+import type { User } from '@types';
 
 describe('views manageUserDates', () => {
   describe('calling function getButton', () => {
@@ -39,7 +39,7 @@ describe('views manageUserDates', () => {
   });
 
   describe('calling function getModal', () => {
-    let user: UserModel = { getBirthdayDate: jest.fn(), getWorkAnniversaryDate: jest.fn() } as never;
+    let user: User = { getBirthdayDate: jest.fn(), getWorkAnniversaryDate: jest.fn() } as never;
     let modal: ModalView;
     let block1: InputBlock;
     let block1element: Datepicker;

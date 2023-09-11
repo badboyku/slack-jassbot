@@ -1,3 +1,4 @@
+import type { DateTime } from 'luxon';
 import type {
   BSON,
   BulkWriteResult,
@@ -67,14 +68,6 @@ export type Channel = {
   memberIds?: string[];
 } & MongoId &
   MongoTimestamps;
-// export type ChannelData = Partial<Channel>;
-// export type ChannelDoc = Document<Channel>;
-// export type ChannelMethods = {};
-// export type ChannelModel = Channel & ChannelMethods;
-// export type ChannelMongoModel = {
-//   getDefaults: () => ChannelData;
-//   getModel: (d: ChannelDoc) => ChannelModel;
-// } & MongoModel;
 
 // User
 export type User = {
@@ -102,18 +95,12 @@ export type User = {
   workAnniversaryLookup?: string;
   channelIds?: string[];
 } & MongoId &
-  MongoTimestamps;
-// export type UserData = Partial<User>;
-// export type UserDoc = Document<User>;
-// export type UserMethods = {
-//   getBirthdayDate: () => DateTime | undefined;
-//   getWorkAnniversaryDate: () => DateTime | undefined;
-// };
-// export type UserModel = User & UserMethods;
-// export type UserMongoModel = {
-//   getDefaults: () => UserData;
-//   getModel: (d: UserDoc) => UserModel;
-// } & MongoModel;
+  MongoTimestamps &
+  UserMethods;
+export type UserMethods = {
+  getBirthdayDate: () => DateTime | undefined;
+  getWorkAnniversaryDate: () => DateTime | undefined;
+};
 
 // sources
 export type DbConnectResult = { isConnected: boolean };
@@ -125,7 +112,7 @@ export type ManageUserDatesResult = { user?: User };
 
 // event
 export type AppHomeOpenedResult = { user?: User };
-export type MemberJoinedChannelResult = { channel: ChannelModel | undefined };
+export type MemberJoinedChannelResult = { channel: Channel | undefined };
 
 // job
 export type UpdateChannelsResult = { results: BulkWriteResults | undefined };

@@ -1,6 +1,6 @@
 import type { Button, ModalView } from '@slack/types';
 import type { ChatPostMessageArguments } from '@slack/web-api';
-import type { UserModel } from '@types';
+import type { User } from '@types';
 
 const getButton = (actionId?: string): Button => {
   return {
@@ -10,7 +10,7 @@ const getButton = (actionId?: string): Button => {
   };
 };
 
-const getModal = (user?: UserModel, callbackId?: string): ModalView => {
+const getModal = (user?: User, callbackId?: string): ModalView => {
   return {
     type: 'modal',
     callback_id: callbackId || 'saveUserDates',
